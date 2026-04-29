@@ -1,5 +1,5 @@
 # Template Repository for the Software Engineering Lecture
-
+test
 > [!IMPORTANT]
 > Replace this README with a detailed description of your project, your team, your architecture decisions, and instructions on how to run it.
 
