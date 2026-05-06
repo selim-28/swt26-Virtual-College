@@ -19,6 +19,10 @@
 
     <modules>
         <module>app</module>
+        <module>backend-api</module>
+        <module>backend-worker</module>
+        <module>database-service</module>
+        <module>frontend-pwa</module>
     </modules>
 
     <properties>
