@@ -1,0 +1,30 @@
+Allgemein###########################################################################
+1. git pull
+2. git add *
+3. git commit -m "[Stand]"
+4. git push
+Branch##############################################################################
+1. Feature-Branch vom main ableiten
+- Wechsle zuerst zu main:                             git checkout main
+- Ziehe die aktuellen Änderungen:                     git pull
+- Erstelle dann deinen Feature-Branch:                git checkout -b feature/backend-main-functions
+Damit arbeitest du isoliert, ohne den Haupt-Branch direkt zu verändern.
+
+2. Implementieren und Änderungen veröffentlichen
+- Mach deine Änderungen im Feature-Branch (z. B. App.java mit main()).
+- Füge die Dateien hinzu und committe:                git add *
+                                                      git commit -m "Add main functions for backend-api and backend-worker"
+- Push den Branch ins Remote-Repository:              git push -u origin feature/backend-main-functions
+
+3. Pull-Request für main erstellen
+- Öffne GitHub und erstelle einen Pull-Request vom Branch feature/backend-main-functions nach main.
+- Im PR sollte stehen, was du geändert hast und warum.
+
+4. Code-Review / Actions
+- Bei komplexeren Änderungen würde ein Teammitglied den PR prüfen (Code-Review).
+- GitHub Actions führen im Hintergrund den Build/Tests aus.
+- Du darfst den PR nicht in main mergen, bevor die Actions erfolgreich sind.
+
+5. Pull-Request in main überführen
+- Wenn der PR geprüft wurde und die Actions grün sind, merge den PR auf GitHub.
+- Danach ist dein Code im main-Branch.
