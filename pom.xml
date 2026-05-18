@@ -10,19 +10,16 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.example</groupId>
-    <artifactId>swt-project-template</artifactId>
+    <groupId>swt2.virtualcollege</groupId>
+    <artifactId>virtual-college</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>SWT Project Template</name>
+    <name>Virtual College</name>
 
     <modules>
-        <module>app</module>
-        <module>backend-api</module>
-        <module>backend-worker</module>
-        <module>database-service</module>
-        <module>frontend-pwa</module>
+        <module>backend_receive</module>
+        <module>backend_send</module>
     </modules>
 
     <properties>

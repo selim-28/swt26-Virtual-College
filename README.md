@@ -1,5 +1,5 @@
 # Template Repository for the Software Engineering Lecture
-test
+
 > [!IMPORTANT]
 > Replace this README with a detailed description of your project, your team, your architecture decisions, and instructions on how to run it.
 
@@ -10,9 +10,9 @@ This template is set up as a multi-module Maven repository with Spring Boot `4.0
 
 ## Team
 
-Team Leader: Mahmut Selim Kilicaslan
+Team Leader: [Name]
 
-Members: Adam Nachit, Onur Kizil, Ahmed Ghanem, Mhamed Mokhtar, Sif-Eddine Khayati
+Members: [Name1], [Name2], [Name3]
 
 ## Quickstart
 
