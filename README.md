@@ -10,9 +10,9 @@ This template is set up as a multi-module Maven repository with Spring Boot `4.0
 
 ## Team
 
-Team Leader: [Name]
+Team Leader: Mahmut Selim Kilicaslan
 
-Members: [Name1], [Name2], [Name3]
+Members: Adam Nachit, Onur Kizil, Ahmed Ghanem, Mhamed Mokhtar, Sif-Eddine Khayati
 
 ## Quickstart
 
