@@ -1,57 +1,114 @@
+<!--
+  pom.xml von BACKEND 1 ("Application Server").
+  Diese Datei beschreibt nur DIESES eine Backend: welchen Namen es hat
+  und welche fertigen Bibliotheken (Abhaengigkeiten) es braucht.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <!-- Version des pom-Dateiformats. Bei Maven immer "4.0.0". -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+      "parent" verweist auf die zentrale pom.xml (eine Ebene hoeher).
+      Dadurch erbt dieses Backend alle gemeinsamen Einstellungen
+      (Java 21, Spring-Boot-Versionen usw.).
+    -->
     <parent>
+        <!-- Gruppenname des Eltern-Projekts (siehe zentrale pom.xml). -->
         <groupId>swt2.virtualcollege</groupId>
+        <!-- Name des Eltern-Projekts. -->
         <artifactId>virtual-college</artifactId>
+        <!-- Version des Eltern-Projekts (muss uebereinstimmen). -->
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <!-- Eigener Name dieses Moduls. Passt zum Ordnernamen "backend_receive". -->
     <artifactId>backend_receive</artifactId>
+    <!-- "jar" = aus dem Code wird ein startbares Java-Programm gebaut. -->
     <packaging>jar</packaging>
 
+    <!-- Lesbarer Anzeigename. -->
     <name>Virtual College Backend Receive</name>
 
+    <!--
+      "dependencies" = Liste der fertigen Bibliotheken, die wir benutzen.
+      Das ist genau das, was Aufgabe 2 von Praktikum 3 verlangt.
+      Eine Version muessen wir NICHT angeben, weil sie vom Eltern-Projekt
+      (Spring Boot) kommt.
+    -->
     <dependencies>
+        <!--
+          Bibliothek 1: macht aus dem Programm einen Web-Server und
+          stellt die REST-Schnittstellen (die Internet-Adressen) bereit.
+        -->
         <dependency>
+            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
+            <!-- Name der Bibliothek: das Web-/REST-Starterpaket. -->
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!--
+          Bibliothek 2 + 3: Grundlage fuer die Anbindung an den
+          MQTT-Broker (Mosquitto). Damit koennen die Backends spaeter
+          asynchron Nachrichten austauschen.
+        -->
         <dependency>
+            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <!-- Allgemeines Integrations-Starterpaket. -->
+            <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
         <dependency>
+            <!-- Gruppe/Hersteller: Spring Integration. -->
             <groupId>org.springframework.integration</groupId>
+            <!-- Das spezielle Paket fuer MQTT (Mosquitto). -->
             <artifactId>spring-integration-mqtt</artifactId>
         </dependency>
+        <!--
+          Bibliothek 3b: Der eigentliche MQTT-Client (Eclipse Paho).
+          Wird von der MQTT-Konfiguration (MqttReceiveConfig) direkt benoetigt.
+          Die Version MUSS hier angegeben werden, weil das Eltern-Projekt
+          (Spring Boot) dafuer keine Version vorgibt.
+        -->
         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <!--
+          Bibliothek 3c: Actuator. Liefert technische Status-/Health-Endpunkte
+          und gehoert zur bestehenden Backend-Konfiguration des Teams.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--
+          Bibliothek 4: Werkzeuge zum automatischen Testen des Codes.
+          "scope = test" heisst: wird nur beim Testen gebraucht,
+          nicht im fertigen Programm.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
+    <!-- "build" = Einstellungen, WIE das Programm gebaut wird. -->
     <build>
         <plugins>
+            <!--
+              Dieses Plugin von Spring Boot baut am Ende eine startbare
+              jar-Datei, die man direkt ausfuehren kann.
+            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>swt2.virtualcollege.receive.ReceiveApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual College – Erklärung für Einsteiger (Praktikum 3)</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#334155;
+    --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8;
+    --green:#4ade80; --yellow:#fbbf24; --red:#f87171; --purple:#c084fc;
+    --code:#0b1220;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; font-size:17px;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:32px 20px 80px}
+  h1{font-size:2rem; line-height:1.2; margin:0 0 8px}
+  h2{font-size:1.5rem; margin:48px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--card2); color:var(--accent)}
+  h3{font-size:1.2rem; margin:28px 0 10px; color:var(--purple)}
+  p{margin:12px 0}
+  .lead{color:var(--muted); font-size:1.05rem}
+  .card{background:var(--card); border-radius:14px; padding:20px 24px; margin:18px 0; border:1px solid var(--card2)}
+  .analogy{background:linear-gradient(135deg,#1e293b,#243049); border-left:5px solid var(--yellow); border-radius:10px; padding:14px 20px; margin:16px 0}
+  .analogy b{color:var(--yellow)}
+  .tip{border-left:5px solid var(--green); background:#16271c; border-radius:10px; padding:14px 20px; margin:16px 0}
+  .warn{border-left:5px solid var(--red); background:#2a1717; border-radius:10px; padding:14px 20px; margin:16px 0}
+  code{background:var(--code); padding:2px 7px; border-radius:6px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:0.9em; color:#7dd3fc}
+  pre{background:var(--code); padding:16px 18px; border-radius:12px; overflow-x:auto; border:1px solid var(--card2); font-size:0.86rem}
+  pre code{background:none; padding:0; color:#cbd5e1}
+  .tag{color:#f472b6}    /* xml tags */
+  .cmt{color:#64748b; font-style:italic}  /* comments */
+  .kw{color:#c084fc}     /* keywords */
+  .str{color:#86efac}    /* strings */
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.95rem}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--card2)}
+  th{color:var(--accent)}
+  td code{font-size:0.85em}
+  .pill{display:inline-block; padding:3px 12px; border-radius:999px; font-size:0.8rem; font-weight:600}
+  .done{background:#14331f; color:var(--green); border:1px solid var(--green)}
+  .toc{background:var(--card); border-radius:14px; padding:18px 24px; margin:24px 0}
+  .toc a{color:var(--accent); text-decoration:none; display:block; padding:4px 0}
+  .toc a:hover{text-decoration:underline}
+  .flow{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:18px 0}
+  .box{background:var(--card2); border:1px solid var(--accent); border-radius:10px; padding:12px 16px; text-align:center; min-width:130px}
+  .box small{display:block; color:var(--muted); font-weight:400}
+  .arrow{color:var(--accent); font-size:1.4rem; font-weight:700}
+  .num{display:inline-flex; width:28px; height:28px; background:var(--accent); color:#06121f; border-radius:50%; align-items:center; justify-content:center; font-weight:700; margin-right:8px}
+  hr{border:none; border-top:1px solid var(--card2); margin:40px 0}
+  .small{font-size:0.9rem; color:var(--muted)}
+  .tree{line-height:1.55; font-size:0.9rem}
+  .tree .fld{color:var(--yellow); font-weight:600}     /* Ordner */
+  .tree .keep{color:var(--green)}                       /* wichtig für dich */
+  .tree .skip{color:#64748b}                            /* ignorieren */
+  .tree .cfg{color:var(--accent)}                       /* Konfiguration */
+  .tree .note{color:#cbd5e1; font-style:italic}
+  .legend{display:flex; flex-wrap:wrap; gap:18px; margin:14px 0}
+  .legend span{display:inline-flex; align-items:center; gap:7px; font-size:0.92rem}
+  .dot{width:13px; height:13px; border-radius:4px; display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>🎓 Virtual College – verständlich erklärt</h1>
+  <p class="lead">Diese Seite erklärt dir von Grund auf, was in deinem Projekt steckt – ohne Vorwissen. Lies sie von oben nach unten wie eine Geschichte. Jeder Fachbegriff wird mit einem Vergleich aus dem Alltag erklärt.</p>
+
+  <div class="toc">
+    <strong>📑 Inhalt</strong>
+    <a href="#bild">1. Das große Bild: Was bauen wir überhaupt?</a>
+    <a href="#ordner">📁 Der ganze Projektordner erklärt (was kann ich ignorieren?)</a>
+    <a href="#java">2. Java, Maven & die pom.xml (das Fundament)</a>
+    <a href="#pom">3. Die pom.xml Zeile für Zeile erklärt</a>
+    <a href="#spring">4. Spring Boot (der Motor)</a>
+    <a href="#mqtt">5. MQTT & Mosquitto (das asynchrone Telefon)</a>
+    <a href="#rest">6. REST & Controller (die Bedienschalter)</a>
+    <a href="#slicing">7. Modulith & Vertical Slicing (die Ordnerstruktur)</a>
+    <a href="#dateien">8. Was steckt in welcher Datei?</a>
+    <a href="#gemacht">9. Was haben wir in Praktikum 3 gemacht?</a>
+    <a href="#starten">10. Wie startet man das Ganze?</a>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2 id="bild">1. Das große Bild 🗺️</h2>
+  <p>Dein Projekt heißt <b>Virtual College</b>. Stell dir eine App für Studierende vor, die z.&nbsp;B. den <b>Mensa-Speiseplan</b> und die <b>nächsten Bus-/Bahn-Abfahrten</b> anzeigt.</p>
+
+  <p>Damit so etwas funktioniert, gibt es nicht <em>ein</em> Programm, sondern mehrere Teile, die zusammenarbeiten. Genau das zeigt dein <b>Verteilungsdiagramm</b>:</p>
+
+  <div class="flow">
+    <div class="box">📱 Frontend<small>App / Browser<br>(was du siehst)</small></div>
+    <div class="arrow">→</div>
+    <div class="box">🧠 backend_receive<small>Anwendungs-Server<br>(rechnet & antwortet)</small></div>
+    <div class="arrow">↔</div>
+    <div class="box">📨 Mosquitto<small>MQTT-Broker<br>(Vermittler)</small></div>
+    <div class="arrow">↔</div>
+    <div class="box">🚏 backend_send<small>Fremdsystem<br>(ÖPNV/Studiwerk)</small></div>
+  </div>
+
+  <div class="card">
+    <p style="margin-top:0"><b>In Worten:</b></p>
+    <ul>
+      <li>Das <b>Frontend</b> ist das, was der Nutzer sieht (App/Webseite).</li>
+      <li><b>backend_receive</b> = der Server, der dem Frontend Daten liefert (Mensa, Abfahrten).</li>
+      <li><b>backend_send</b> = ein <em>zweiter</em> Server, der so tut, als wäre er das Studierendenwerk oder der Nahverkehr und Daten liefert.</li>
+      <li><b>Mosquitto</b> = der „Briefkasten/Postbote" dazwischen, über den die zwei Server <b>asynchron</b> (= zeitversetzt, ohne aufeinander warten zu müssen) Nachrichten austauschen.</li>
+    </ul>
+  </div>
+
+  <div class="analogy"><b>🍕 Vergleich:</b> Stell dir eine Pizzeria vor. Das <b>Frontend</b> ist der Gast. <b>backend_receive</b> ist der Kellner, der Bestellungen annimmt. <b>backend_send</b> ist der Koch in der Küche. <b>Mosquitto</b> ist der Bestellzettel-Spieß, an den der Kellner Zettel hängt und von dem der Koch sie nimmt – beide müssen nicht gleichzeitig am selben Ort stehen.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="ordner">📁 Der ganze Projektordner – was ist was?</h2>
+  <p>Im Datei-Baum links siehst du <b>sehr viele</b> Ordner und Dateien. <b>Gute Nachricht: Den größten Teil kannst du komplett ignorieren!</b> Vieles wird automatisch erzeugt. Hier ist die Übersicht mit Farben:</p>
+
+  <div class="legend">
+    <span><span class="dot" style="background:#4ade80"></span> wichtig für dich (hier passiert deine Arbeit)</span>
+    <span><span class="dot" style="background:#38bdf8"></span> Konfiguration (selten anfassen)</span>
+    <span><span class="dot" style="background:#64748b"></span> ignorieren (automatisch erzeugt / unwichtig)</span>
+    <span><span class="dot" style="background:#fbbf24"></span> Ordner</span>
+  </div>
+
+  <pre class="tree"><code><span class="fld">SWT26-VIRTUAL-COLLEGE-MAIN/</span>
+│
+├── <span class="fld">backend_receive/</span> <span class="keep">★ DEIN BACKEND fürs Frontend (Mensa, ÖPNV)</span>
+│   ├── <span class="fld">src/main/</span> <span class="keep">← hier liegt DEIN Code</span>
+│   │   ├── <span class="fld">java/swt2/virtualcollege/receive/</span>
+│   │   │   ├── <span class="keep">ReceiveApplication.java</span>  <span class="note">Startknopf</span>
+│   │   │   ├── <span class="fld">mensa/</span> MensaController.java     <span class="note">Modul Mensa</span>
+│   │   │   └── <span class="fld">transit/</span> TransitController.java <span class="note">Modul ÖPNV</span>
+│   │   └── <span class="fld">resources/</span>
+│   │       └── <span class="cfg">application.properties</span>      <span class="note">Einstellungen (Port, MQTT)</span>
+│   ├── <span class="skip">target/  ← AUTOMATISCH erzeugt beim Bauen — IGNORIEREN!</span>
+│   └── <span class="cfg">pom.xml</span>                            <span class="note">Einkaufsliste dieses Backends</span>
+│
+├── <span class="fld">backend_send/</span> <span class="keep">★ DEIN simuliertes Fremdsystem (ÖPNV/Studiwerk)</span>
+│   ├── <span class="fld">src/main/</span>
+│   │   ├── <span class="fld">java/swt2/virtualcollege/send/</span>
+│   │   │   ├── <span class="keep">SendApplication.java</span>        <span class="note">Startknopf</span>
+│   │   │   └── <span class="fld">simulation/</span> SimulationController.java
+│   │   └── <span class="fld">resources/</span>
+│   │       └── <span class="cfg">application.properties</span>
+│   ├── <span class="skip">target/  ← IGNORIEREN (automatisch)</span>
+│   └── <span class="cfg">pom.xml</span>
+│
+├── <span class="fld">docs/</span>
+│   └── <span class="keep">erklaerung.html</span>  <span class="note">← genau diese Seite hier 🙂</span>
+│
+├── <span class="skip">app/        ← Reste der Vorlage. Wird nicht gebaut. Kannst du ignorieren/löschen.</span>
+├── <span class="skip">.github/    ← Automatik-Einstellungen für GitHub. Nicht nötig anzufassen.</span>
+├── <span class="skip">.mvn/       ← Hilfsdateien für Maven. IGNORIEREN.</span>
+├── <span class="cfg">pom.xml</span>     <span class="note">← die CHEF-pom: listet die beiden Backends auf</span>
+├── <span class="skip">mvnw / mvnw.cmd   ← Maven-Starter (mitgeliefert). Nicht anfassen.</span>
+├── <span class="skip">Dockerfile.java   ← nur für "Container"-Bau. Für jetzt egal.</span>
+├── <span class="skip">.gitignore / .dockerignore   ← sagen, was NICHT gespeichert wird. Egal.</span>
+├── <span class="skip">"git commands" / Linkboard   ← lose Notizdateien. Unwichtig.</span>
+├── <span class="cfg">README.md</span>   <span class="note">← Projektbeschreibung (Team-Namen eintragen!)</span>
+└── <span class="skip">swt2allsin-compressed.pdf   ← die Aufgaben-PDF.</span></code></pre>
+
+  <div class="tip"><b>Das Wichtigste in einem Satz:</b> Du arbeitest praktisch <b>nur</b> in den <span style="color:var(--green)">grünen</span> <code>src/main/</code>-Ordnern der beiden <code>backend_…</code>-Module und manchmal in den <span style="color:var(--accent)">blauen</span> <code>pom.xml</code> / <code>application.properties</code>. <b>Alles andere kannst du ignorieren.</b></div>
+
+  <h3>Warum gibt es so viele „unwichtige" Sachen?</h3>
+  <table>
+    <tr><th>Ordner/Datei</th><th>Wofür? Warum ignorieren?</th></tr>
+    <tr><td><code>target/</code></td><td>Hier legt Maven beim Bauen das <b>fertige Ergebnis</b> ab (die <code>.class</code>-Dateien und die <code>.jar</code>). Wird bei jedem Bauen neu erzeugt – du schreibst da <b>nie</b> selbst rein.</td></tr>
+    <tr><td><code>.class</code>-Dateien</td><td>Das ist dein <code>.java</code>-Code, in „Maschinensprache" übersetzt. Liegt in <code>target/</code>. Automatisch – ignorieren.</td></tr>
+    <tr><td><code>generated-sources</code>, <code>maven-status</code></td><td>Interne Notizen von Maven während des Bauens. Reiner „Maschinen-Kram".</td></tr>
+    <tr><td><code>app/</code></td><td>Ein Beispiel-Modul aus der ursprünglichen Vorlage. Es ist <b>nicht</b> in der Chef-<code>pom.xml</code> eingetragen, wird also nicht mitgebaut. Du kannst es liegen lassen oder löschen.</td></tr>
+    <tr><td><code>.mvn/</code>, <code>mvnw</code>, <code>mvnw.cmd</code></td><td>Der „Maven-Wrapper": sorgt dafür, dass Maven funktioniert, ohne dass du es installierst. Einfach da lassen.</td></tr>
+    <tr><td><code>.github/</code></td><td>Vorlagen & Automatik für die GitHub-Webseite (z.B. automatisches Bauen). Für deinen Code irrelevant.</td></tr>
+    <tr><td><code>Dockerfile.java</code></td><td>Bauplan, um das Programm in einen „Container" zu verpacken. Brauchst du erst, wenn ihr das gezielt macht.</td></tr>
+  </table>
+
+  <div class="warn"><b>Faustregel:</b> Fängt ein Name mit einem Punkt an (<code>.github</code>, <code>.mvn</code>, <code>.gitignore</code>) oder heißt er <code>target</code>, ist es fast immer „Technik im Hintergrund" – <b>nicht deine Baustelle</b>.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="java">2. Java, Maven & die pom.xml 🧱</h2>
+
+  <h3>Was ist Java?</h3>
+  <p><b>Java</b> ist die Programmiersprache, in der die Server geschrieben sind. Eine Programmiersprache ist die „Sprache", in der man dem Computer Befehle gibt.</p>
+
+  <h3>Was ist Maven?</h3>
+  <p>Ein großes Programm besteht aus vielen fertigen Bausteinen, die andere Leute schon gebaut haben (man muss das Rad nicht neu erfinden). <b>Maven</b> ist ein <b>Bau-Werkzeug</b>, das:</p>
+  <ul>
+    <li>die benötigten Bausteine automatisch aus dem Internet herunterlädt,</li>
+    <li>deinen Code zusammenbaut („kompiliert") und</li>
+    <li>am Ende ein lauffähiges Programm erzeugt.</li>
+  </ul>
+
+  <div class="analogy"><b>🛒 Vergleich:</b> Maven ist wie ein <b>Lieferdienst + Möbelaufbauer</b> bei IKEA. Du gibst eine Liste ab, was du brauchst – er besorgt alle Teile und baut den Schrank zusammen.</div>
+
+  <h3>Was ist die <code>pom.xml</code>?</h3>
+  <p>Die <code>pom.xml</code> ist die <b>Einkaufs- und Bauanleitung</b>, die du Maven gibst. „POM" steht für <em>Project Object Model</em>. Darin steht:</p>
+  <ul>
+    <li>wie das Projekt heißt,</li>
+    <li>welche Bausteine (= <b>Dependencies</b>, „Abhängigkeiten") es braucht,</li>
+    <li>wie es gebaut werden soll.</li>
+  </ul>
+  <p>Ohne diese Datei wüsste Maven nicht, was es tun soll.</p>
+
+  <div class="tip"><b>Warum „.xml"?</b> XML ist nur ein <b>Format</b>, um Informationen ordentlich zu verschachteln – mit „Etiketten" (Tags) in spitzen Klammern. Mehr dazu gleich.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="pom">3. Die pom.xml – Zeile für Zeile 🔍</h2>
+
+  <p>Zuerst die <b>Grammatik</b> von XML. Alles steckt zwischen <b>Tags</b>. Ein Tag wird geöffnet und wieder geschlossen:</p>
+  <pre><code><span class="tag">&lt;name&gt;</span>Virtual College<span class="tag">&lt;/name&gt;</span>
+   ▲ Öffnen        ▲ Inhalt      ▲ Schließen (mit / )</code></pre>
+  <p>Tags können <b>ineinander verschachtelt</b> sein, wie Schachteln in Schachteln:</p>
+  <pre><code><span class="tag">&lt;dependency&gt;</span>            <span class="cmt">&lt;!-- eine große Schachtel: ein Baustein --&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>...<span class="tag">&lt;/groupId&gt;</span>      <span class="cmt">&lt;!-- kleine Schachtel: Hersteller --&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>...<span class="tag">&lt;/artifactId&gt;</span>  <span class="cmt">&lt;!-- kleine Schachtel: Name des Bausteins --&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+  <p>Alles zwischen <code>&lt;!--</code> und <code>--&gt;</code> ist ein <b>Kommentar</b> – nur für Menschen, der Computer ignoriert ihn.</p>
+
+  <h3>Jetzt deine echte pom.xml von <code>backend_receive</code>:</h3>
+  <pre><code><span class="cmt">&lt;!-- Kopf: legt fest, dass das eine Maven-Datei ist (immer gleich) --&gt;</span>
+<span class="tag">&lt;project</span> xmlns=<span class="str">"..."</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>   <span class="cmt">&lt;!-- Version des POM-Formats --&gt;</span>
+
+    <span class="cmt">&lt;!-- "parent" = die ELTERN-Datei. Von dort erbt dieses Modul
+         gemeinsame Einstellungen (z.B. die Spring-Boot-Version).
+         So muss man Versionen nur EINMAL pflegen. --&gt;</span>
+    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>swt2.virtualcollege<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>virtual-college<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/parent&gt;</span>
+
+    <span class="tag">&lt;artifactId&gt;</span>backend_receive<span class="tag">&lt;/artifactId&gt;</span> <span class="cmt">&lt;!-- Name DIESES Moduls --&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>          <span class="cmt">&lt;!-- Ergebnis = eine .jar-Datei (lauffähiges Programm) --&gt;</span>
+    <span class="tag">&lt;name&gt;</span>Virtual College Backend Receive<span class="tag">&lt;/name&gt;</span>
+
+    <span class="cmt">&lt;!-- ===== DIE EINKAUFSLISTE (die wichtigsten Zeilen!) ===== --&gt;</span>
+    <span class="tag">&lt;dependencies&gt;</span>
+
+        <span class="cmt">&lt;!-- Baustein 1: Spring Boot + Web → ermöglicht REST-Schnittstellen --&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+
+        <span class="cmt">&lt;!-- Baustein 2 + 3: Anbindung an den MQTT-Broker (Mosquitto) --&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-integration<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.integration<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-integration-mqtt<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+
+        <span class="cmt">&lt;!-- Baustein 4: Werkzeuge zum Testen (scope=test → nur beim Testen) --&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+
+    <span class="tag">&lt;/dependencies&gt;</span>
+
+    <span class="cmt">&lt;!-- "build" = WIE gebaut wird. Dieses Plugin macht eine
+         startbare Spring-Boot-.jar (z.B. backend_receive.jar). --&gt;</span>
+    <span class="tag">&lt;build&gt;</span>
+        <span class="tag">&lt;plugins&gt;</span>
+            <span class="tag">&lt;plugin&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;/plugins&gt;</span>
+    <span class="tag">&lt;/build&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+
+  <table>
+    <tr><th>Begriff</th><th>Bedeutung in einfachen Worten</th></tr>
+    <tr><td><code>groupId</code></td><td>Wer hat den Baustein gebaut (Hersteller/Firma, z.B. „org.springframework.boot").</td></tr>
+    <tr><td><code>artifactId</code></td><td>Wie heißt der konkrete Baustein (das Produkt).</td></tr>
+    <tr><td><code>version</code></td><td>Welche Ausgabe/Version. Steht hier oft NICHT, weil die Eltern-Datei sie schon festlegt.</td></tr>
+    <tr><td><code>dependency</code></td><td>Ein Baustein, den dein Projekt benutzt.</td></tr>
+    <tr><td><code>scope</code></td><td>Wann der Baustein gebraucht wird. <code>test</code> = nur beim Testen.</td></tr>
+    <tr><td><code>plugin</code></td><td>Ein Helfer, der beim Bauen eine bestimmte Aufgabe übernimmt.</td></tr>
+  </table>
+
+  <div class="tip"><b>Merke:</b> Die <code>pom.xml</code> von <code>backend_send</code> sieht <b>fast identisch</b> aus – nur der Name (<code>backend_send</code>) ist anders. Beide brauchen ja dieselben Bausteine.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="spring">4. Spring Boot 🚀</h2>
+  <p><b>Spring Boot</b> ist ein fertiges <b>Grundgerüst</b> für Server-Programme in Java. Es nimmt dir extrem viel Arbeit ab: Es startet einen Web-Server, kümmert sich um Konfiguration usw. Du schreibst nur noch deinen eigenen Teil.</p>
+
+  <div class="analogy"><b>🏠 Vergleich:</b> Spring Boot ist wie ein <b>fertig gebautes Haus mit Strom, Wasser und Heizung</b>. Du musst nur noch deine Möbel reinstellen, statt das Haus von Grund auf zu mauern.</div>
+
+  <p>Die „Startklasse" jedes Backends ist mit <code>@SpringBootApplication</code> markiert. Das <code>@</code>-Zeichen heißt <b>Annotation</b> – ein „Aufkleber", der Spring sagt: <em>„Hier beginnt das Programm."</em></p>
+  <pre><code><span class="kw">@SpringBootApplication</span>          <span class="cmt">// Aufkleber: "Das ist eine Spring-Boot-App"</span>
+<span class="kw">public class</span> ReceiveApplication {
+    <span class="kw">public static void</span> main(String[] args) {
+        SpringApplication.run(...); <span class="cmt">// startet den Server</span>
+    }
+}</code></pre>
+
+  <!-- ============================================================= -->
+  <h2 id="mqtt">5. MQTT & Mosquitto 📨</h2>
+
+  <h3>Was ist MQTT?</h3>
+  <p><b>MQTT</b> ist eine <b>Sprache/Regel zum Nachrichten-Austausch</b> zwischen Programmen. Das Besondere: Es funktioniert nach dem <b>„Publish/Subscribe"-Prinzip</b> (veröffentlichen / abonnieren):</p>
+  <ul>
+    <li><b>Publish</b> (veröffentlichen): Ein Programm schickt eine Nachricht zu einem <b>Thema</b> („Topic"), z.B. <code>mensa/speiseplan</code>.</li>
+    <li><b>Subscribe</b> (abonnieren): Ein anderes Programm hat dieses Thema abonniert und bekommt die Nachricht automatisch.</li>
+  </ul>
+
+  <div class="analogy"><b>📰 Vergleich:</b> Wie eine <b>Zeitung</b>. Der Verlag <em>veröffentlicht</em> (publish) Ausgaben. Du hast die Zeitung <em>abonniert</em> (subscribe) und bekommst sie zugestellt, ohne den Verlag jedes Mal anzurufen. Ihr müsst euch nie direkt treffen.</div>
+
+  <h3>Was ist Mosquitto?</h3>
+  <p><b>Mosquitto</b> ist ein konkretes <b>Programm</b>, das MQTT umsetzt – der <b>Broker</b> (Vermittler). Er nimmt alle „Publish"-Nachrichten entgegen und verteilt sie an die Abonnenten. In deinem Diagramm ist das der eigene Kasten „Message Broker Server".</p>
+
+  <div class="analogy"><b>🏤 Vergleich:</b> Mosquitto ist das <b>Postverteilzentrum</b>. Alle werfen Briefe ein, das Zentrum sortiert und liefert sie an die richtigen Empfänger.</div>
+
+  <h3>Wo steht das in deinem Projekt?</h3>
+  <p>In der Datei <code>application.properties</code> jedes Backends. „Properties" = Einstellungen, je eine pro Zeile als <code>schlüssel=wert</code>:</p>
+  <pre><code><span class="cmt"># Adresse des Mosquitto-Brokers (tcp = Verbindungsart, 1883 = Standard-Tür/Port für MQTT)</span>
+mqtt.broker.url=tcp://localhost:1883
+<span class="cmt"># Eindeutiger Name, mit dem sich dieses Backend beim Broker meldet</span>
+mqtt.client.id=backend_receive</code></pre>
+  <div class="small">Hinweis: Die echte MQTT-Übertragung wird laut Aufgabenstellung erst in einem <b>späteren</b> Praktikum programmiert. Jetzt ist nur die Vorbereitung (Baustein + Einstellungen) fertig.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="rest">6. REST & Controller 🎛️</h2>
+  <p>Wie redet das Frontend mit <code>backend_receive</code>? Über <b>REST</b>. Das ist eine Regel, bei der man Daten über normale <b>Web-Adressen (URLs)</b> abruft – genau wie beim Aufrufen einer Webseite.</p>
+
+  <p>Beispiel: Das Frontend ruft die Adresse <code>/api/mensa/speiseplan</code> auf und bekommt den Speiseplan zurück.</p>
+
+  <p>Ein <b>Controller</b> ist die Java-Klasse, die solche Adressen <em>beantwortet</em>. Die Aufkleber (Annotationen) sagen, welche Adresse zuständig ist:</p>
+  <pre><code><span class="kw">@RestController</span>                       <span class="cmt">// "Ich beantworte Web-Anfragen"</span>
+<span class="kw">@RequestMapping</span>(<span class="str">"/api/mensa"</span>)        <span class="cmt">// Basis-Adresse für dieses Modul</span>
+<span class="kw">public class</span> MensaController {
+
+    <span class="kw">@GetMapping</span>(<span class="str">"/speiseplan"</span>)        <span class="cmt">// reagiert auf GET /api/mensa/speiseplan</span>
+    <span class="kw">public</span> List&lt;Gericht&gt; speiseplan() {
+        <span class="kw">return</span> List.of(            <span class="cmt">// gibt eine Liste von Gerichten zurück</span>
+            <span class="kw">new</span> Gericht(<span class="str">"Spaghetti Bolognese"</span>, 3.50),
+            <span class="kw">new</span> Gericht(<span class="str">"Gemüsecurry"</span>, 2.90)
+        );
+    }
+}</code></pre>
+  <table>
+    <tr><th>Aufkleber</th><th>Bedeutung</th></tr>
+    <tr><td><code>@GetMapping</code></td><td>Reagiert, wenn etwas <b>abgefragt/gelesen</b> wird (HTTP „GET").</td></tr>
+    <tr><td><code>@PostMapping</code></td><td>Reagiert, wenn etwas <b>ausgelöst/gesendet</b> wird (HTTP „POST"), z.B. „Simulation starten".</td></tr>
+  </table>
+  <div class="small">Die zurückgegebenen Daten (Spaghetti, Curry …) sind aktuell <b>Beispiel-Werte</b> – Platzhalter, bis die echten Daten per MQTT kommen. Das ist für Praktikum 3 genau richtig so.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="slicing">7. Modulith & Vertical Slicing 🍰</h2>
+  <p><b>Modulith</b> = ein einzelnes Programm, das aber innen sauber in <b>Module</b> (Themenbereiche) aufgeteilt ist.</p>
+  <p><b>Vertical Slicing</b> (senkrechtes Schneiden) = man teilt nach <b>Fachthema</b>, nicht nach Technik. Jedes Thema bekommt seinen eigenen Ordner mit allem, was dazugehört.</p>
+
+  <div class="analogy"><b>🍰 Vergleich:</b> Eine Torte kann man waagerecht (alle Böden getrennt) oder senkrecht (ganze Tortenstücke) schneiden. „Vertical Slicing" = jeder bekommt ein <b>komplettes Stück</b> (= ein Fachthema mit allem drin), nicht nur „alle Böden" oder „alle Cremeschichten".</div>
+
+  <p>So sieht das in deinem <code>backend_receive</code> aus – ein Ordner pro Thema:</p>
+  <pre><code>receive/
+ ├── mensa/      <span class="cmt">← Thema "Mensa"   → MensaController.java</span>
+ └── transit/    <span class="cmt">← Thema "ÖPNV"    → TransitController.java</span></code></pre>
+
+  <!-- ============================================================= -->
+  <h2 id="dateien">8. Was steckt in welcher Datei? 🗂️</h2>
+  <table>
+    <tr><th>Datei</th><th>Aufgabe</th></tr>
+    <tr><td><code>pom.xml</code> (oben/Root)</td><td>„Chef-Datei": listet die beiden Module <code>backend_receive</code> und <code>backend_send</code> auf.</td></tr>
+    <tr><td><code>backend_receive/pom.xml</code></td><td>Einkaufsliste für den Anwendungs-Server.</td></tr>
+    <tr><td><code>backend_send/pom.xml</code></td><td>Einkaufsliste für das simulierte Fremdsystem.</td></tr>
+    <tr><td><code>ReceiveApplication.java</code></td><td>Startknopf von <code>backend_receive</code>.</td></tr>
+    <tr><td><code>SendApplication.java</code></td><td>Startknopf von <code>backend_send</code>.</td></tr>
+    <tr><td><code>mensa/MensaController.java</code></td><td>Liefert den Speiseplan: <code>GET /api/mensa/speiseplan</code>.</td></tr>
+    <tr><td><code>transit/TransitController.java</code></td><td>Liefert Abfahrten: <code>GET /api/transit/abfahrten</code>.</td></tr>
+    <tr><td><code>simulation/SimulationController.java</code></td><td>Startet die Simulation: <code>POST /api/simulation/start</code>.</td></tr>
+    <tr><td><code>application.properties</code> (je Backend)</td><td>Einstellungen: Port + MQTT-Broker-Adresse.</td></tr>
+  </table>
+
+  <!-- ============================================================= -->
+  <h2 id="gemacht">9. Was haben wir in Praktikum 3 gemacht? ✅</h2>
+  <p>Die Aufgabenstellung (PDF, S. 565) hatte <b>drei</b> Punkte:</p>
+  <table>
+    <tr><th>Aufgabe</th><th>Status</th><th>Was konkret existiert</th></tr>
+    <tr><td>1. Verteilungsdiagramm</td><td><span class="pill done">erledigt</span></td><td>Dein UML-Diagramm mit Frontend, beiden Backends, Mosquitto, MariaDB.</td></tr>
+    <tr><td>2. MQTT-Abhängigkeiten in Maven</td><td><span class="pill done">erledigt</span></td><td><code>spring-integration-mqtt</code> &amp; Co. in beiden <code>pom.xml</code> + MQTT-Einstellungen.</td></tr>
+    <tr><td>3. REST-Schnittstellen (Modulith / Vertical Slicing)</td><td><span class="pill done">erledigt</span></td><td>3 Controller in eigenen Modul-Ordnern (mensa, transit, simulation).</td></tr>
+  </table>
+  <div class="tip"><b>Geprüft:</b> Der Befehl <code>./mvnw verify</code> bzw. <code>compile</code> läuft mit <b>„BUILD SUCCESS"</b> durch – das Projekt baut also fehlerfrei. ✔️</div>
+  <div class="warn"><b>Ehrlich gesagt:</b> Diese Dateien waren beim Nachschauen bereits fertig eingerichtet (vermutlich vorher von dir oder einem Werkzeug). Meine Rolle war: <b>prüfen, bauen und dir alles erklären</b> – nicht neu schreiben.</div>
+
+  <!-- ============================================================= -->
+  <h2 id="starten">10. Wie startet man das Ganze? ▶️</h2>
+  <p>Im <b>Terminal</b>, im Hauptordner des Projekts:</p>
+  <pre><code><span class="cmt"># 1) Alles bauen und testen</span>
+./mvnw verify
+
+<span class="cmt"># 2) Das Anwendungs-Backend starten (läuft dann auf Port 8080)</span>
+./mvnw -pl backend_receive spring-boot:run
+
+<span class="cmt"># 3) In einem ZWEITEN Terminal das Fremdsystem starten (Port 8081)</span>
+./mvnw -pl backend_send spring-boot:run</code></pre>
+  <p>Danach kannst du im Browser testen:</p>
+  <pre><code>http://localhost:8080/api/mensa/speiseplan
+http://localhost:8080/api/transit/abfahrten</code></pre>
+  <p class="small"><code>./mvnw</code> ist der „Maven-Wrapper" – ein mitgeliefertes kleines Skript, damit du Maven nicht extra installieren musst. <code>-pl</code> heißt „nur dieses eine Modul".</p>
+
+  <hr>
+  <p class="small">Erstellt für das Verständnis von Praktikum 3 – Softwaretechnik 2. Du kannst diese Datei jederzeit im Browser öffnen (Doppelklick auf <code>docs/erklaerung.html</code>).</p>
+
+</div>
+</body>
+</html>
