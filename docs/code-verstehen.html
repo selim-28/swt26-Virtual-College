@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual College – Unser Code komplett verstanden (Architektur &amp; Rundgang)</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#334155;
+    --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8;
+    --green:#4ade80; --yellow:#fbbf24; --red:#f87171; --purple:#c084fc;
+    --code:#0b1220;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; font-size:17px;}
+  .wrap{max-width:920px; margin:0 auto; padding:32px 20px 80px}
+  h1{font-size:2rem; line-height:1.2; margin:0 0 8px}
+  h2{font-size:1.5rem; margin:48px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--card2); color:var(--accent)}
+  h3{font-size:1.2rem; margin:28px 0 10px; color:var(--purple)}
+  h4{font-size:1.02rem; margin:18px 0 6px; color:#fde68a}
+  p{margin:12px 0}
+  .lead{color:var(--muted); font-size:1.05rem}
+  .card{background:var(--card); border-radius:14px; padding:20px 24px; margin:18px 0; border:1px solid var(--card2)}
+  .analogy{background:linear-gradient(135deg,#1e293b,#243049); border-left:5px solid var(--yellow); border-radius:10px; padding:14px 20px; margin:16px 0}
+  .analogy b{color:var(--yellow)}
+  .tip{border-left:5px solid var(--green); background:#16271c; border-radius:10px; padding:14px 20px; margin:16px 0}
+  .warn{border-left:5px solid var(--red); background:#2a1717; border-radius:10px; padding:14px 20px; margin:16px 0}
+  .key{border-left:5px solid var(--accent); background:#0b2233; border-radius:10px; padding:14px 20px; margin:16px 0}
+  code{background:var(--code); padding:2px 7px; border-radius:6px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:0.88em; color:#7dd3fc}
+  pre{background:var(--code); padding:16px 18px; border-radius:12px; overflow-x:auto; border:1px solid var(--card2); font-size:0.84rem}
+  pre code{background:none; padding:0; color:#cbd5e1}
+  .cmt{color:#64748b; font-style:italic}
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.93rem}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--card2); vertical-align:top}
+  th{color:var(--accent)}
+  td code{font-size:0.85em}
+  .toc{background:var(--card); border-radius:14px; padding:18px 24px; margin:24px 0}
+  .toc a{color:var(--accent); text-decoration:none; display:block; padding:4px 0}
+  .toc a:hover{text-decoration:underline}
+  .flow{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:18px 0}
+  .box{background:var(--card2); border:1px solid var(--accent); border-radius:10px; padding:12px 16px; text-align:center; min-width:120px}
+  .box small{display:block; color:var(--muted); font-weight:400; font-size:.8rem}
+  .arrow{color:var(--accent); font-size:1.4rem; font-weight:700}
+  hr{border:none; border-top:1px solid var(--card2); margin:40px 0}
+  .small{font-size:0.9rem; color:var(--muted)}
+  .tree{line-height:1.5; font-size:0.88rem; white-space:pre; overflow-x:auto}
+  .tree .fld{color:var(--yellow); font-weight:600}
+  .tree .keep{color:var(--green)}
+  .tree .cfg{color:var(--accent)}
+  .tree .note{color:#94a3b8; font-style:italic}
+  .pill{display:inline-block; padding:2px 10px; border-radius:999px; font-size:0.74rem; font-weight:700; white-space:nowrap; border:1px solid}
+  .run{background:#14331f; color:var(--green); border-color:var(--green)}
+  .model{background:#221a2e; color:var(--purple); border-color:var(--purple)}
+  .pat{display:inline-block; padding:2px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; white-space:nowrap; border:1px solid}
+  .pcre{background:#14331f; color:var(--green); border-color:var(--green)}
+  .pstr{background:#0b2233; color:var(--accent); border-color:var(--accent)}
+  .pbeh{background:#221a2e; color:var(--purple); border-color:var(--purple)}
+  .step{display:flex; gap:12px; margin:10px 0; align-items:flex-start}
+  .step .n{flex:none; width:30px; height:30px; background:var(--accent); color:#06121f; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800}
+  .step .t{flex:1}
+  .file{color:#fda4af; font-size:.82em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>🔎 Unser Code – komplett verstanden</h1>
+  <p class="lead">Diese Seite ist der <b>Rundgang durch euren eigenen Code</b>. Sie beantwortet genau die Frage: „Was hat die KI uns eigentlich gebaut – <b>was liegt wo</b> und <b>wie arbeitet es zusammen</b>?" Wir gehen von oben (das große Bild) nach unten (jede Datei) – in einer <b>logischen Reihenfolge zum Lernen</b>.</p>
+
+  <div class="key">
+    <b>📚 Zwei Dokumente – so passen sie zusammen:</b>
+    <ul style="margin:8px 0 0">
+      <li><b><a href="erklaerung.html" style="color:var(--accent)">erklaerung.html</a></b> = die <b>Konzepte &amp; die Klausur/Aufgaben</b> (Verteilungsdiagramm, OOD, die 3 Muster als Theorie).</li>
+      <li><b>diese Seite</b> = der <b>echte Code</b>: Ordner, Klassen, Datenflüsse – damit ihr <b>jede Zeile eures Projekts erklären</b> könnt.</li>
+    </ul>
+    Empfohlene Lern-Reihenfolge für die Präsentation steht gleich in <a href="#pfad" style="color:var(--accent)">Kapitel&nbsp;0</a>.
+  </div>
+
+  <div class="toc">
+    <strong>📑 Inhalt (von oben nach unten lesen)</strong>
+    <a href="#pfad">0. Lernpfad: in welcher Reihenfolge lernen?</a>
+    <a href="#bild">1. Das große Bild: die Architektur in 60 Sekunden</a>
+    <a href="#zweischichten">2. ⭐ Die wichtigste Erkenntnis: euer Code hat ZWEI Schichten</a>
+    <a href="#ordner">3. Der Projekt-Ordnerbaum – komplett erklärt</a>
+    <a href="#flows">4. Wie eine Anfrage durch das System fließt (3 Szenarien)</a>
+    <a href="#receive">5. backend_receive – Paket für Paket</a>
+    <a href="#send">6. backend_send – Paket für Paket</a>
+    <a href="#frontend">7. Das Frontend (App.jsx) – Bildschirm für Bildschirm</a>
+    <a href="#infra">8. Die Infrastruktur (Docker, Nginx, Mosquitto, Properties)</a>
+    <a href="#muster">9. Die 3 Entwurfsmuster – wo sie WIRKLICH im Code stehen</a>
+    <a href="#glossar">10. Mini-Glossar (jeder Fachbegriff in einem Satz)</a>
+    <a href="#rollen">11. Wer erklärt was? (Verantwortungsbereiche)</a>
+    <a href="#karte-live">12. Reale Karte, Routing und VRR-Datenfluss</a>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 id="pfad">0. Lernpfad: in welcher Reihenfolge lernen? 🧭</h2>
+  <p>Damit ihr in der Präsentation einem roten Faden folgt, lernt in <b>dieser</b> Reihenfolge:</p>
+  <table>
+    <tr><th>#</th><th>Was</th><th>Wo</th></tr>
+    <tr><td>1</td><td>Das große Bild + die zwei Schichten verstehen</td><td>hier, Kap. 1–2</td></tr>
+    <tr><td>2</td><td>Ordnerstruktur einmal komplett durchgehen</td><td>hier, Kap. 3</td></tr>
+    <tr><td>3</td><td>Die 3 Datenflüsse „nachfühlen" (Reservierung, Pinwand, Simulation)</td><td>hier, Kap. 4</td></tr>
+    <tr><td>4</td><td>Jedes Backend Paket für Paket ansehen</td><td>hier, Kap. 5–6</td></tr>
+    <tr><td>5</td><td>Das Frontend verstehen (was klickt der Nutzer)</td><td>hier, Kap. 7</td></tr>
+    <tr><td>6</td><td>Infrastruktur (warum Docker, Nginx, Broker)</td><td>hier, Kap. 8</td></tr>
+    <tr><td>7</td><td>Die 3 Muster im Code festnageln</td><td>hier, Kap. 9</td></tr>
+    <tr><td>8</td><td>Theorie/Diagramme für die Klausur</td><td><a href="erklaerung.html" style="color:var(--accent)">erklaerung.html</a></td></tr>
+    <tr><td>9</td><td>Ablauf + Spickzettel der Präsentation</td><td><a href="../PRAESENTATION.md" style="color:var(--accent)">PRAESENTATION.md</a></td></tr>
+  </table>
+  <div class="key"><b>„Was sollen wir als Nächstes tun?"</b> Das beantwortet – aus den Folien und auf unseren Stand bezogen – <a href="erklaerung.html#naechstes" style="color:var(--accent)"><b>erklaerung.html, Kapitel&nbsp;19</b></a>: kurz gesagt <b>Projektdokumentation (3-Sprint-Planung), Tests und Präsentationsvorbereitung</b> – keine großen neuen Features mehr.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="bild">1. Das große Bild: die Architektur in 60 Sekunden 🗺️</h2>
+  <p>Euer Projekt besteht aus <b>fünf laufenden Programmen</b> (im Docker „Container" genannt). So hängen sie zusammen:</p>
+  <div class="flow">
+    <div class="box">🖥️ Browser<small>der Nutzer</small></div>
+    <div class="arrow">→</div>
+    <div class="box">🌐 Frontend<small>React + Nginx<br>Port 8090</small></div>
+    <div class="arrow">→</div>
+    <div class="box">🧠 backend_receive<small>unsere App<br>Port 8083</small></div>
+    <div class="arrow">↔</div>
+    <div class="box">🗄️ MariaDB<small>Datenbank<br>Port 3306</small></div>
+  </div>
+  <div class="flow">
+    <div class="box">🚏 backend_send<small>Fremdsystem<br>Port 8084</small></div>
+    <div class="arrow">→</div>
+    <div class="box">📨 Mosquitto<small>MQTT-Broker<br>Port 1883</small></div>
+    <div class="arrow">→</div>
+    <div class="box">🧠 backend_receive<small>empfängt &amp; speichert</small></div>
+  </div>
+  <table>
+    <tr><th>Programm</th><th>Sprache/Technik</th><th>Aufgabe in einem Satz</th></tr>
+    <tr><td><b>Frontend</b></td><td>React/Vite, ausgeliefert von Nginx</td><td>Das, was der Nutzer sieht und klickt; schickt Anfragen an die Backends.</td></tr>
+    <tr><td><b>backend_receive</b></td><td>Java 21 + Spring Boot</td><td>Unsere App-Logik: Karte, Reservierungen, Pinwand, Mensa-Empfang, Datenbank.</td></tr>
+    <tr><td><b>backend_send</b></td><td>Java 21 + Spring Boot</td><td>Simuliertes Fremdsystem (ÖPNV/Studierendenwerk): erzeugt Daten und sendet sie per MQTT.</td></tr>
+    <tr><td><b>Mosquitto</b></td><td>fertiges MQTT-Broker-Image</td><td>Der „Postbote", über den die zwei Backends asynchron Nachrichten austauschen.</td></tr>
+    <tr><td><b>MariaDB</b></td><td>fertiges Datenbank-Image</td><td>Speichert Reservierungen, Posts und Mensa-Gerichte dauerhaft.</td></tr>
+  </table>
+  <div class="analogy"><b>🍕 Merksatz:</b> Frontend = Gast · backend_receive = Kellner · backend_send = Koch · Mosquitto = der Bestellzettel-Spieß zwischen ihnen · MariaDB = das Kassenbuch, das alles festhält.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="zweischichten">2. ⭐ Die wichtigste Erkenntnis: euer Code hat ZWEI Schichten</h2>
+  <p>Wenn ihr in den Code schaut, seht ihr <b>scheinbar doppelte</b> Klassen (z.&nbsp;B. einen <code>Raum</code> <em>und</em> ein <code>RaumInfo</code>; eine <code>Pinwand</code> <em>und</em> einen <code>GespeicherterPinwandPost</code>). Das ist <b>kein Fehler</b> – es sind zwei bewusst getrennte Schichten:</p>
+
+  <table>
+    <tr><th></th><th><span class="pill run">LAUFENDE Schicht</span></th><th><span class="pill model">MODELL-Schicht</span></th></tr>
+    <tr><td><b>Was</b></td><td>Was beim Klick <b>wirklich ausgeführt</b> wird.</td><td>Die Klassen aus euren <b>UML-Diagrammen</b> (OOD).</td></tr>
+    <tr><td><b>Typische Klassen</b></td><td><code>…Controller</code>, <code>…Service</code>, <code>…Repository</code>, <code>Gespeichert…</code>-Entities, die MQTT-Klassen</td><td><code>DigitalerCampus</code>, <code>LiveCampusKarte</code>, <code>Gebaeude</code>, <code>Raum</code>, <code>Pinwand</code>, <code>Beobachter</code>, <code>Nutzer</code> …</td></tr>
+    <tr><td><b>Warum da?</b></td><td>Damit die App funktioniert (REST, Datenbank, MQTT).</td><td>Damit <b>Diagramm und Code übereinstimmen</b> – die Konsistenz-Regel aus Praktikum&nbsp;4 (&bdquo;jede Klasse im Modell muss im Code existieren&ldquo;) – und um die <b>Muster</b> zu zeigen.</td></tr>
+  </table>
+
+  <div class="key"><b>Der entscheidende Satz für die Präsentation:</b><br>
+    „Unser Backend hat eine <b>lauffähige Spring-Schicht</b> (Controller → Service → Repository), die die echten Daten verarbeitet, und ein <b>OOD-Domänenmodell</b> (z.&nbsp;B. <code>DigitalerCampus</code> mit Karte, Pinwand, Nutzerverwaltung), das exakt unseren UML-Klassendiagrammen entspricht und die Entwurfsmuster trägt. <b>Beim Adapter und der Factory ist das Modell sogar Teil des Live-Flusses</b>, beim Observer demonstrieren wir das Muster im Domänenmodell."</div>
+
+  <div class="warn"><b>Ehrlich &amp; gut zu wissen (typische Prüfungsfrage):</b>
+    <ul style="margin:8px 0 0">
+      <li><span class="pat pstr">Adapter</span> &amp; <span class="pat pcre">Factory</span> laufen <b>echt mit</b>: Beim Simulation-Klick werden <code>DatenGenerator</code> (Factory) und <code>MqttDatenAdapter</code> (Adapter) wirklich ausgeführt.</li>
+      <li>Das <span class="pat pbeh">Observer</span>-Muster (<code>Pinwand</code> → <code>Beobachter</code>/<code>Nutzer</code>) lebt im <b>Domänenmodell</b> und zeigt das Muster sauber. Die <b>dauerhaft gespeicherte</b> Pinwand im Frontend läuft über <code>PinwandService</code> + Datenbank. Beides existiert nebeneinander – das ist völlig in Ordnung und genau das, was die Aufgabe verlangt.</li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 id="ordner">3. Der Projekt-Ordnerbaum – komplett erklärt 🗂️</h2>
+  <p><span class="keep" style="color:var(--green)">Grün</span> = euer Code zum Verstehen. <span class="cfg" style="color:var(--accent)">Blau</span> = Konfiguration. <span class="note" style="color:#94a3b8">Grau</span> = Erklärung.</p>
+<div class="tree"><span class="fld">swt26-Virtual-College/</span>
+├── <span class="cfg">docker-compose.yml</span>        <span class="note"># startet ALLE fünf Container mit einem Befehl</span>
+├── <span class="cfg">Dockerfile.java</span>           <span class="note"># Bauplan für EIN Backend-Image (baut die .jar)</span>
+├── <span class="cfg">pom.xml</span>                   <span class="note"># Maven-Chef-Datei: listet die zwei Backend-Module</span>
+├── <span class="cfg">README.md</span> · <span class="cfg">PRAESENTATION.md</span>   <span class="note"># Einstieg + Präsentations-Spickzettel</span>
+├── <span class="fld">docs/</span>
+│   ├── erklaerung.html         <span class="note"># Konzepte & Klausur</span>
+│   └── code-verstehen.html     <span class="note"># DIESE Seite</span>
+│
+├── <span class="fld">frontend/</span>                  <span class="note"># das, was der Nutzer sieht</span>
+│   ├── <span class="cfg">nginx.conf</span>              <span class="note"># leitet /api/... an die richtigen Backends</span>
+│   ├── <span class="cfg">Dockerfile.frontend</span>     <span class="note"># baut React, liefert es mit Nginx aus</span>
+│   ├── <span class="cfg">package.json</span>            <span class="note"># React/Vite + Icons</span>
+│   └── <span class="fld">src/</span>
+│       ├── <span class="keep">main.jsx</span>            <span class="note"># Startpunkt: rendert App in die Seite</span>
+│       ├── <span class="keep">App.jsx</span>             <span class="note"># DIE ganze App (alle 4 Bildschirme)</span>
+│       └── <span class="keep">styles.css</span>          <span class="note"># das komplette Aussehen</span>
+│
+├── <span class="fld">backend_receive/</span>           <span class="note"># UNSERE App (Port 8083)</span>
+│   ├── <span class="cfg">pom.xml</span>                 <span class="note"># Bibliotheken: Web, MQTT, JPA, H2, MariaDB</span>
+│   └── src/main/
+│       ├── resources/<span class="cfg">application.properties</span>  <span class="note"># Port, MQTT-Topic, Datenbank</span>
+│       └── java/swt2/virtualcollege/receive/
+│           ├── <span class="keep">ReceiveApplication.java</span>      <span class="note"># Startknopf</span>
+│           ├── <span class="fld">campus/</span>      <span class="note"># Karte, Räume, Reservierungen</span>
+│           ├── <span class="fld">pinwand/</span>     <span class="note"># Posts, Likes, Observer-Muster</span>
+│           ├── <span class="fld">nutzer/</span>      <span class="note"># Nutzer + Rollen (Vererbung)</span>
+│           ├── <span class="fld">auth/</span>        <span class="note"># Login/Registrierung + Passwort-Hashing</span>
+│           ├── <span class="fld">mensa/</span>       <span class="note"># Speiseplan + MQTT-Empfang + Adapter-Muster</span>
+│           ├── <span class="fld">transit/</span>     <span class="note"># ÖPNV-Abfahrten</span>
+│           └── <span class="fld">persistenz/</span>  <span class="note"># Datenbank: Entities + Repositories</span>
+│
+├── <span class="fld">backend_send/</span>              <span class="note"># simuliertes Fremdsystem (Port 8084)</span>
+│   └── src/main/java/swt2/virtualcollege/send/
+│       ├── <span class="keep">SendApplication.java</span>           <span class="note"># Startknopf</span>
+│       ├── <span class="fld">mensa/</span>           <span class="note"># fachliche Mensa-Daten</span>
+│       └── <span class="fld">simulation/</span>      <span class="note"># Factory-Muster + MQTT-Sender</span>
+│
+└── <span class="fld">mosquitto/</span>
+    └── <span class="cfg">mosquitto.conf</span>          <span class="note"># Einstellungen für den MQTT-Broker</span>
+</div>
+  <div class="tip"><b>Faustregel zum Wiederfinden:</b> Ein <code>…Controller</code> = die Tür von außen (REST). Ein <code>…Service</code> = die Fachlogik dahinter. Ein <code>…Repository</code> = der Datenbank-Zugang. Eine <code>Gespeichert…</code>-Klasse = eine Datenbank-Tabelle. Alles andere = Modell-/Muster-Klassen.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="flows">4. Wie eine Anfrage durch das System fließt 🔁</h2>
+  <p>Am besten versteht man Software, wenn man <b>einer Aktion folgt</b>. Hier sind die wichtigsten – Schritt für Schritt, mit echten Datei- und Methodennamen.</p>
+
+  <h3>Szenario 0: Einloggen (passiert immer zuerst) 🔑</h3>
+  <div class="step"><div class="n">1</div><div class="t">Wer die Seite öffnet, sieht zuerst die <b>Login-Seite</b> (<code>AuthView</code>). Mit dem Demo-Konto <code>student@fh-dortmund.de</code> / <code>passwort123</code> kann man sofort rein. <span class="file">frontend/src/App.jsx</span></div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>login()</code> schickt <code>POST /api/auth/login</code>. Nginx leitet <code>/api/auth/</code> an <code>backend_receive:8083</code>.</div></div>
+  <div class="step"><div class="n">3</div><div class="t"><code>AuthService.login()</code> sucht das <code>Benutzerkonto</code>, prüft das Passwort mit <code>Passwort.pruefe()</code> (PBKDF2) und gibt bei Erfolg ein zufälliges <b>Token</b> zurück. <span class="file">receive/auth/</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t">Das Frontend speichert Token + Konto im <code>localStorage</code> (bleibt nach Reload erhalten) und zeigt die App. Jede weitere Anfrage trägt das Token im Header <code>X-Auth-Token</code>.</div></div>
+
+  <h3>Szenario A: Ein Student reserviert einen Raum</h3>
+  <div class="step"><div class="n">1</div><div class="t">Im Frontend klickt der Student „Reservieren". <code>App.jsx</code> ruft <code>reservieren()</code> auf und schickt ein <code>POST /api/campus/reservierungen</code> mit <code>{raumId, reserviertVon, von, bis}</code>. <span class="file">frontend/src/App.jsx</span></div></div>
+  <div class="step"><div class="n">2</div><div class="t">Nginx sieht den Pfad <code>/api/campus/</code> und leitet ihn an <code>backend_receive:8083</code> weiter. <span class="file">frontend/nginx.conf</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t"><code>CampusController.reservieren(...)</code> nimmt die Anfrage an und gibt sie an den Service. <span class="file">campus/CampusController.java</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t"><code>CampusService.reserviere(...)</code> sucht den Raum, füllt fehlende Werte mit Standards und <b>speichert</b> über <code>repository.save(...)</code> eine neue <code>GespeicherteReservierung</code>. <span class="file">campus/CampusService.java → persistenz/ReservierungRepository</span></div></div>
+  <div class="step"><div class="n">5</div><div class="t">Spring Data JPA schreibt die Zeile in die Tabelle <code>gespeicherte_reservierung</code> (H2 lokal, MariaDB im Docker). Die Antwort geht zurück bis ins Frontend, das danach <code>ladeAlles()</code> aufruft und die Karte neu zeichnet.</div></div>
+  <div class="tip"><b>Beweis in der Demo:</b> <code>SELECT * FROM gespeicherte_reservierung</code> zeigt die neue Zeile. Das ist <b>echte Persistenz</b>, nicht nur Browser-Zustand.</div>
+
+  <h3>Szenario B: Ein Post wird erstellt und geliked</h3>
+  <div class="step"><div class="n">1</div><div class="t"><code>App.jsx</code> → <code>postErstellen()</code> schickt <code>POST /api/pinwand/posts</code>; ein Like schickt <code>POST /api/pinwand/posts/{id}/like</code>.</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>PinwandController</code> nimmt beides an. <span class="file">pinwand/PinwandController.java</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t"><code>PinwandService.erstellePost(...)</code> speichert einen <code>GespeicherterPinwandPost</code>; <code>like(id)</code> lädt den Post, ruft <code>post.like()</code> (Zähler +1) und speichert wieder. Beim allerersten Start legt <code>@PostConstruct initialisiereWennLeer()</code> zwei Demo-Posts an. <span class="file">pinwand/PinwandService.java</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t">Alles landet in der Tabelle <code>gespeicherter_pinwand_post</code>. <span class="model" style="color:var(--purple)">Modell-Schicht:</span> parallel zeigt die Klasse <code>Pinwand</code> mit <code>abonniere()</code>/<code>benachrichtige()</code> das <b>Observer-Muster</b> – sie ist der „saubere Lehrbuch-Teil".</div></div>
+
+  <h3>Szenario C: Die volle Kette – Simulation (Factory → MQTT → Adapter → DB) ⚡</h3>
+  <p>Das ist das <b>Herzstück</b> für die Präsentation, weil hier alle SWT2-Themen auf einmal sichtbar werden.</p>
+  <div class="flow">
+    <div class="box">Klick<small>„Simulation starten"</small></div><div class="arrow">→</div>
+    <div class="box">backend_send<small>Factory baut JSON</small></div><div class="arrow">→</div>
+    <div class="box">Mosquitto<small>publish/subscribe</small></div><div class="arrow">→</div>
+    <div class="box">backend_receive<small>Adapter übersetzt</small></div><div class="arrow">→</div>
+    <div class="box">MariaDB<small>speichert</small></div>
+  </div>
+  <div class="step"><div class="n">1</div><div class="t"><code>App.jsx</code> → <code>simulationStarten()</code> schickt <code>POST /api/simulation/start</code>. Nginx leitet <code>/api/simulation/</code> an <b><code>backend_send:8084</code></b> (das einzige, das nicht an receive geht!).</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>SimulationController</code> → <code>SimulationService.starteSimulation()</code> geht durch die drei Fabriken <code>SpeiseplanGenerator</code>, <code>AuslastungsGenerator</code>, <code>AbfahrtsGenerator</code> und ruft bei jeder <code>erzeugeDaten()</code> (<b>Factory Method</b>). <span class="file">send/simulation/</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t">Jede Fabrik liefert einen <code>Fremddatensatz</code>; <code>veroeffentliche()</code> macht daraus per <code>alsJson()</code> einen Text und schickt ihn via <code>MqttSender.publish(...)</code> an das Topic <code>virtualcollege/data</code>. <span class="file">send/simulation/MqttSender.java</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t">In <code>backend_receive</code> hat <code>MqttEmpfaenger</code> dieses Topic abonniert. <code>messageArrived(...)</code> verzweigt nach Nachrichtentyp: Speiseplan geht durch den <b>Adapter</b> <code>MqttDatenAdapter</code>; Abfahrten gehen in <code>AbfahrtsSpeicher.aktualisiereAusJson()</code>. <span class="file">receive/mensa/MqttEmpfaenger.java + receive/transit/AbfahrtsSpeicher.java</span></div></div>
+  <div class="step"><div class="n">5</div><div class="t">Der Speiseplan wird in den <code>SpeiseplanSpeicher</code> gelegt (für <code>GET /api/mensa/speiseplan</code>) <b>und</b> über <code>SpeisearchivService.speichere(...)</code> dauerhaft in die Tabelle <code>gespeichertes_gericht</code> geschrieben (für <code>GET /api/mensa/historie</code>).</div></div>
+  <div class="step"><div class="n">6</div><div class="t">Das Frontend wartet kurz (650&nbsp;ms), lädt neu und zeigt: Mensa-Quelle und Historie ändern sich; außerdem zeigt ÖPNV den via MQTT empfangenen VRR-Snapshot inklusive Quelle.</div></div>
+  <div class="warn"><b>Ehrlicher Hinweis (gut für eine starke Antwort):</b> Speiseplan und Abfahrt werden im Empfänger ausgewertet; nur <code>auslastung</code> ist noch ein reines Simulationsprodukt. VRR kann offline sein – dann ist der Fallback im Feld <code>quelle</code> sichtbar.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="receive">5. backend_receive – Paket für Paket 🧠</h2>
+  <p class="lead">Unser Haupt-Backend (Port 8083). Jedes Unter-Paket ist ein eigenes „Thema" (Vertical Slicing). <span class="pill run">L</span> = lauffähige Schicht, <span class="pill model">M</span> = Modell-Schicht.</p>
+
+  <h3>📦 campus/ – Karte, Räume, Reservierungen</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>CampusController</code></td><td><span class="pill run">L</span></td><td><code>GET /api/campus/karte</code> (Räume+Veranstaltungen+Reservierungen) und <code>POST /api/campus/reservierungen</code>. Definiert die JSON-Formate als <code>record</code>s (<code>RaumInfo</code>, <code>VeranstaltungInfo</code>, …).</td></tr>
+    <tr><td><code>CampusService</code></td><td><span class="pill run">L</span></td><td>Hält die <b>statische</b> Raum- und Veranstaltungsliste (eure 4 Räume: Audimax, Mensa, Labor&nbsp;105, Seminarraum&nbsp;303) und speichert Reservierungen über das Repository.</td></tr>
+    <tr><td><code>DigitalerCampus</code></td><td><span class="pill model">M</span></td><td>Die <b>Fassade</b> aus dem Diagramm: „besteht aus" <code>LiveCampusKarte</code>, <code>Pinwand</code>, <code>Nutzerverwaltung</code>.</td></tr>
+    <tr><td><code>LiveCampusKarte</code>, <code>Gebaeude</code>, <code>Raum</code>, <code>Koordinaten</code></td><td><span class="pill model">M</span></td><td>Die fachliche Kartenstruktur aus SWT&nbsp;1 (Gebäude hat Räume, Raum hat Koordinaten/Belegungen).</td></tr>
+    <tr><td><code>Belegung</code> → <code>Reservierung</code> / <code>Veranstaltung</code></td><td><span class="pill model">M</span></td><td>Eine Raum-Belegung mit zwei Spezialfällen (Vererbung).</td></tr>
+  </table>
+  <div class="tip"><b>Wichtig zu wissen:</b> Die Räume sind <b>bewusst fest im Code</b> (in <code>CampusService</code>), weil sie euer Kanban-Konzept abbilden. <b>Reservierungen</b> sind dagegen <b>echt persistent</b>. Das ist eine saubere V1-Entscheidung.</div>
+
+  <h3>📦 pinwand/ – Posts, Likes, Observer-Muster</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>PinwandController</code></td><td><span class="pill run">L</span></td><td><code>GET</code>/<code>POST /api/pinwand/posts</code> und <code>POST …/{id}/like</code>.</td></tr>
+    <tr><td><code>PinwandService</code></td><td><span class="pill run">L</span></td><td>Erstellt/lädt/liked Posts über das Repository; legt beim ersten Start 2 Demo-Posts an.</td></tr>
+    <tr><td><code>Pinwand</code></td><td><span class="pill model">M</span></td><td><b>Subjekt</b> des Observer-Musters: <code>abonniere()</code>, <code>meldeAb()</code>, <code>benachrichtige()</code>, <code>neuerPost()</code>.</td></tr>
+    <tr><td><code>Beobachter</code> <span class="small">«interface»</span></td><td><span class="pill model">M</span></td><td>Der Vertrag „benachrichtige mich" – Methode <code>aktualisiere(Benachrichtigung)</code>.</td></tr>
+    <tr><td><code>Post</code>, <code>Kommentar</code>, <code>Like</code>, <code>Benachrichtigung</code></td><td><span class="pill model">M</span></td><td>Die fachlichen Pinwand-Bausteine.</td></tr>
+  </table>
+
+  <h3>📦 nutzer/ – Nutzer und Rollen</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>Nutzer</code></td><td><span class="pill model">M</span></td><td><b>implements Beobachter</b> → jeder Nutzer kann Pinwand-Benachrichtigungen empfangen (<code>aktualisiere()</code> schreibt eine Log-Meldung).</td></tr>
+    <tr><td><code>Student</code>, <code>Betreuer</code>, <code>Verwaltungsangestellter</code></td><td><span class="pill model">M</span></td><td>Erben von <code>Nutzer</code> (Vererbung / die drei Rollen aus eurem OOA).</td></tr>
+    <tr><td><code>Nutzerverwaltung</code></td><td><span class="pill model">M</span></td><td>Verwaltet die Nutzerliste.</td></tr>
+  </table>
+
+  <h3>📦 auth/ – Login, Registrierung &amp; Passwort-Sicherheit <span class="pill run">L</span></h3>
+  <p>Damit das Tool <b>richtig nutzbar</b> ist, gibt es eine echte Anmeldung. Niemand sieht den Campus, ohne sich einzuloggen. Die Passwörter werden <b>nie im Klartext</b> gespeichert.</p>
+  <table>
+    <tr><th>Klasse</th><th>Aufgabe</th></tr>
+    <tr><td><code>AuthController</code></td><td>REST-Tür: <code>POST /api/auth/registrieren</code>, <code>POST /api/auth/login</code>, <code>GET /api/auth/ich</code>, <code>POST /api/auth/logout</code>.</td></tr>
+    <tr><td><code>AuthService</code></td><td>Die Logik: prüft E-Mail/Passwort, vergibt beim Login ein zufälliges <b>Token</b> (merkt sich <code>token → email</code>), legt beim ersten Start ein Demo-Konto an.</td></tr>
+    <tr><td><code>Passwort</code></td><td>Das sichere Hashing mit <b>PBKDF2 + Salt</b> (120.000 Runden). <code>hash()</code> beim Registrieren, <code>pruefe()</code> beim Login.</td></tr>
+    <tr><td><code>Benutzerkonto</code> <span class="small">@Entity</span></td><td>= Tabelle <code>benutzerkonto</code> (email <em>unique</em>, name, rolle, passwortHash, erstelltAm).</td></tr>
+    <tr><td><code>BenutzerkontoRepository</code></td><td>Datenbank-Zugang: <code>findByEmail()</code>, <code>existsByEmail()</code>.</td></tr>
+    <tr><td><code>FehlerBehandlung</code></td><td>Sorgt dafür, dass Fehler als sauberes JSON mit <b>Klartext-Meldung</b> ankommen (z.&nbsp;B. „E-Mail oder Passwort ist falsch."), statt nur einer nackten 401.</td></tr>
+  </table>
+  <div class="analogy"><b>🔑 Token = Garderoben-Zettel:</b> Nach dem Login bekommt der Browser ein Token. Er zeigt es bei jeder Anfrage im Header <code>X-Auth-Token</code> vor – wie einen Garderoben-Zettel, mit dem man seine Jacke wiederbekommt, ohne jedes Mal den Ausweis zu zeigen.</div>
+  <div class="analogy"><b>🧂 Hash + Salt:</b> Aus dem Passwort wird eine Einbahn-Prüfsumme. „Salt" ist eine pro Konto zufällige Zutat, damit zwei gleiche Passwörter <b>trotzdem verschieden</b> aussehen. Man kann aus dem Hash <b>nicht</b> das Passwort zurückrechnen.</div>
+  <div class="key"><b>Schöner Bezug zu eurem Modell:</b> Die Rolle im Konto (<code>Student</code> / <code>Betreuer</code> / <code>Verwaltungsangestellter</code>) ist genau die Vererbungs-Hierarchie aus dem <code>nutzer/</code>-Paket. Auth ist also nicht „dazugeklebt", sondern passt zu eurem OOA/OOD.</div>
+  <div class="warn"><b>Ehrlich (gut für eine Nachfrage):</b> Das ist eine <b>schlanke Demo-Authentifizierung</b> fürs Praktikum: Passwörter sind sicher gehasht, aber die Tokens liegen nur im Arbeitsspeicher und laufen nicht ab, und der Broker erlaubt anonyme Verbindungen. Für den echten Produktivbetrieb würde man z.&nbsp;B. <b>Spring Security</b> mit JWT/Sessions und HTTPS nehmen.</div>
+
+  <h3>📦 mensa/ – Speiseplan, MQTT-Empfang, Adapter-Muster</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>MensaController</code></td><td><span class="pill run">L</span></td><td><code>GET /api/mensa/speiseplan</code> (zeigt <code>quelle</code> = Beispiel oder „MQTT live") und <code>GET /api/mensa/historie</code> (aus der DB).</td></tr>
+    <tr><td><code>MqttEmpfaenger</code></td><td><span class="pill run">L</span></td><td>Verbindet sich (mit Wiederholung) zum Broker, <b>abonniert</b> das Topic, reagiert in <code>messageArrived()</code> auf Speiseplan-Nachrichten.</td></tr>
+    <tr><td><code>MqttDatenAdapter</code></td><td><span class="pill run">L</span> + <span class="pill model">M</span></td><td><b>Der Adapter</b>: erfüllt das Interface <code>SpeiseplanQuelle</code> und übersetzt eine <code>MqttRohNachricht</code> (JSON) in einen <code>Speiseplan</code>. Wird <b>echt</b> im Empfang benutzt <em>und</em> ist die Muster-Klasse aus dem Diagramm.</td></tr>
+    <tr><td><code>SpeiseplanQuelle</code> <span class="small">«interface»</span>, <code>MqttRohNachricht</code></td><td><span class="pill model">M</span></td><td>Target-Vertrag und Adaptee (Rohnachricht) des Adapter-Musters.</td></tr>
+    <tr><td><code>SpeiseplanSpeicher</code></td><td><span class="pill run">L</span></td><td>Hält den zuletzt empfangenen Speiseplan im Arbeitsspeicher (für die <code>/speiseplan</code>-Antwort).</td></tr>
+    <tr><td><code>Speiseplan</code>, <code>Gericht</code></td><td><span class="pill run">L</span></td><td>Die sauberen Datenobjekte (records).</td></tr>
+  </table>
+
+  <h3>📦 transit/ – ÖPNV</h3>
+  <p><code>AbfahrtsSpeicher</code> <span class="pill run">L</span> liest den letzten <code>"typ":"abfahrt"</code>-Snapshot aus MQTT-JSON und hält Quelle, Haltestelle und Abfahrten im Speicher. <code>TransitController</code> liefert diesen Snapshot mit <code>GET /api/transit/abfahrten</code>. Vor der ersten Simulation steht dort sichtbar „Warte auf VRR-Daten via MQTT".</p>
+
+  <h3>📦 persistenz/ – die Datenbank-Schicht</h3>
+  <table>
+    <tr><th>Klasse</th><th>Aufgabe</th></tr>
+    <tr><td><code>GespeichertesGericht</code> <span class="small">@Entity</span></td><td>= Tabelle <code>gespeichertes_gericht</code> (name, preis, empfangenAm).</td></tr>
+    <tr><td><code>GespeicherterPinwandPost</code> <span class="small">@Entity</span></td><td>= Tabelle <code>gespeicherter_pinwand_post</code> (autor, rolle, kategorie, titel, inhalt, likes, …).</td></tr>
+    <tr><td><code>GespeicherteReservierung</code> <span class="small">@Entity</span></td><td>= Tabelle <code>gespeicherte_reservierung</code> (raumId, raumName, reserviertVon, von, bis, status, …).</td></tr>
+    <tr><td><code>…Repository</code> (3 Stück)</td><td>Spring Data JPA: ihr schreibt nur eine Interface-Methode wie <code>findAllByOrderByIdDesc()</code> – den DB-Code generiert Spring automatisch.</td></tr>
+    <tr><td><code>SpeisearchivService</code></td><td>Speichert empfangene Gerichte (<code>speichere()</code>), liefert die <code>historie()</code> und die <code>anzahl()</code>.</td></tr>
+  </table>
+  <div class="analogy"><b>📓 Vergleich Entity ↔ Tabelle:</b> Eine <code>@Entity</code>-Klasse ist die <b>Vorlage einer Tabelle</b>, jedes Objekt davon eine <b>Zeile</b>. Spring/Hibernate legt die Tabellen beim Start automatisch an (<code>ddl-auto=update</code>).</div>
+
+  <!-- ============================================================ -->
+  <h2 id="send">6. backend_send – Paket für Paket 🚏</h2>
+  <p class="lead">Das simulierte Fremdsystem (Port 8084). Es <b>erzeugt</b> Daten und <b>sendet</b> sie per MQTT – mehr nicht. Hier steckt das <b>Factory-Method</b>-Muster.</p>
+
+  <h3>📦 mensa/</h3>
+  <p><code>Mensa</code>, <code>Speiseplan</code>, <code>Gericht</code>: fachliche Studierendenwerk-Daten. <code>Mensa.getSpeiseplan()</code> liefert einen festen Beispiel-Speiseplan.</p>
+
+  <h3>📦 simulation/ – Factory + MQTT-Sender</h3>
+  <table>
+    <tr><th>Klasse</th><th>Rolle im Factory-Muster</th></tr>
+    <tr><td><code>SimulationController</code></td><td>REST-Tür: <code>POST /api/simulation/start</code>.</td></tr>
+    <tr><td><code>SimulationService</code></td><td><b>Client</b> der Factory: hält die Liste der 3 Generatoren, ruft <code>erzeugeDaten()</code> und sendet via <code>MqttSender</code>. Kennt <b>kein</b> <code>if typ==…</code>!</td></tr>
+    <tr><td><code>DatenGenerator</code> <span class="small">«abstract»</span></td><td><b>Creator</b>: die abstrakte Fabrikmethode <code>erzeugeDaten()</code>.</td></tr>
+    <tr><td><code>SpeiseplanGenerator</code>, <code>AuslastungsGenerator</code>, <code>AbfahrtsGenerator</code></td><td><b>ConcreteCreators</b>: je eine Fabrik pro Datenart. Der <code>AbfahrtsGenerator</code> delegiert die externe Abfrage an <code>VrrAbfahrten</code>.</td></tr>
+    <tr><td><code>Fremddatensatz</code> <span class="small">«interface»</span></td><td><b>Product</b>: gemeinsamer Vertrag <code>alsJson()</code>.</td></tr>
+    <tr><td><code>SpeiseplanDaten</code>, <code>AuslastungsDaten</code>, <code>AbfahrtsDaten</code></td><td><b>ConcreteProducts</b>: bauen ihren JSON-Text selbst (z.&nbsp;B. <code>{"typ":"speiseplan",…}</code>).</td></tr>
+    <tr><td><code>MqttSender</code></td><td>Verbindet sich zum Broker und <b>publisht</b> (QoS&nbsp;1, „retained" = Broker hebt die letzte Nachricht auf).</td></tr>
+    <tr><td><code>VrrAbfahrten</code></td><td>Ruft per JDK <code>HttpClient</code> den VRR-EFA-Abfahrtsmonitor für „Dortmund Universität S" ab und liefert bei Netzausfall einen klar markierten Fallback.</td></tr>
+  </table>
+  <div class="tip"><b>Warum ist das ein gutes Muster-Beispiel?</b> Eine neue Datenart hinzufügen = <b>eine</b> neue Generator-Klasse + eine Zeile in der Liste im <code>SimulationService</code>. Kein bestehender Code wird geändert (Offen-Geschlossen-Prinzip).</div>
+
+  <!-- ============================================================ -->
+  <h2 id="frontend">7. Das Frontend (App.jsx) – Bildschirm für Bildschirm 🖥️</h2>
+  <p>Die ganze Oberfläche steckt in <b>einer Datei</b> (<code>frontend/src/App.jsx</code>). Sie ist in kleine Funktions-Komponenten unterteilt. Oben stehen die <b>API-Adressen</b> (relative Pfade), die der Browser an Nginx schickt.</p>
+  <div class="key"><b>Zuerst der Login:</b> Solange niemand eingeloggt ist, zeigt <code>App</code> nur die <code>AuthView</code> (Login/Registrieren). Erst nach dem Login erscheinen die vier Tabs unten. Das eingeloggte Konto steht oben rechts im Header, mit Logout-Knopf.</div>
+  <table>
+    <tr><th>Bereich (Tab)</th><th>Komponente</th><th>Was er tut / welche API</th></tr>
+    <tr><td><b>Live Campus</b></td><td><code>CampusView</code> + <code>CampusMap</code> + <code>RoomPanel</code></td><td>Leaflet zeichnet echte Straßen-/Satelliten-Tiles aus den <code>lat/lng</code>-Daten. Browser-Geolocation + OSRM ergeben den Fußweg mit Pfeilen; Marker öffnet Details und Reservierung.</td></tr>
+    <tr><td><b>Pinwand</b></td><td><code>PinwandView</code></td><td>Liste der Posts, Formular für neue Posts, Like-Button (<code>/api/pinwand/posts</code> + <code>…/{id}/like</code>).</td></tr>
+    <tr><td><b>Live-Daten</b></td><td><code>DatenView</code></td><td>Mensa, ÖPNV und DB-Historie als Kacheln; Knopf „Simulation starten" (<code>POST /api/simulation/start</code>).</td></tr>
+    <tr><td><b>Login / Registrieren</b></td><td><code>AuthView</code></td><td>Vorgeschaltet: <code>/api/auth/login</code> bzw. <code>/api/auth/registrieren</code>. Ohne Login kein Zugang.</td></tr>
+    <tr><td><b>Einstellungen</b></td><td><code>EinstellungenView</code></td><td>Zeigt das Konto (E-Mail/Name/Rolle, read-only), zwei UI-Schalter und den Abmelden-Knopf.</td></tr>
+  </table>
+  <h4>Die wichtigsten Funktionen in App.jsx</h4>
+  <table>
+    <tr><th>Funktion</th><th>Was sie macht</th></tr>
+    <tr><td><code>login()</code> / <code>registrieren()</code> / <code>logout()</code></td><td>Anmelden/Registrieren (Token speichern) bzw. Abmelden (Token löschen).</td></tr>
+    <tr><td><code>apiJson()</code></td><td>Zentrale Fetch-Hilfe: hängt automatisch das <code>X-Auth-Token</code> an und zeigt bei Fehlern die Klartext-Meldung des Backends.</td></tr>
+    <tr><td><code>ladeAlles()</code></td><td>Holt nach dem Login <b>parallel</b> (Promise.all) alle 5 Datenquellen und füllt den React-Zustand.</td></tr>
+    <tr><td><code>reservieren()</code></td><td>Sendet die Reservierung (mit dem eingeloggten Namen), lädt danach alles neu.</td></tr>
+    <tr><td><code>postErstellen()</code> / <code>postLiken()</code></td><td>Speichert Post bzw. Like und aktualisiert die Liste.</td></tr>
+    <tr><td><code>simulationStarten()</code></td><td>POST an backend_send, wartet 650&nbsp;ms (MQTT braucht einen Moment), lädt neu, springt auf „Live-Daten".</td></tr>
+  </table>
+  <div class="analogy"><b>🧩 React in einem Satz:</b> React hält „Zustand" (z.&nbsp;B. die Postliste) und zeichnet die Seite automatisch neu, sobald sich der Zustand ändert. Ihr beschreibt also <em>was</em> angezeigt wird, nicht <em>wie</em> man es Schritt für Schritt malt.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="infra">8. Die Infrastruktur (Docker, Nginx, Mosquitto, Properties) 🐳</h2>
+  <table>
+    <tr><th>Datei</th><th>Was drinsteht / wofür</th></tr>
+    <tr><td><code>docker-compose.yml</code></td><td>Definiert die <b>fünf App-Dienste</b> (frontend, backend_receive, backend_send, mosquitto, mariadb) plus <b>optional <code>adminer</code></b> (DB-Ansicht), ihre Ports und wie sie sich finden. Setzt für receive per Umgebungsvariable die DB auf MariaDB (<code>vcuser</code>/<code>vcpass</code>) und den Broker auf <code>tcp://mosquitto:1883</code>.</td></tr>
+    <tr><td><code>adminer</code> (Container, Port 8091)</td><td><b>Datenbank im Browser</b>: fertiges Web-Tool, um die MariaDB-Tabellen anzusehen (statt Konsole). Öffnen: <code>http://localhost:8091</code> · Login: Server <code>mariadb</code>, <code>vcuser</code>/<code>vcpass</code>, DB <code>virtualcollege</code>. Optionales Entwickler-Werkzeug, nicht Teil der eigentlichen Architektur.</td></tr>
+    <tr><td><code>Dockerfile.java</code></td><td>Baut <b>ein</b> Backend: nimmt den Quellcode, baut mit Maven die <code>.jar</code>, packt sie mit Java&nbsp;21. Wird für beide Backends benutzt (Parameter <code>MODULE</code>).</td></tr>
+    <tr><td><code>frontend/nginx.conf</code></td><td>Lauscht auf Port&nbsp;80. Leitet <code>/api/mensa</code>, <code>/api/transit</code>, <code>/api/campus</code>, <code>/api/pinwand</code>, <code>/api/auth</code> → <code>backend_receive:8083</code> und <code>/api/simulation</code> → <code>backend_send:8084</code>. Alles andere (<code>/</code>) = die React-Seite.</td></tr>
+    <tr><td><code>mosquitto/mosquitto.conf</code></td><td>Zwei Zeilen: <code>listener 1883</code> + <code>allow_anonymous true</code> (für die Demo dürfen sich beide Backends ohne Passwort verbinden).</td></tr>
+    <tr><td><code>application.properties</code> (je Backend)</td><td>Port, MQTT-Adresse/Topic, Datenbank-Zugang. Lokal: H2 im Speicher. Im Docker: MariaDB (per Umgebungsvariable überschrieben).</td></tr>
+  </table>
+  <div class="key"><b>Warum überhaupt Nginx als Zwischenstelle?</b> Der Browser kennt keine Container-Namen wie <code>backend_receive</code>. Er ruft nur <code>/api/...</code> auf der gleichen Adresse auf. Nginx ist der „Empfang", der jede Anfrage an das richtige Backend weiterreicht. Das passt 1:1 zum „Frontend Web Server" aus dem Verteilungsdiagramm.</div>
+
+  <!-- ============================================================ -->
+  <h2 id="muster">9. Die 3 Entwurfsmuster – wo sie WIRKLICH im Code stehen 🧩</h2>
+  <p>Praktikum&nbsp;4 verlangt drei Muster aus drei Kategorien (Singleton ist verboten). Hier zum Nachschlagen, welche Dateien zu jedem Muster gehören:</p>
+  <table>
+    <tr><th>Muster</th><th>Kategorie</th><th>Dateien</th><th>Kernidee in einem Satz</th></tr>
+    <tr><td><span class="pat pcre">Factory&nbsp;Method</span></td><td>Erzeugung</td><td><code>send/simulation/</code>: <code>DatenGenerator</code> (+3 Unterklassen), <code>Fremddatensatz</code> (+3 …Daten)</td><td>Objekterzeugung pro Datenart in eigene Fabriken auslagern – der Aufrufer braucht kein <code>if</code>.</td></tr>
+    <tr><td><span class="pat pstr">Adapter</span></td><td>Struktur</td><td><code>receive/mensa/</code>: <code>SpeiseplanQuelle</code>, <code>MqttDatenAdapter</code>, <code>MqttRohNachricht</code></td><td>Fremdes JSON-Format in unser sauberes <code>Speiseplan</code>-Objekt übersetzen.</td></tr>
+    <tr><td><span class="pat pbeh">Observer</span></td><td>Verhalten</td><td><code>receive/pinwand/</code>: <code>Pinwand</code>, <code>Beobachter</code>; <code>receive/nutzer/Nutzer</code></td><td>Bei neuem Post werden alle abonnierten Nutzer automatisch benachrichtigt.</td></tr>
+  </table>
+  <p class="small">Ausführliche Theorie + die zugehörigen UML-Klassendiagramme stehen in <a href="erklaerung.html#p4" style="color:var(--accent)">erklaerung.html, Kapitel&nbsp;13</a>.</p>
+
+  <!-- ============================================================ -->
+  <h2 id="glossar">10. Mini-Glossar (jeder Begriff in einem Satz) 📖</h2>
+  <table>
+    <tr><td><b>Spring Boot</b></td><td>Java-Baukasten, der den Server-Aufbau (Web, Datenbank, …) automatisch erledigt.</td></tr>
+    <tr><td><b>REST-Controller</b></td><td>Eine Klasse, die auf Web-Adressen (<code>/api/...</code>) antwortet.</td></tr>
+    <tr><td><b>Service</b></td><td>Die Fachlogik hinter dem Controller (damit der Controller klein bleibt).</td></tr>
+    <tr><td><b>Repository</b></td><td>Automatischer Datenbank-Zugang (Spring Data JPA).</td></tr>
+    <tr><td><b>Entity (@Entity)</b></td><td>Eine Klasse, die einer Datenbank-Tabelle entspricht.</td></tr>
+    <tr><td><b>record</b></td><td>Kurze, unveränderliche Java-Datenklasse – ideal für JSON-Antworten.</td></tr>
+    <tr><td><b>MQTT</b></td><td>Nachrichten-Protokoll: einer „publisht", andere „subscriben" – über einen Broker.</td></tr>
+    <tr><td><b>Broker (Mosquitto)</b></td><td>Der Vermittler, der MQTT-Nachrichten weiterreicht.</td></tr>
+    <tr><td><b>Topic</b></td><td>Der „Themenkanal" beim Broker – bei uns <code>virtualcollege/data</code>.</td></tr>
+    <tr><td><b>JPA / Hibernate</b></td><td>Übersetzt Java-Objekte automatisch in Datenbank-Zeilen und zurück.</td></tr>
+    <tr><td><b>H2 / MariaDB</b></td><td>H2 = winzige DB im Speicher (Entwicklung). MariaDB = echte DB (Produktion/Docker).</td></tr>
+    <tr><td><b>Nginx</b></td><td>Web-Server, der die React-Seite ausliefert und <code>/api/...</code> weiterleitet.</td></tr>
+    <tr><td><b>Container / Image</b></td><td>Image = eingefrorene Programm-Vorlage. Container = ein daraus gestartetes laufendes Programm.</td></tr>
+    <tr><td><b>Vertical Slicing / Modulith</b></td><td>Ein Backend, aber pro Thema ein eigenes Paket (campus, pinwand, …).</td></tr>
+    <tr><td><b>Authentifizierung</b></td><td>Nachweis „wer bist du?" – bei uns E-Mail + Passwort, danach ein Token.</td></tr>
+    <tr><td><b>Token</b></td><td>Zufälliger „Garderoben-Zettel" nach dem Login; geht bei jeder Anfrage im Header <code>X-Auth-Token</code> mit.</td></tr>
+    <tr><td><b>Hash + Salt (PBKDF2)</b></td><td>Einbahn-Verschlüsselung des Passworts mit zufälliger Zutat – aus dem Hash kommt man nicht zum Passwort zurück.</td></tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2 id="rollen">11. Wer erklärt was? (Verantwortungsbereiche) 🎤</h2>
+  <p>Laut Folie muss <b>jedes Teammitglied seinen Bereich vorstellen</b>. Ein sinnvoller Schnitt, der zu diesem Code passt:</p>
+  <table>
+    <tr><th>Bereich</th><th>Was man dazu sagen können muss</th><th>Wer</th></tr>
+    <tr><td>Frontend &amp; Demo</td><td>Die 4 Bildschirme, wie React mit den Backends redet (App.jsx, nginx).</td><td>____</td></tr>
+    <tr><td>backend_receive + Persistenz</td><td>Controller→Service→Repository, die 3 Tabellen, Adapter-Muster.</td><td>____</td></tr>
+    <tr><td>backend_send + MQTT</td><td>Factory-Muster, MqttSender/Empfaenger, Broker, das Topic.</td><td>____</td></tr>
+    <tr><td>Architektur &amp; Diagramme</td><td>Verteilungsdiagramm, die zwei Schichten, die 3 Muster, DBMS-Begründung.</td><td>____</td></tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2 id="karte-live">12. Reale Karte, Routing und VRR-Datenfluss 🗺️</h2>
+  <table>
+    <tr><th>Teil</th><th>Datei / Technik</th><th>Datenfluss</th></tr>
+    <tr><td>Marker</td><td><code>CampusService</code> + <code>CampusController.RaumInfo</code></td><td>Backend sendet WGS84-Werte <code>lat/lng</code>; <code>CampusMap</code> setzt Leaflet-Marker am Campus EFS 40/42.</td></tr>
+    <tr><td>Kartenbild</td><td><code>frontend/index.html</code>, Leaflet</td><td>Browser lädt wahlweise OSM-Straßentiles oder Esri-Satellitentiles. Attribution bleibt sichtbar.</td></tr>
+    <tr><td>Standort</td><td><code>navigator.geolocation</code></td><td>Nach Einwilligung nur im Browserzustand; keine Speicherung im Backend.</td></tr>
+    <tr><td>Fußroute</td><td><code>routing.openstreetmap.de</code> (OSRM)</td><td>Start/Ziel → GeoJSON-Linie → Leaflet-Polyline + Richtungspfeile, Meter und Minuten.</td></tr>
+    <tr><td>Abfahrten</td><td><code>VrrAbfahrten</code> → <code>AbfahrtsDaten</code> → MQTT → <code>AbfahrtsSpeicher</code></td><td>VRR-JSON wird zum Factory-Produkt und läuft über die geforderte asynchrone Komponentengrenze.</td></tr>
+  </table>
+  <div class="key"><b>Warum zwei Fallbacks?</b> Die Karte fällt bei fehlendem Leaflet-CDN auf die alte lokale Skizze zurück. Die VRR-Abfrage liefert bei Netzausfall zeitrelative, ausdrücklich als „Offline-Fallback" markierte Abfahrten. Damit bleibt die Präsentation bedienbar, ohne Scheindaten als live zu verkaufen.</div>
+
+  <hr>
+  <p class="small">Erstellt als Code-Rundgang für Virtual College (SWT2, Praktikum&nbsp;4). Stand: backend_receive, backend_send, MQTT, MariaDB, Login/Authentifizierung, reale Karte/Navigation und VRR-Daten umgesetzt &amp; per Docker testbar. Konzepte &amp; Diagramme: <a href="erklaerung.html" style="color:var(--accent)">erklaerung.html</a> · Präsentations-Ablauf: <a href="../PRAESENTATION.md" style="color:var(--accent)">PRAESENTATION.md</a>.</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Lokale Abhaengigkeiten werden im Docker-Build frisch installiert.
+node_modules
+
+# Gebaute Dateien entstehen im Container erneut.
+dist
+
+# Lokale Logdateien gehoeren nicht in den Docker-Build-Kontext.
+npm-debug.log
