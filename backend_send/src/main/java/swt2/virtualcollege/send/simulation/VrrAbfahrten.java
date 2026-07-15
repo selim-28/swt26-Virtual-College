@@ -29,18 +29,31 @@ public class VrrAbfahrten {
     private static final Logger log = LoggerFactory.getLogger(VrrAbfahrten.class);
     private static final JsonMapper MAPPER = JsonMapper.builder().build();
     private static final String HALTESTELLE = "Dortmund Universität";
-    private static final String ENDPOINT = "https://efa.vrr.de/vrr/XSLT_DM_REQUEST";
+    private static final String STANDARD_ENDPOINT = "https://efa.vrr.de/vrr/XSLT_DM_REQUEST";
+
+    // Der EFA-Endpunkt als Feld: im Betrieb der echte VRR-Server, im Test eine
+    // absichtlich unerreichbare Adresse (so laesst sich der Fallback pruefen).
+    private final String endpoint;
 
     private final HttpClient http = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(4))
             .build();
+
+    public VrrAbfahrten() {
+        this(STANDARD_ENDPOINT);
+    }
+
+    // Fuer Tests (US 6.2): erlaubt, den Dienst gezielt "ausfallen" zu lassen.
+    VrrAbfahrten(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
     public AbfahrtsDaten holeAbfahrten() {
         try {
             String query = "?language=de&outputFormat=JSON&type_dm=stop&mode=direct"
                     + "&useRealtime=1&limit=8&name_dm="
                     + URLEncoder.encode(HALTESTELLE, StandardCharsets.UTF_8);
-            HttpRequest request = HttpRequest.newBuilder(URI.create(ENDPOINT + query))
+            HttpRequest request = HttpRequest.newBuilder(URI.create(endpoint + query))
                     .timeout(Duration.ofSeconds(7))
                     .header("User-Agent", "VirtualCollege-SWT2/1.0 (student project)")
                     .GET()

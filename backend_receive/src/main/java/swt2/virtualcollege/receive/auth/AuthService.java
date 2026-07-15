@@ -1,65 +1,77 @@
 package swt2.virtualcollege.receive.auth;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.annotation.PostConstruct;
 
 /*
  * AUTHENTIFIZIERUNG – die Fachlogik (Registrieren, Login, Logout).
  *
- * Ablauf:
- *  - registriere(): legt ein neues Benutzerkonto an (Passwort wird gehasht).
- *  - login(): prueft E-Mail + Passwort und gibt ein zufaelliges "Token" zurueck.
- *  - ausToken(): findet zu einem Token das eingeloggte Konto.
- *  - logout(): macht ein Token ungueltig.
- *
- * Das Token ist wie ein "Garderoben-Zettel": Nach dem Login bekommt der
- * Browser ein Token und zeigt es bei jeder Anfrage vor. Wir merken uns die
- * gueltigen Tokens hier im Arbeitsspeicher (Map token -> email).
- *
- * Hinweis (ehrlich): Das ist eine schlanke Demo-Authentifizierung fuer das
- * Praktikum. Passwoerter sind sicher gehasht, aber Tokens liegen nur im
- * Speicher und laufen nicht ab. Fuer den Produktivbetrieb wuerde man z. B.
- * Spring Security mit JWT/Sessions nehmen.
+ * PRODUKTIONS-VARIANTE mit Spring Security + JWT:
+ *  - Passwoerter werden ueber den Spring PasswordEncoder gehasht/geprueft
+ *    (intern weiterhin sicheres PBKDF2, siehe PbkdfPasswortEncoder).
+ *  - Beim Login gibt es KEINEN selbst verwalteten Token mehr, sondern einen
+ *    signierten JWT-Ausweis (JwtDienst). Das Backend muss sich keine Tokens
+ *    mehr merken ("stateless") – es prueft nur die Signatur.
+ *  - Logout sperrt das Token gezielt in der TokenSperrliste, damit es sofort
+ *    ungueltig ist.
  */
 @Service
 public class AuthService {
 
     private final BenutzerkontoRepository repository;
+    private final PasswordEncoder passwortEncoder;
+    private final JwtDienst jwt;
+    private final TokenSperrliste sperrliste;
 
-    // Gueltige Tokens:  token -> email.  Beim Neustart leer (man muss sich neu einloggen).
-    private final Map<String, String> tokens = new ConcurrentHashMap<>();
-
-    public AuthService(BenutzerkontoRepository repository) {
+    public AuthService(BenutzerkontoRepository repository,
+                       PasswordEncoder passwortEncoder,
+                       JwtDienst jwt,
+                       TokenSperrliste sperrliste) {
         this.repository = repository;
+        this.passwortEncoder = passwortEncoder;
+        this.jwt = jwt;
+        this.sperrliste = sperrliste;
+    }
+
+    /** Ergebnis einer Anmeldung: der JWT-Ausweis + das zugehoerige Konto. */
+    public record Sitzung(String token, Benutzerkonto konto) {
     }
 
     /*
-     * Legt beim ersten Start ein Demo-Konto an, damit man sich sofort
-     * einloggen kann (praktisch fuer die Praesentation).
-     * Login:  student@fh-dortmund.de  /  passwort123
+     * Legt beim ersten Start DREI Demo-Konten an - eines pro Rolle, damit man
+     * in der Praesentation alle Sichten zeigen kann (Passwort jeweils: passwort123):
+     *   student@fh-dortmund.de  -> Student   (reserviert Lern-/Seminarraeume)
+     *   prof@fh-dortmund.de     -> Professor (darf zusaetzlich Hoersaele reservieren)
+     *   admin@fh-dortmund.de    -> Admin     (darf ALLES verwalten, z. B. loeschen)
      */
     @PostConstruct
-    public void demoKontoAnlegen() {
-        if (!repository.existsByEmail("student@fh-dortmund.de")) {
+    public void demoKontenAnlegen() {
+        legeAnWennNeu("student@fh-dortmund.de", "Demo Student", "Student");
+        legeAnWennNeu("prof@fh-dortmund.de", "Prof. Demo", "Professor");
+        legeAnWennNeu("admin@fh-dortmund.de", "Demo Admin", "Admin");
+    }
+
+    private void legeAnWennNeu(String email, String name, String rolle) {
+        if (!repository.existsByEmail(email)) {
             repository.save(new Benutzerkonto(
-                    "student@fh-dortmund.de",
-                    "Demo Student",
-                    "Student",
-                    Passwort.hash("passwort123"),
+                    email, name, rolle,
+                    passwortEncoder.encode("passwort123"),
                     Instant.now()
             ));
         }
     }
 
-    public Benutzerkonto registriere(String email, String name, String rolle, String passwort) {
+    /** Legt ein neues Konto an und meldet direkt an (gibt einen JWT-Ausweis zurueck). */
+    public Sitzung registriere(String email, String name, String rolle, String passwort) {
         String e = normalisiere(email);
         if (e.isBlank() || !e.contains("@")) {
             throw fehler("Bitte eine gueltige E-Mail angeben.");
@@ -72,36 +84,35 @@ public class AuthService {
         }
         String r = (rolle == null || rolle.isBlank()) ? "Student" : rolle.trim();
         String n = (name == null || name.isBlank()) ? e : name.trim();
-        return repository.save(new Benutzerkonto(e, n, r, Passwort.hash(passwort), Instant.now()));
+        Benutzerkonto konto = repository.save(
+                new Benutzerkonto(e, n, r, passwortEncoder.encode(passwort), Instant.now()));
+        return new Sitzung(jwt.erzeuge(konto), konto);
     }
 
-    /** Prueft Login-Daten und gibt bei Erfolg ein neues Token zurueck. */
-    public String login(String email, String passwort) {
+    /** Prueft die Anmeldedaten und gibt bei Erfolg einen frischen JWT-Ausweis zurueck. */
+    public Sitzung login(String email, String passwort) {
         Benutzerkonto konto = repository.findByEmail(normalisiere(email))
                 .orElseThrow(this::loginFehler);
-        if (!Passwort.pruefe(passwort, konto.getPasswortHash())) {
+        if (!passwortEncoder.matches(passwort == null ? "" : passwort, konto.getPasswortHash())) {
             throw loginFehler();
         }
-        String token = UUID.randomUUID().toString();
-        tokens.put(token, konto.getEmail());
-        return token;
+        return new Sitzung(jwt.erzeuge(konto), konto);
     }
 
-    /** Findet das eingeloggte Konto zu einem Token (oder 401, wenn ungueltig). */
-    public Benutzerkonto ausToken(String token) {
+    /**
+     * Meldet ab: sperrt das uebergebene Token bis zu seinem Ablauf, damit es
+     * sofort nicht mehr gilt. Ein bereits ungueltiges Token wird still ignoriert.
+     */
+    public void abmelden(String token) {
         if (token == null || token.isBlank()) {
-            throw loginFehler();
+            return;
         }
-        String email = tokens.get(token);
-        if (email == null) {
-            throw loginFehler();
-        }
-        return repository.findByEmail(email).orElseThrow(this::loginFehler);
-    }
-
-    public void logout(String token) {
-        if (token != null) {
-            tokens.remove(token);
+        try {
+            Claims inhalt = jwt.pruefe(token);
+            Date ablauf = inhalt.getExpiration();
+            sperrliste.sperre(inhalt.getId(), ablauf == null ? Instant.now() : ablauf.toInstant());
+        } catch (JwtException | IllegalArgumentException ungueltig) {
+            // Token war ohnehin schon ungueltig -> nichts zu tun.
         }
     }
 

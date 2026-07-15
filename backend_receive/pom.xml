@@ -108,6 +108,41 @@
         </dependency>
 
         <!--
+          PRODUKTIONS-AUTHENTIFIZIERUNG (Spring Security + JWT):
+          Bibliothek 8: Spring Security = der Tuersteher fuer die REST-Endpunkte.
+          Er prueft bei jeder Anfrage, ob ein gueltiges Login-Token dabei ist,
+          und laesst nur angemeldete Nutzer an die geschuetzten Funktionen.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!--
+          Bibliothek 9-11: JJWT = erzeugt und prueft JWT-Token ("JSON Web Token").
+          Ein JWT ist ein digital signierter Ausweis: Das Backend stellt ihn beim
+          Login aus, der Browser zeigt ihn bei jeder Anfrage vor. Weil er signiert
+          ist, kann niemand ihn faelschen (dazu braeuchte man unseren Geheimschluessel).
+          Die Version muss angegeben werden, weil Spring Boot JJWT nicht vorgibt.
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
           Bibliothek 4: Werkzeuge zum automatischen Testen des Codes.
           "scope = test" heisst: wird nur beim Testen gebraucht,
           nicht im fertigen Programm.
@@ -115,6 +150,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--
+          Test-Hilfen fuer Spring Security (z. B. angemeldeten Nutzer simulieren).
+        -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

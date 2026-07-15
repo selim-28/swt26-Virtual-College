@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Bus,
   CalendarCheck,
   CheckCircle2,
   ClipboardList,
@@ -16,9 +17,11 @@ import {
   Send,
   Settings,
   Soup,
+  Trash2,
   User,
   UserPlus
 } from "lucide-react";
+import { escapeHtml, richtungsWinkel, statusClass, POLL_INTERVALL_MS, sollAktualisieren, darfRaumReservieren, neuerPostHinweis } from "./campusUtils.mjs";
 
 // Zentrale API-Adressen. Nginx leitet diese relativen Pfade an die Backends weiter.
 const API = {
@@ -61,10 +64,12 @@ function vergissKonto() {
 
 // Kleine Helferfunktion fuer Fetch-Aufrufe: haengt automatisch das Login-Token
 // an und liest bei Fehlern die Klartext-Meldung des Backends aus.
+// Das Token ist jetzt ein JWT und wird als "Authorization: Bearer <token>"
+// gesendet (Standard fuer token-basierte APIs mit Spring Security).
 async function apiJson(url, options = {}) {
   const token = gespeichertesToken();
   const headers = { ...(options.headers || {}) };
-  if (token) headers["X-Auth-Token"] = token;
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const response = await fetch(url, { ...options, headers });
   if (!response.ok) {
@@ -123,6 +128,22 @@ export default function App() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [status, setStatus] = useState("Bereit");
   const [busy, setBusy] = useState(false);
+  // Merkt sich, ob GERADE eine Ladung laeuft. Als Ref (nicht State), damit der
+  // Polling-Takt immer den aktuellen Wert sieht und Ladungen sich nicht ueberholen.
+  const ladeLaeuftRef = useRef(false);
+
+  // Refs fuer die Benachrichtigung ueber neue Posts (US 4.3): Der Polling-Takt
+  // laeuft in einer alten Closure - ueber die Refs sieht er trotzdem immer die
+  // AKTUELLE Post-Liste und die AKTUELLEN Einstellungen.
+  const postsRef = useRef([]);
+  const prefsRef = useRef(prefs);
+  prefsRef.current = prefs;
+
+  // Posts-Liste zentral uebernehmen (State + Ref gemeinsam pflegen).
+  function uebernimmPosts(liste) {
+    postsRef.current = liste;
+    setPosts(liste);
+  }
 
   // Aus der Raum-ID wird das aktuell ausgewaehlte Raumobjekt.
   const selectedRoom = useMemo(
@@ -147,6 +168,25 @@ export default function App() {
     // Absicht: nur einmal beim Mounten pruefen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // POLLING (letzte Meile zu EPIC 7): MQTT bringt frische Daten nur bis ins
+  // backend_receive. Das Frontend spricht HTTP und muss aktiv nachfragen. Statt
+  // den "Aktualisieren"-Knopf manuell zu druecken, fragt die App nun selbst in
+  // festen Abstaenden nach – aber nur eingeloggt und nur bei sichtbarem Tab.
+  useEffect(() => {
+    if (!konto) return undefined;
+    const id = window.setInterval(() => {
+      const darf = sollAktualisieren({
+        eingeloggt: Boolean(konto),
+        seiteSichtbar: document.visibilityState === "visible",
+        ladeLaeuft: ladeLaeuftRef.current
+      });
+      if (darf) ladeAlles({ stumm: true });
+    }, POLL_INTERVALL_MS);
+    // Aufraeumen: Timer stoppen, wenn sich das Konto aendert (z.B. Logout).
+    return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [konto]);
 
   // Login: Token holen, merken, Daten laden.
   async function login(email, passwort) {
@@ -184,8 +224,11 @@ export default function App() {
   }
 
   // Laedt alle Daten, die die Startseite braucht.
-  async function ladeAlles() {
-    setBusy(true);
+  // stumm=true = automatische Aktualisierung (Polling): ohne "Lade..."-Puls und
+  // ohne Fehlermeldung, damit sie im Hintergrund nicht stoert.
+  async function ladeAlles({ stumm = false } = {}) {
+    ladeLaeuftRef.current = true;
+    if (!stumm) setBusy(true);
     try {
       const [campusData, postData, mensaData, transitData, historieData] = await Promise.all([
         apiJson(API.campus),
@@ -194,16 +237,27 @@ export default function App() {
         apiJson(API.transit),
         apiJson(API.historie)
       ]);
+      // US 4.3: VOR dem Uebernehmen pruefen, ob neue Beitraege dazugekommen
+      // sind - registrierte Beobachter (Schalter "Neue Pinwand-Posts melden")
+      // bekommen dann eine 🔔-Meldung in der Statuszeile.
+      const hinweis = neuerPostHinweis(
+        postsRef.current, postData, prefsRef.current.benachrichtigungen);
+
       setCampus(campusData);
-      setPosts(postData);
+      uebernimmPosts(postData);
       setMensa(mensaData);
       setTransit(transitData);
       setHistorie(historieData);
-      setStatus("Daten geladen");
+      setStatus(hinweis ?? (stumm
+        ? `Automatisch aktualisiert (${new Date().toLocaleTimeString("de-DE")})`
+        : "Daten geladen"));
     } catch (error) {
-      setStatus(`Fehler beim Laden: ${error.message}`);
+      // Beim automatischen Aktualisieren NICHT mit Fehlern nerven – der naechste
+      // Takt versucht es ohnehin gleich wieder. Nur beim manuellen Laden zeigen.
+      if (!stumm) setStatus(`Fehler beim Laden: ${error.message}`);
     } finally {
-      setBusy(false);
+      ladeLaeuftRef.current = false;
+      if (!stumm) setBusy(false);
     }
   }
 
@@ -255,7 +309,11 @@ export default function App() {
   // Speichert einen neuen Pinwand-Post in der Datenbank.
   async function postErstellen(event) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    // WICHTIG: das Formular-Element JETZT sichern. Nach einem "await" setzt React
+    // event.currentTarget auf null – ein spaeteres event.currentTarget.reset()
+    // wuerde sonst mit "Cannot read properties of null (reading 'reset')" abstuerzen.
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
     setBusy(true);
     try {
       await apiJson(API.posts, {
@@ -269,8 +327,8 @@ export default function App() {
           inhalt: form.get("inhalt")
         })
       });
-      event.currentTarget.reset();
-      setPosts(await apiJson(API.posts));
+      formEl.reset();   // gesicherte Referenz benutzen (nicht event.currentTarget)
+      uebernimmPosts(await apiJson(API.posts));
       setStatus("Post gespeichert und Pinwand aktualisiert");
     } catch (error) {
       setStatus(`Post konnte nicht gespeichert werden: ${error.message}`);
@@ -284,7 +342,7 @@ export default function App() {
     setBusy(true);
     try {
       await apiJson(`${API.posts}/${id}/like`, { method: "POST" });
-      setPosts(await apiJson(API.posts));
+      uebernimmPosts(await apiJson(API.posts));
       setStatus("Like gespeichert");
     } catch (error) {
       setStatus(`Like fehlgeschlagen: ${error.message}`);
@@ -292,6 +350,37 @@ export default function App() {
       setBusy(false);
     }
   }
+
+  // ADMIN: Pinwand-Post loeschen (das Backend erlaubt DELETE nur der Rolle Admin).
+  async function postLoeschen(id) {
+    setBusy(true);
+    try {
+      await apiJson(`${API.posts}/${id}`, { method: "DELETE" });
+      uebernimmPosts(await apiJson(API.posts));
+      setStatus("Post geloescht");
+    } catch (error) {
+      setStatus(`Loeschen fehlgeschlagen: ${error.message}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // ADMIN: Reservierung loeschen.
+  async function reservierungLoeschen(id) {
+    setBusy(true);
+    try {
+      await apiJson(`${API.reservierungen}/${id}`, { method: "DELETE" });
+      await ladeAlles();
+      setStatus("Reservierung geloescht");
+    } catch (error) {
+      setStatus(`Loeschen fehlgeschlagen: ${error.message}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // Nur der Admin bekommt Verwaltungs-Funktionen (Loeschknoepfe) angezeigt.
+  const istAdmin = konto?.rolle === "Admin";
 
   // Nicht eingeloggt? Dann zeigen wir nur die Login-/Registrier-Seite.
   if (!konto) {
@@ -312,21 +401,25 @@ export default function App() {
             onSelectRoom={setSelectedRoomId}
             onReserve={reservieren}
             profil={profil}
+            mensa={mensa}
+            historie={historie}
+            istAdmin={istAdmin}
+            onDeleteReservierung={reservierungLoeschen}
           />
         )}
 
         {view === "pinwand" && (
-          <PinwandView posts={posts} onCreate={postErstellen} onLike={postLiken} />
+          <PinwandView
+            posts={posts}
+            onCreate={postErstellen}
+            onLike={postLiken}
+            istAdmin={istAdmin}
+            onDelete={postLoeschen}
+          />
         )}
 
         {view === "daten" && (
-          <DatenView
-            mensa={mensa}
-            transit={transit}
-            historie={historie}
-            onSimulation={simulationStarten}
-            busy={busy}
-          />
+          <DatenView transit={transit} onSimulation={simulationStarten} busy={busy} />
         )}
 
         {view === "einstellungen" && (
@@ -342,7 +435,7 @@ function Header({ view, onView, konto, onLogout }) {
   const tabs = [
     ["campus", "Live Campus", MapPin],
     ["pinwand", "Pinwand", MessageSquarePlus],
-    ["daten", "Live-Daten", Soup],
+    ["daten", "ÖPNV", Bus],
     ["einstellungen", "Einstellungen", Settings]
   ];
 
@@ -391,7 +484,8 @@ function StatusBar({ busy, status, onRefresh }) {
 }
 
 // Campus-Seite mit Karte und Raumdetails.
-function CampusView({ campus, selectedRoom, onSelectRoom, onReserve, profil }) {
+function CampusView({ campus, selectedRoom, onSelectRoom, onReserve, profil,
+                      mensa, historie, istAdmin, onDeleteReservierung }) {
   return (
     <section className="page-grid campus-grid">
       <div className="workspace">
@@ -408,6 +502,10 @@ function CampusView({ campus, selectedRoom, onSelectRoom, onReserve, profil }) {
         campus={campus}
         profil={profil}
         onReserve={onReserve}
+        mensa={mensa}
+        historie={historie}
+        istAdmin={istAdmin}
+        onDeleteReservierung={onDeleteReservierung}
       />
     </section>
   );
@@ -425,11 +523,17 @@ function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
   const [position, setPosition] = useState(null);
   const [routeInfo, setRouteInfo] = useState(null);
   const [routing, setRouting] = useState(false);
+  // Kartendienst-Ausfall (Kacheln laden nicht) bzw. bewusster Wechsel auf die
+  // Offline-Ersatzkarte. Beides fuehrt zur nutzbaren FallbackCampusMap.
+  const [kartendienstAus, setKartendienstAus] = useState(false);
+  const [manuellFallback, setManuellFallback] = useState(false);
 
   useEffect(() => {
-    if (!window.L || !nodeRef.current || mapRef.current) return undefined;
+    if (!window.L || manuellFallback || !nodeRef.current || mapRef.current) return undefined;
     const L = window.L;
-    const map = L.map(nodeRef.current, { zoomControl: true }).setView([51.4939, 7.4203], 18);
+    // Startansicht: Mittelpunkt der drei FH-Gebaeude (Hoersaalgeb./Informatik/Haus 44),
+    // Zoom 17 zeigt alle drei Cluster; beim Hineinzoomen trennen sich die Raeume.
+    const map = L.map(nodeRef.current, { zoomControl: true }).setView([51.4939, 7.4199], 17);
     const strasse = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 20,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -441,6 +545,17 @@ function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
     strasse.addTo(map);
     L.control.layers({ "Straße": strasse, "Satellit": satellit }, null, { position: "topright" }).addTo(map);
     L.control.scale({ imperial: false }).addTo(map);
+
+    // Ausfall des Kartendienstes erkennen: Laedt keine einzige Kachel, aber es
+    // haeufen sich Fehler, bieten wir die Offline-Ersatzkarte an (US 2.1).
+    let kachelFehler = 0;
+    const beiKachelErfolg = () => { kachelFehler = 0; setKartendienstAus(false); };
+    const beiKachelFehler = () => { kachelFehler += 1; if (kachelFehler >= 6) setKartendienstAus(true); };
+    strasse.on("tileload", beiKachelErfolg);
+    satellit.on("tileload", beiKachelErfolg);
+    strasse.on("tileerror", beiKachelFehler);
+    satellit.on("tileerror", beiKachelFehler);
+
     markerLayerRef.current = L.layerGroup().addTo(map);
     routeLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -448,8 +563,11 @@ function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
     return () => {
       map.remove();
       mapRef.current = null;
+      markerLayerRef.current = null;
+      routeLayerRef.current = null;
+      userMarkerRef.current = null;
     };
-  }, []);
+  }, [manuellFallback]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -566,8 +684,17 @@ function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
     mapRef.current.fitBounds(L.latLngBounds([start, ziel]).pad(0.25), { maxZoom: 18 });
   }
 
-  if (!window.L) {
-    return <FallbackCampusMap campus={campus} selectedRoom={selectedRoom} onSelectRoom={onSelectRoom} />;
+  // Ohne Leaflet-Bibliothek (CDN blockiert) ODER bei bewusstem Wechsel zeigen
+  // wir die Offline-Ersatzkarte. Sie bleibt immer bedienbar (US 2.1).
+  if (!window.L || manuellFallback) {
+    return (
+      <FallbackCampusMap
+        campus={campus}
+        selectedRoom={selectedRoom}
+        onSelectRoom={onSelectRoom}
+        onZurueck={window.L ? () => { setManuellFallback(false); setKartendienstAus(false); } : undefined}
+      />
+    );
   }
 
   return (
@@ -579,21 +706,34 @@ function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
         <button type="button" className="route-button" onClick={routeBerechnen} disabled={routing || !standortTeilen}>
           <Navigation size={16} /> {routing ? "Route wird berechnet …" : "Fußweg zum Raum"}
         </button>
+        <button type="button" onClick={() => setManuellFallback(true)} title="Zur Offline-Ersatzkarte wechseln">
+          <MapPin size={16} /> Offline-Karte
+        </button>
         <span><Layers size={15} /> Straße/Satellit oben rechts</span>
       </div>
       <div ref={nodeRef} className="leaflet-campus-map" aria-label="Interaktive Karte des Campus Emil-Figge-Straße" />
       <div className="map-feedback" role="status">
         <span>{kartenStatus}</span>
+        {kartendienstAus && (
+          <button type="button" className="route-button" onClick={() => setManuellFallback(true)}>
+            ⚠ Kartendienst gestört – zur Offline-Karte wechseln
+          </button>
+        )}
         {routeInfo && <strong>{routeInfo.meter} m · ca. {routeInfo.minuten} Min. bis {routeInfo.ziel}</strong>}
       </div>
     </div>
   );
 }
 
-function FallbackCampusMap({ campus, selectedRoom, onSelectRoom }) {
+function FallbackCampusMap({ campus, selectedRoom, onSelectRoom, onZurueck }) {
   return (
     <div className="campus-map" aria-label="Offline-Fallback der Campus-Karte">
       <div className="offline-badge">Offline-Karte · Internet für Satellit und Route erforderlich</div>
+      {onZurueck && (
+        <button type="button" className="offline-back" onClick={onZurueck} title="Zurück zur Live-Karte">
+          <MapPin size={14} /> Zur Live-Karte
+        </button>
+      )}
       <div className="road road-v" />
       <div className="road road-h" />
       <div className="green-zone zone-one" />
@@ -615,28 +755,21 @@ function FallbackCampusMap({ campus, selectedRoom, onSelectRoom }) {
   );
 }
 
-function escapeHtml(text) {
-  return String(text).replace(/[&<>'"]/g, (zeichen) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
-  })[zeichen]);
-}
-
-function richtungsWinkel([lat1, lng1], [lat2, lng2]) {
-  const y = Math.sin((lng2 - lng1) * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180);
-  const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180)
-    - Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
-    * Math.cos((lng2 - lng1) * Math.PI / 180);
-  return Math.atan2(y, x) * 180 / Math.PI;
-}
-
 // Rechte Detailspalte fuer Raum, Veranstaltungen und Reservierungen.
-function RoomPanel({ selectedRoom, campus, profil, onReserve }) {
+// Die Mensa (kostBar) zeigt hier direkt ihren LIVE-SPEISEPLAN aus den
+// Fremddaten (EPIC 5) - man muss dafuer nicht mehr in einen anderen Tab.
+function RoomPanel({ selectedRoom, campus, profil, onReserve,
+                     mensa, historie, istAdmin, onDeleteReservierung }) {
   const reservierungen = selectedRoom
     ? campus.reservierungen.filter((reservierung) => reservierung.raumId === selectedRoom.id)
     : campus.reservierungen.slice(0, 3);
   const veranstaltungen = selectedRoom
     ? campus.veranstaltungen.filter((veranstaltung) => veranstaltung.raumId === selectedRoom.id)
     : campus.veranstaltungen;
+
+  const istMensa = selectedRoom?.typ === "Mensa";
+  // Rollenregel (Spiegel des Backends): Hoersaele nur Professor/Admin usw.
+  const darfBuchen = darfRaumReservieren(selectedRoom, profil.rolle);
 
   return (
     <aside className="side-panel">
@@ -650,15 +783,75 @@ function RoomPanel({ selectedRoom, campus, profil, onReserve }) {
           <Metric label="Auslastung" value={`${selectedRoom.personen}/${selectedRoom.kapazitaet}`} />
           <Metric label="Status" value={selectedRoom.status} />
           <TagList items={selectedRoom.ausstattung} />
-          <ReserveForm profil={profil} onReserve={onReserve} />
+
+          {istMensa && <MensaPanel mensa={mensa} historie={historie} />}
+
+          {!istMensa && darfBuchen && <ReserveForm profil={profil} onReserve={onReserve} />}
+
+          {!istMensa && !darfBuchen && (
+            // US 3.2 + Rollenregel: verstaendlich erklaeren, warum es hier
+            // kein Formular gibt (Backend lehnt solche Anfragen ohnehin ab).
+            <p className="muted">
+              {selectedRoom.typ === "Vorlesung"
+                ? `${selectedRoom.name} ist ein Hoersaal - reservieren duerfen ihn nur Professor:innen oder die Verwaltung (Admin).`
+                : `${selectedRoom.name} kann nicht reserviert werden (${selectedRoom.typ}). Reservierbar sind freie Lern- und Seminarraeume.`}
+            </p>
+          )}
         </>
       ) : (
         <p className="muted">Klicke auf einen Raum in der Karte, um Details und Aktionen zu sehen.</p>
       )}
 
       <MiniList title="Veranstaltungen" icon={CalendarCheck} items={veranstaltungen.map((v) => `${v.titel} (${v.von}-${v.bis})`)} />
-      <MiniList title="Reservierungen" icon={ClipboardList} items={reservierungen.map((r) => `${r.raumName}: ${r.von}-${r.bis}`)} />
+
+      {/* Reservierungen mit Details; der Admin bekommt Loeschknoepfe. */}
+      <section className="mini-list">
+        <h3><ClipboardList size={16} /> Reservierungen</h3>
+        {reservierungen.length === 0 ? (
+          <p className="muted">Keine Eintraege.</p>
+        ) : (
+          reservierungen.map((r) => (
+            <p key={r.id} className="reservation-row">
+              <span>{r.raumName}: {r.von}-{r.bis} ({r.reserviertVon})</span>
+              {istAdmin && (
+                <button
+                  type="button"
+                  className="icon-button danger"
+                  title="Reservierung loeschen (Admin)"
+                  aria-label={`Reservierung ${r.id} loeschen`}
+                  onClick={() => onDeleteReservierung(r.id)}
+                >
+                  <Trash2 size={14} />
+                </button>
+              )}
+            </p>
+          ))
+        )}
+      </section>
     </aside>
+  );
+}
+
+// Live-Speiseplan der Mensa kostBar direkt im Raum-Panel (EPIC 5 trifft EPIC 2).
+function MensaPanel({ mensa, historie }) {
+  return (
+    <section className="mini-list">
+      <h3><Soup size={16} /> Speiseplan heute</h3>
+      <p className="muted">{mensa.quelle}</p>
+      {mensa.gerichte.length === 0 ? (
+        <p className="muted">Noch keine Daten - starte die Simulation im Bereich ÖPNV.</p>
+      ) : (
+        mensa.gerichte.map((gericht) => (
+          <p key={gericht.name} className="reservation-row">
+            <span>{gericht.name}</span>
+            <b>{euro(gericht.preis)}</b>
+          </p>
+        ))
+      )}
+      <p className="muted">
+        <History size={13} /> Historie: {historie.anzahlGesamt} gespeicherte Gerichte in der Datenbank
+      </p>
+    </section>
   );
 }
 
@@ -683,7 +876,8 @@ function ReserveForm({ profil, onReserve }) {
 }
 
 // Pinwand-Seite mit echtem Speichern und Likes.
-function PinwandView({ posts, onCreate, onLike }) {
+// Der Admin kann Beitraege zusaetzlich LOESCHEN (verwalten).
+function PinwandView({ posts, onCreate, onLike, istAdmin, onDelete }) {
   return (
     <section className="page-grid pinwand-grid">
       <div className="workspace">
@@ -723,10 +917,23 @@ function PinwandView({ posts, onCreate, onLike }) {
             <p>{post.inhalt}</p>
             <footer>
               <span>{post.autor} - {post.rolle} - {kurzZeit(post.erstelltAm)}</span>
-              <button type="button" className="like-button" onClick={() => onLike(post.id)}>
-                <Heart size={15} />
-                {post.likes}
-              </button>
+              <span className="post-actions">
+                {istAdmin && (
+                  <button
+                    type="button"
+                    className="icon-button danger"
+                    title="Post loeschen (Admin)"
+                    aria-label={`Post ${post.titel} loeschen`}
+                    onClick={() => onDelete(post.id)}
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                )}
+                <button type="button" className="like-button" onClick={() => onLike(post.id)}>
+                  <Heart size={15} />
+                  {post.likes}
+                </button>
+              </span>
             </footer>
           </article>
         ))}
@@ -735,12 +942,14 @@ function PinwandView({ posts, onCreate, onLike }) {
   );
 }
 
-// Live-Daten-Seite fuer Mensa, OePNV, MQTT-Simulation und DB-Historie.
-function DatenView({ mensa, transit, historie, onSimulation, busy }) {
+// OePNV-Seite: Live-Abfahrten ab "Dortmund Universitaet S" + Start der
+// Fremddaten-Simulation. (Der Mensa-Speiseplan ist zur Mensa kostBar auf der
+// Campus-Karte umgezogen - dort gehoert er fachlich hin.)
+function DatenView({ transit, onSimulation, busy }) {
   return (
     <section className="workspace">
       <div className="section-heading">
-        <SectionTitle kicker="Factory -> MQTT -> Adapter -> Datenbank" title="Live-Daten vom Fremdsystem" />
+        <SectionTitle kicker="Fremdsystem -> MQTT -> Live-Abfahrten" title="ÖPNV ab Dortmund Universität S" />
         <button className="primary-action" type="button" onClick={onSimulation} disabled={busy}>
           <RefreshCcw size={16} />
           Simulation starten
@@ -748,21 +957,9 @@ function DatenView({ mensa, transit, historie, onSimulation, busy }) {
       </div>
 
       <div className="data-grid">
-        <DataPanel title="Mensa" icon={Soup} subtitle={mensa.quelle}>
-          {mensa.gerichte.map((gericht) => (
-            <DataRow key={gericht.name} title={gericht.name} value={euro(gericht.preis)} subtitle="Studierendenwerk" />
-          ))}
-        </DataPanel>
-
-        <DataPanel title="ÖPNV ab Universität S" icon={Navigation} subtitle={transit.quelle}>
+        <DataPanel title={`Abfahrten - ${transit.haltestelle || "Dortmund Universität S"}`} icon={Navigation} subtitle={transit.quelle} wide>
           {(transit.abfahrten ?? []).map((abfahrt) => (
             <DataRow key={`${abfahrt.linie}-${abfahrt.zeit}`} title={abfahrt.linie} value={abfahrt.zeit} subtitle={abfahrt.ziel} />
-          ))}
-        </DataPanel>
-
-        <DataPanel title="Datenbank-Historie" icon={History} subtitle={`${historie.anzahlGesamt} gespeicherte Eintraege`} wide>
-          {historie.eintraege.slice(0, 8).map((eintrag) => (
-            <DataRow key={eintrag.id} title={eintrag.name} value={euro(eintrag.preis)} subtitle={kurzZeit(eintrag.empfangenAm)} />
           ))}
         </DataPanel>
       </div>
@@ -868,10 +1065,11 @@ function AuthView({ onLogin, onRegister }) {
               </label>
               <label>
                 Rolle
+                {/* Admin ist bewusst NICHT waehlbar - den gibt es nur als
+                    eingerichtetes Demo-Konto (admin@fh-dortmund.de). */}
                 <select name="rolle" defaultValue="Student">
                   <option>Student</option>
-                  <option>Betreuer</option>
-                  <option>Verwaltungsangestellter</option>
+                  <option>Professor</option>
                 </select>
               </label>
             </>
@@ -963,9 +1161,3 @@ function DataRow({ title, subtitle, value }) {
 }
 
 // Status wird in CSS-Klassen uebersetzt.
-function statusClass(status) {
-  if (status.includes("frei")) return "is-free";
-  if (status.includes("bald")) return "is-soon";
-  if (status.includes("geo")) return "is-open";
-  return "is-busy";
-}

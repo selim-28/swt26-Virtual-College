@@ -347,6 +347,28 @@ main {
   font-weight: 800;
 }
 
+.offline-back {
+  position: absolute;
+  z-index: 5;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #2f69d9;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.offline-back:hover {
+  background: #2555b6;
+}
+
 .road {
   position: absolute;
   background: #777f89;
@@ -746,4 +768,31 @@ textarea {
   background: var(--bg);
   color: var(--muted);
   cursor: not-allowed;
+}
+
+/* --- Admin-Verwaltung + Mensa-Panel (Rollen-Update) ------------------- */
+
+/* Loeschknopf (nur fuer Admins sichtbar): dezent, aber klar als Gefahr markiert. */
+.icon-button.danger {
+  width: 26px;
+  height: 26px;
+  color: #c0392b;
+}
+.icon-button.danger:hover {
+  background: rgba(192, 57, 43, 0.12);
+}
+
+/* Zeile im Raum-Panel: Text links, Preis/Loeschknopf rechts. */
+.reservation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Aktionen (Loeschen + Like) rechts im Post-Footer buendeln. */
+.post-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
