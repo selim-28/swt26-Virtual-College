@@ -43,36 +43,49 @@ docker compose down
 ## Wichtige Tests
 
 ```bash
-# Backend bauen und pruefen
+# Backend: bauen + automatische Tests (u. a. 22 Auth-/Security-Tests, EPIC 1)
+./mvnw -pl backend_receive test
+
+# Backend: kompletter Build inkl. Tests
 ./mvnw verify
 
-# Frontend bauen und pruefen
+# Frontend: automatische Unit-Tests (Karten-Helfer, EPIC 2) – ohne Zusatzbibliothek
 cd frontend
+npm test          # nutzt Nodes eingebauten Runner (node --test), 12 Tests
+
+# Frontend: Produktions-Build
 npm run build
 ```
 
-End-to-End ueber das Frontend:
+End-to-End ueber das Frontend (die API-Endpunkte sind seit Spring Security + JWT
+geschuetzt – zuerst einloggen, dann das Token als `Authorization: Bearer` mitschicken):
 
 ```bash
-# Campus-Karte lesen
-curl http://localhost:8090/api/campus/karte
-
-# Raumreservierung speichern
-curl -X POST http://localhost:8090/api/campus/reservierungen \
+# 1) Einloggen und Token merken (Demo-Konto)
+TOKEN=$(curl -s -X POST http://localhost:8090/api/auth/login \
   -H 'Content-Type: application/json' \
+  -d '{"email":"student@fh-dortmund.de","passwort":"passwort123"}' \
+  | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
+
+# 2) Campus-Karte lesen (mit Token)
+curl http://localhost:8090/api/campus/karte -H "Authorization: Bearer $TOKEN"
+
+# 3) Raumreservierung speichern
+curl -X POST http://localhost:8090/api/campus/reservierungen \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"raumId":"g40-labor105","reserviertVon":"Test Student","von":"12:00","bis":"13:00"}'
 
-# Pinwand-Post speichern
+# 4) Pinwand-Post speichern
 curl -X POST http://localhost:8090/api/pinwand/posts \
-  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"autor":"Test Student","rolle":"Student","kategorie":"Lerngruppe","titel":"React-Test","inhalt":"Pinwand-Test"}'
 
-# Simulation starten: backend_send -> MQTT -> backend_receive -> MariaDB
+# 5) Simulation starten: backend_send -> MQTT -> backend_receive -> MariaDB
 curl -X POST http://localhost:8090/api/simulation/start
-curl http://localhost:8090/api/mensa/historie
+curl http://localhost:8090/api/mensa/historie -H "Authorization: Bearer $TOKEN"
 
-# Danach den letzten via MQTT empfangenen VRR-Snapshot lesen
-curl http://localhost:8090/api/transit/abfahrten
+# 6) Danach den letzten via MQTT empfangenen VRR-Snapshot lesen
+curl http://localhost:8090/api/transit/abfahrten -H "Authorization: Bearer $TOKEN"
 ```
 
 ## Datenbank Anzeigen
@@ -125,7 +138,7 @@ backend_receive/    Hauptbackend (Port 8083), Pakete:
                       campus/      Campus-Karte, Raeume, Reservierungen (Fassade)
                       pinwand/     Posts, Likes, Benachrichtigungen (Observer)
                       nutzer/      Nutzer + Student/Betreuer/Verwaltung (Vererbung)
-                      auth/        Login/Registrierung, Passwort-Hashing (PBKDF2)
+                      auth/        Login/Registrierung, Spring Security + JWT, Passwort-Hashing (PBKDF2)
                       mensa/       Speiseplan + MQTT-Empfang (Adapter)
                       transit/     via MQTT empfangene VRR-Abfahrten
                       persistenz/  JPA-Entities + Repositories (Datenbank)
@@ -133,9 +146,10 @@ backend_send/       Simuliertes Fremdsystem (Port 8084), Paket:
                       simulation/  DatenGenerator (Factory) + MqttSender (publish)
 frontend/           React/Vite-App plus Nginx-Proxy (Port 8090)
 mosquitto/          MQTT-Broker-Konfiguration
-docs/erklaerung.html Konzepte + Diagramme + Klausur/Aufgaben
-docs/code-verstehen.html Rundgang durch den echten Code (was liegt wo, wie fliesst es)
+docs/erklaerung.html DIE komplette Doku in EINER Datei: Konzepte, Diagramme,
+                     Praktikums-Nachweis, Compliance UND Code-Rundgang (Block E)
 PRAESENTATION.md    Spickzettel + Ablauf fuer die Abschlusspraesentation
+unterlagen/         Lernmaterial & Alt-Dateien (Folien-PDF, Kanban-PDFs, altes OOD)
 docker-compose.yml  Ein-Knopf-Start: 5 App-Container + Adminer (DB-Ansicht)
 ```
 
@@ -150,18 +164,18 @@ docker-compose.yml  Ein-Knopf-Start: 5 App-Container + Adminer (DB-Ansicht)
 
 Externe Dienste benötigen Internet und sind Best-Effort-Dienste ohne Verfügbarkeitsgarantie. Für eine produktive App würden Tiles und Routing über vertraglich abgesicherte bzw. selbst betriebene Dienste laufen.
 
-Zwei Lern-Dokumente, die zusammengehoeren:
+Die komplette Lern-Dokumentation steht in **einer** Datei:
 
-- [docs/erklaerung.html](docs/erklaerung.html) — **Konzepte & Klausur**: Verteilungsdiagramm,
-  OOD-Klassendiagramme, die drei Entwurfsmuster Factory/Adapter/Observer als Theorie.
-- [docs/code-verstehen.html](docs/code-verstehen.html) — **der echte Code**: Architektur,
-  Ordnerstruktur, drei Datenfluss-Szenarien und jede Klasse Paket fuer Paket erklaert.
-  Ideal, um komplett zu verstehen, was im Projekt steckt.
+- [docs/erklaerung.html](docs/erklaerung.html) — in 5 Bloecken: **A** Konzepte
+  (Verteilungsdiagramm, MQTT, REST, …) · **B** Praktikums-Stand · **C** Betrieb &
+  Umsetzung (Docker, Auth/Rollen, Karte) · **D** Nachweise (97 Tests, alle 8 EPICs,
+  Praktikums-Aufgaben 1–4, **Compliance**) · **E** Code-Rundgang fuer Einsteiger
+  (Ordnerbaum, 4 Datenfluesse, jede Klasse Paket fuer Paket, Glossar).
+  (`docs/code-verstehen.html` leitet nur noch dorthin weiter.)
 
-> **Hinweis Tests:** Build- und End-to-End-Tests (`./mvnw verify`, `npm run build`,
-> die curl-Aufrufe oben) laufen erfolgreich. Eigene JUnit-Fachtests gibt es noch
-> nicht – das ist die naechste sinnvolle Politur, aber keine Voraussetzung fuer die
-> Praesentation.
+> **Tests:** **97 automatische Tests** sichern das Projekt ab – 60 in
+> `backend_receive`, 10 in `backend_send` (`./mvnw test`) und 27 im Frontend
+> (`cd frontend && npm test`). Details: erklaerung.html, Kapitel 21.
 
 ## Praesentationsfluss
 

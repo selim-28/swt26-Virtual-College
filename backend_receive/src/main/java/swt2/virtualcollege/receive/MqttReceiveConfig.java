@@ -18,10 +18,14 @@ import org.springframework.messaging.MessageChannel;
 @EnableIntegration
 public class MqttReceiveConfig {
 
-    @Value("${mqtt.broker-url}")
+    // Namen MUESSEN zu den Schluesseln in application.properties passen
+    // (mqtt.broker.url / mqtt.client.id / mqtt.topic). Im Docker-Betrieb
+    // ueberschreibt die Umgebungsvariable MQTT_BROKER_URL den Wert mqtt.broker.url
+    // (Spring uebersetzt MQTT_BROKER_URL automatisch nach mqtt.broker.url).
+    @Value("${mqtt.broker.url}")
     private String brokerUrl;
 
-    @Value("${mqtt.client-id}")
+    @Value("${mqtt.client.id}")
     private String clientId;
 
     @Value("${mqtt.topic}")

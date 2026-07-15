@@ -40,6 +40,14 @@
   th{color:var(--accent)}
   td code{font-size:0.85em}
   .pill{display:inline-block; padding:3px 12px; border-radius:999px; font-size:0.8rem; font-weight:600; white-space:nowrap}
+  /* --- Klassen fuer den Code-Rundgang (Block E, uebernommen aus code-verstehen) --- */
+  .key{border-left:5px solid var(--accent); background:#0b2233; border-radius:10px; padding:14px 20px; margin:16px 0}
+  .step{display:flex; gap:12px; margin:10px 0; align-items:flex-start}
+  .step .n{flex:none; width:30px; height:30px; background:var(--accent); color:#06121f; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800}
+  .step .t{flex:1}
+  .run{background:#14331f; color:var(--green); border:1px solid var(--green); padding:2px 10px; border-radius:999px; font-size:0.74rem; font-weight:700; white-space:nowrap}
+  .model{background:#221a2e; color:var(--purple); border:1px solid var(--purple); padding:2px 10px; border-radius:999px; font-size:0.74rem; font-weight:700; white-space:nowrap}
+  .file{color:#fda4af; font-size:.82em}
   .done{background:#14331f; color:var(--green); border:1px solid var(--green)}
   .wip{background:#332a14; color:var(--yellow); border:1px solid var(--yellow)}
   .open{background:#331417; color:var(--red); border:1px solid var(--red)}
@@ -94,30 +102,57 @@
   </div>
 
   <div class="card" style="border-color:var(--green)">
-    <p style="margin:0"><b>🔎 Willst du euren echten Code verstehen?</b> Diese Seite erklärt die <b>Konzepte &amp; die Klausur</b>. Den kompletten <b>Rundgang durch euren Code</b> (welche Datei macht was, wie die Daten fließen, Ordner für Ordner) findest du in der Schwester-Seite <a href="code-verstehen.html" style="color:var(--green)"><b>code-verstehen.html</b></a> – ideal, um zu begreifen, was die KI gebaut hat.</p>
+    <p style="margin:0"><b>📖 ALLES in dieser EINEN Datei:</b> die Konzepte &amp; Prüfungsthemen (Block&nbsp;A), der Praktikums-Stand (Block&nbsp;B), Betrieb &amp; Umsetzung (Block&nbsp;C), die Nachweise – Tests, EPICs, Praktika, Compliance (Block&nbsp;D) – und der komplette <b>Code-Rundgang für Einsteiger</b> (Block&nbsp;E, ab <a href="#rundgang" style="color:var(--green)"><b>Kapitel&nbsp;30</b></a>: welche Datei macht was, wie die Daten fließen, Ordner für Ordner). Nutze das Inhaltsverzeichnis direkt hierunter als Landkarte.</p>
   </div>
 
   <div class="toc">
-    <strong>📑 Inhalt</strong>
+    <strong>📑 Inhalt – in 4 Blöcken</strong>
+
+    <strong style="display:block;margin-top:10px;color:var(--accent)">🧱 Block A – Grundlagen (fürs Verständnis &amp; die Klausur)</strong>
     <a href="#bild">1. Das große Bild: Was bauen wir überhaupt?</a>
-    <a href="#vd">2. Das Verteilungsdiagramm (NOCH NICHT endgültig fest!)</a>
-    <a href="#ordner">3. Der ganze Projektordner erklärt (was kann ich ignorieren?)</a>
+    <a href="#vd">2. Das Verteilungsdiagramm (geprüft &amp; vervollständigt)</a>
+    <a href="#ordner">3. Der ganze Projektordner erklärt</a>
     <a href="#java">4. Java, Maven &amp; die pom.xml (das Fundament)</a>
     <a href="#pom">5. Die pom.xml Zeile für Zeile erklärt</a>
     <a href="#spring">6. Spring Boot (der Motor)</a>
     <a href="#mqtt">7. MQTT &amp; Mosquitto (das asynchrone Telefon)</a>
     <a href="#rest">8. REST &amp; Controller (die Bedienschalter)</a>
     <a href="#slicing">9. Modulith &amp; Vertical Slicing (die Ordnerstruktur)</a>
+
+    <strong style="display:block;margin-top:10px;color:var(--accent)">📋 Block B – Projektstand &amp; Praktika</strong>
     <a href="#dateien">10. Was steckt in welcher Datei? (echter Code-Stand)</a>
     <a href="#gemacht">11. Was haben wir bisher gemacht? (Praktikum 2 + 3)</a>
     <a href="#todo">12. ⭐ Was ist noch zu tun? (Überblick)</a>
-    <a href="#p4">13. ⭐⭐ Praktikum 4 LÖSEN: OOD-Diagramme &amp; 3 Entwurfsmuster (Schritt für Schritt)</a>
+    <a href="#p4">13. ⭐⭐ Praktikum 4 LÖSEN: OOD-Diagramme &amp; 3 Entwurfsmuster</a>
+    <a href="#naechstes">19. ⭐ Was kommt jetzt? – Stand vs. Praktikumsplan</a>
+
+    <strong style="display:block;margin-top:10px;color:var(--accent)">⚙️ Block C – Betrieb &amp; Umsetzung</strong>
     <a href="#starten">14. Wie startet man das Ganze?</a>
-    <a href="#docker">15. 🐳 Mit Docker testen (für Professor:innen) – ein Befehl, alles läuft</a>
-    <a href="#echt">16. ⚡ Die echte Funktion: Klassen, MQTT &amp; Datenbank (Schritte 1–3)</a>
-    <a href="#frontend">17. 🖥️ React-Frontend 1.0: Kanban-Entwurf wird zur nutzbaren Campus-App</a>
-    <a href="#anmeldung">18. 🔐 Authentifizierung: Login, Registrierung &amp; sichere Passwörter</a>
-    <a href="#naechstes">19. ⭐ Was kommt jetzt? – unser Stand vs. der Praktikumsplan (aus den Folien)</a>
+    <a href="#docker">15. 🐳 Mit Docker testen (für Professor:innen)</a>
+    <a href="#echt">16. ⚡ Die echte Funktion: Klassen, MQTT &amp; Datenbank</a>
+    <a href="#frontend">17. 🖥️ React-Frontend 1.0</a>
+    <a href="#anmeldung">18. 🔐 Authentifizierung, Rollen (Student/Professor/Admin) &amp; JWT</a>
+    <a href="#realmap">20. 🗺️ Reale 2D-Karte, Navigation &amp; VRR-Echtzeitdaten</a>
+
+    <strong style="display:block;margin-top:10px;color:var(--accent)">✅ Block D – EPICs mit Tests (Nachweis der User Stories)</strong>
+    <a href="#tests">21. ✅ Automatische Tests: JUnit &amp; Frontend-Tests (alle EPICs)</a>
+    <a href="#persistenz">22. 💾 EPIC 8 – Betrieb &amp; Persistenz</a>
+    <a href="#fremdsystem">23. 📡 EPIC 7 – Fremdsystem &amp; MQTT (+ Polling)</a>
+    <a href="#raumreservierung">24. 🏫 EPIC 3 – Raumverwaltung &amp; Reservierung (echte FH-Räume, Rollen)</a>
+    <a href="#pinwand-epic">25. 📌 EPIC 4 – Virtuelle Pinwand (Observer LIVE, 🔔-Benachrichtigungen)</a>
+    <a href="#mensa-epic">26. 🍲 EPIC 5 – Mensa-Informationen (Speiseplan &amp; Historie)</a>
+    <a href="#oepnv-epic">27. 🚌 EPIC 6 – Öffentlicher Nahverkehr (VRR + Offline-Fallback)</a>
+    <a href="#praktika">28. 📋 Praktikums-Nachweis: jede Prof-Aufgabe → unsere Antwort + Fundort</a>
+    <a href="#compliance">29. ⚖️ Compliance im Software Engineering – auf unser Projekt angewendet</a>
+
+    <strong style="display:block;margin-top:10px;color:var(--accent)">🔎 Block E – Der Code-Rundgang (für Einsteiger: jede Datei, jeder Fluss)</strong>
+    <a href="#rundgang">30. Das große Bild, Lernpfad &amp; die zwei Schichten</a>
+    <a href="#ordnerbaum">31. Der Projekt-Ordnerbaum – komplett erklärt</a>
+    <a href="#fluesse">32. Wie eine Anfrage durchs System fließt (4 Szenarien)</a>
+    <a href="#receive-pakete">33. backend_receive – Paket für Paket</a>
+    <a href="#send-pakete">34. backend_send – Paket für Paket + Infrastruktur</a>
+    <a href="#frontend-rundgang">35. Das Frontend – Bildschirm für Bildschirm</a>
+    <a href="#glossar">36. Mini-Glossar (jeder Begriff in einem Satz)</a>
   </div>
 
   <!-- ============================================================= -->
@@ -204,6 +239,17 @@
 <text x="1120" y="600" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">«protocol» MQTT</text><text x="1120" y="615" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">(publish)</text>
 <line x1="880" y1="660" x2="740" y2="540" stroke="#111" stroke-width="1.6" marker-end="url(#ah)"/>
 <text x="770" y="600" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">«protocol» MQTT</text><text x="770" y="615" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">(subscribe)</text>
+<!-- NEU: Externe Internet-Dienste (Karten, Routing, VRR) - vom Code wirklich genutzt -->
+<polygon points="960,45 973,32 1280,32 1267,45" fill="#d8d8d8" stroke="#222" stroke-width="1.3"/><polygon points="1267,45 1280,32 1280,162 1267,175" fill="#d8d8d8" stroke="#222" stroke-width="1.3"/><rect x="960" y="45" width="307" height="130" fill="#ffffff" stroke="#222" stroke-width="1.5"/>
+<text x="1113" y="64" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#333" style="font-style:italic">«device»</text><text x="1113" y="81" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="13.5" fill="#111" style="font-weight:700">Internet / Externe Dienste</text>
+<text x="1113" y="103" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">OSM / Esri (Karten-Kacheln)</text>
+<text x="1113" y="121" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">OSRM (Fussrouting)</text>
+<text x="1113" y="139" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">VRR EFA (Abfahrtsmonitor)</text>
+<text x="1113" y="160" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#555" style="font-style:italic">nur mit Internet - sonst Offline-Fallback</text>
+<line x1="805" y1="115" x2="955" y2="100" stroke="#111" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="878" y="88" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">«protocol» HTTPS</text><text x="878" y="103" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">(Karten &amp; Routen)</text>
+<line x1="1120" y1="315" x2="1117" y2="182" stroke="#111" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="1190" y="245" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">«protocol» HTTPS</text><text x="1190" y="260" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11.5" fill="#111" style="">(VRR EFA live)</text>
 </svg>
       </div>
       <p class="small">Dieses Diagramm ist als <b>SVG fest eingebaut</b> – es wird immer angezeigt (kein Internet nötig) und sieht aus wie euer Foto-Entwurf, nur mit den drei Korrekturen.</p>
@@ -230,6 +276,7 @@
     <tr><td>External System Server (ÖPNV / Studierendenwerk)</td><td>Java / Spring Boot + <code>backend_send.jar</code></td><td><b>Das simulierte Fremdsystem.</b> Liefert die „echten" Daten (Abfahrten, Speiseplan).</td></tr>
     <tr><td>Database Server</td><td>MariaDB (DBMS) + Database Schema</td><td>Speichert Daten dauerhaft (Datenbank).</td></tr>
     <tr><td>Message Broker Server</td><td>Mosquitto (MQTT-Broker), <b>Port 1883</b></td><td>Der „Postbote" zwischen den beiden Backends (siehe Kapitel 7). <span class="small">(<code>localhost</code> nur in der lokalen Entwicklung.)</span></td></tr>
+    <tr><td>Internet / Externe Dienste <span class="pill done">NEU</span></td><td>OSM/Esri (Karten-Kacheln), OSRM (Fußrouting), VRR EFA (Abfahrten)</td><td>Echte externe Anbieter: Der <b>Browser</b> lädt Karten &amp; Fußrouten per HTTPS, <b>backend_send</b> holt live VRR-Abfahrten. Ohne Internet greifen unsere <b>Offline-Fallbacks</b> (Ersatzkarte, gekennzeichnete Ersatz-Abfahrten) – nichts stürzt ab.</td></tr>
   </table>
 
   <h3>Die Verbindungen (wer redet mit wem)</h3>
@@ -293,7 +340,7 @@
     </div>
   </div>
 
-  <div class="tip"><b>🎯 Dein 30-Sekunden-Spickzettel (auswendig):</b> „Das Verteilungsdiagramm zeigt, auf welcher <b>Hardware</b> (<span class="uml">«device»</span>) welche <b>Software-Umgebung</b> (<span class="uml">«execution environment»</span>) mit welchem <b>fertigen Programm</b> (<span class="uml">«artifact»</span>) läuft und über welche <b>Verbindungen</b> (<span class="uml">«protocol»</span>) sie reden. Wir haben 6 Knoten: Client-Browser, Frontend (Nginx), zwei Backends (Spring Boot), Datenbank (MariaDB) und Message-Broker (Mosquitto). Das Frontend redet per <b>HTTP</b> mit dem Backend, das Backend per <b>JDBC</b> mit der Datenbank und per <b>MQTT (publish/subscribe)</b> über den Broker mit dem Fremdsystem."</div>
+  <div class="tip"><b>🎯 Dein 30-Sekunden-Spickzettel (auswendig):</b> „Das Verteilungsdiagramm zeigt, auf welcher <b>Hardware</b> (<span class="uml">«device»</span>) welche <b>Software-Umgebung</b> (<span class="uml">«execution environment»</span>) mit welchem <b>fertigen Programm</b> (<span class="uml">«artifact»</span>) läuft und über welche <b>Verbindungen</b> (<span class="uml">«protocol»</span>) sie reden. Wir haben <b>7 Knoten</b>: Client-Browser, Frontend (Nginx), zwei Backends (Spring Boot), Datenbank (MariaDB), Message-Broker (Mosquitto) und die <b>externen Internet-Dienste</b> (OSM/Esri-Karten, OSRM-Routing, VRR-Abfahrten). Das Frontend redet per <b>HTTP</b> mit dem Backend, das Backend per <b>JDBC</b> mit der Datenbank, per <b>MQTT (publish/subscribe)</b> über den Broker mit dem Fremdsystem – und Browser bzw. Fremdsystem holen per <b>HTTPS</b> Karten/Routen bzw. VRR-Livedaten; fällt das Internet aus, greifen unsere Offline-Fallbacks."</div>
 
   <div class="warn"><b>⚠️ Stand der Umsetzung (aktualisiert):</b> Das Verteilungsdiagramm ist <b>geprüft und vollständig</b>. Inzwischen ist auch das <b>meiste davon wirklich programmiert</b> (siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>):
     <ul style="margin:8px 0 0">
@@ -808,6 +855,12 @@ class Beobachter {
   &lt;&lt;interface&gt;&gt;
   +aktualisiere(Benachrichtigung b) void
 }
+class BenachrichtigungsSpeicher {
+  -Deque~Eintrag~ eintraege
+  +aktualisiere(Benachrichtigung b) void
+  +alle() List~Eintrag~
+}
+class PinwandService
 class SpeiseplanQuelle {
   &lt;&lt;interface&gt;&gt;
   +holeSpeiseplan() Speiseplan
@@ -837,6 +890,9 @@ Pinwand *-- Post
 Post *-- Kommentar
 Post *-- Like
 Beobachter &lt;|.. Nutzer
+Beobachter &lt;|.. BenachrichtigungsSpeicher
+PinwandService --> Pinwand : nutzt LIVE
+PinwandService --> BenachrichtigungsSpeicher : abonniert
 Pinwand o-- Beobachter
 SpeiseplanQuelle &lt;|.. MqttDatenAdapter
 MqttDatenAdapter --> MqttRohNachricht
@@ -852,10 +908,39 @@ MqttDatenAdapter --> Speiseplan : liefert
         <tr><td>Nutzer → Student / Betreuer / Verwaltungsangestellter</td><td>Nutzer und seine Rollen (Vererbung).</td><td><span class="pat pbeh">Observer</span> (Nutzer = Empfänger)</td></tr>
         <tr><td>Pinwand, Post, Kommentar, Like</td><td>Die virtuelle Pinwand.</td><td><span class="pat pbeh">Observer</span> (Pinwand = Sender)</td></tr>
         <tr><td>Beobachter <span class="uml">«interface»</span></td><td>Vertrag „benachrichtige mich".</td><td><span class="pat pbeh">Observer</span></td></tr>
+        <tr><td>BenachrichtigungsSpeicher, PinwandService <span class="pill done">NEU</span></td><td>Der Observer läuft jetzt <b>LIVE</b>: Der Service meldet den Speicher als Beobachter an; jeder neue Post erzeugt automatisch eine Benachrichtigung (REST: <code>/api/pinwand/benachrichtigungen</code>). Siehe <a href="#pinwand-epic" style="color:var(--accent)">Kapitel&nbsp;25</a>.</td><td><span class="pat pbeh">Observer</span> (konkreter Beobachter)</td></tr>
         <tr><td>SpeiseplanQuelle <span class="uml">«interface»</span>, MqttDatenAdapter, MqttRohNachricht</td><td>Übersetzt MQTT-Rohdaten in saubere <code>Speiseplan</code>-Objekte.</td><td><span class="pat pstr">Adapter</span></td></tr>
         <tr><td>Speiseplan</td><td>Das fertige, saubere Ergebnis, das der Adapter am Ende liefert.</td><td><span class="pat pstr">Adapter</span></td></tr>
       </table>
       <div class="tip"><b>Neu verbunden – damit nichts mehr allein steht:</b> Die <code>LiveCampusKarte</code> <b>benutzt</b> die <code>SpeiseplanQuelle</code> (gestrichelter „benutzt"-Pfeil mit der Aufschrift <i>holt Live-Daten</i>), und der <code>MqttDatenAdapter</code> <b>liefert</b> am Ende einen <code>Speiseplan</code>. Dadurch hängt der Adapter-Teil jetzt am großen Campus-Baum dran.<br><b>Ganz einfach gesagt:</b> Die Karte will das Mensa-Essen anzeigen → sie fragt „die Quelle" → dahinter steckt der Adapter, der die rohe MQTT-Nachricht in einen schönen <code>Speiseplan</code> übersetzt.</div>
+
+      <div class="frage" style="margin-top:14px">Zusatz-Diagramm: Das Auth-Modul (NEU seit dem Entwurf) 🔐</div>
+      <p>Nach dem P4-Entwurf ist die <b>Authentifizierung</b> dazugekommen (Kapitel&nbsp;18). Damit Diagramm und Code <b>konsistent</b> bleiben (P4-Anforderung!), hier der neue Slice als eigenes, bewusst kompaktes Klassendiagramm – ohne Methoden, nur die Struktur:</p>
+      <pre class="mermaid">
+classDiagram
+direction LR
+class SecurityConfig
+class JwtAuthFilter
+class JwtDienst
+class TokenSperrliste
+class AuthService
+class Benutzerkonto
+class AngemeldeterNutzer
+class PasswordEncoder {
+  &lt;&lt;interface&gt;&gt;
+}
+class PbkdfPasswortEncoder
+SecurityConfig --> JwtAuthFilter : haengt in Filterkette
+JwtAuthFilter --> JwtDienst : prueft Token
+JwtAuthFilter --> TokenSperrliste : prueft Logout-Sperre
+JwtAuthFilter --> AngemeldeterNutzer : setzt Principal
+AuthService --> JwtDienst : erzeugt Token
+AuthService --> TokenSperrliste : sperrt bei Logout
+AuthService --> PasswordEncoder : hasht/prueft
+PasswordEncoder &lt;|.. PbkdfPasswortEncoder
+AuthService --> Benutzerkonto : laedt/speichert
+      </pre>
+      <p class="small"><b>Lesehilfe:</b> <code>SecurityConfig</code> = die Türsteher-Regeln (wer darf wohin, DELETE nur Admin), <code>JwtAuthFilter</code> = der Türsteher pro Anfrage, <code>JwtDienst</code> = Ausweis-Drucker/-Prüfer (HS256), <code>TokenSperrliste</code> = Liste eingezogener Ausweise (Logout), <code>PbkdfPasswortEncoder</code> = bindet unser PBKDF2-Hashing an das Spring-Interface <code>PasswordEncoder</code> (Programmieren gegen Schnittstellen!). Details &amp; Rollen: <a href="#anmeldung" style="color:var(--accent)">Kapitel&nbsp;18</a>.</p>
     </div>
   </div>
 
@@ -922,6 +1007,10 @@ class AbfahrtsGenerator {
 class VrrAbfahrten {
   +holeAbfahrten() AbfahrtsDaten
 }
+class MqttSender {
+  +publish(String json) void
+}
+SimulationService --> MqttSender : publish an Broker
 SimulationService --> DatenGenerator
 DatenGenerator &lt;|-- SpeiseplanGenerator
 DatenGenerator &lt;|-- AuslastungsGenerator
@@ -1605,7 +1694,7 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
   <p class="lead">Damit das Tool <b>richtig nutzbar</b> ist, gibt es jetzt eine echte Anmeldung. Niemand sieht den Campus, ohne sich vorher einzuloggen. Das passt auch zum Vorlesungsthema <b>Authentifizierung/Security</b>.</p>
 
   <div class="card" style="border-color:var(--green)">
-    <p style="margin:0"><b>📍 In einem Satz:</b> Es gibt eine Login-/Registrier-Seite. Konten liegen in der Datenbank (Tabelle <code>benutzerkonto</code>), Passwörter werden <b>sicher gehasht</b> (nie im Klartext gespeichert), und nach dem Login bekommt der Browser ein <b>Token</b>. Demo-Konto: <code>student@fh-dortmund.de</code> / <code>passwort123</code>.</p>
+    <p style="margin:0"><b>📍 In einem Satz:</b> Es gibt eine Login-/Registrier-Seite. Konten liegen in der Datenbank (Tabelle <code>benutzerkonto</code>), Passwörter werden <b>sicher gehasht</b> (nie im Klartext gespeichert), und nach dem Login bekommt der Browser einen <b>JWT-Ausweis</b>. Die Endpunkte sind mit <b>Spring Security</b> geschützt – wer kein gültiges Token vorzeigt, kommt gar nicht erst durch. Demo-Konto: <code>student@fh-dortmund.de</code> / <code>passwort123</code>.</p>
   </div>
 
   <div class="qa">
@@ -1614,10 +1703,33 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
       <ol style="margin:6px 0">
         <li>Auf der Login-Seite gibt man E-Mail + Passwort ein → das Frontend schickt <code>POST /api/auth/login</code>.</li>
         <li>Im Backend prüft der <code>AuthService</code> die Daten: Es sucht das <code>Benutzerkonto</code> und vergleicht das Passwort über die Klasse <code>Passwort</code> (Hash-Vergleich).</li>
-        <li>Stimmt alles, bekommt der Browser ein zufälliges <b>Token</b> (wie ein Garderoben-Zettel). Es wird im <code>localStorage</code> gespeichert, damit man nach einem Reload eingeloggt bleibt.</li>
-        <li>Bei jeder weiteren Anfrage schickt das Frontend das Token im Header <code>X-Auth-Token</code> mit. <b>Logout</b> macht das Token ungültig.</li>
+        <li>Stimmt alles, erzeugt der <code>JwtDienst</code> einen signierten <b>JWT-Ausweis</b>. Er wird im <code>localStorage</code> gespeichert, damit man nach einem Reload eingeloggt bleibt.</li>
+        <li>Bei jeder weiteren Anfrage schickt das Frontend das Token im Header <code>Authorization: Bearer &lt;token&gt;</code> mit. Der <code>JwtAuthFilter</code> prüft es. <b>Logout</b> sperrt das Token sofort (Sperrliste).</li>
       </ol>
-      <div class="analogy"><b>🎟️ Vergleich:</b> Login = einmal den Ausweis an der Tür zeigen und dafür ein <b>Bändchen</b> bekommen. Danach reicht das Bändchen (Token) – man muss nicht bei jeder Tür den Ausweis neu zeigen.</div>
+      <div class="analogy"><b>🎟️ Vergleich:</b> Login = einmal den Ausweis an der Tür zeigen und dafür ein <b>fälschungssicheres Bändchen</b> bekommen. Danach reicht das Bändchen (Token) – man muss nicht bei jeder Tür den Ausweis neu zeigen. Weil das Bändchen ein <b>Prägesiegel</b> (die Signatur) trägt, erkennt jeder Türsteher sofort, ob es echt ist.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was ist ein „JWT" überhaupt? (ganz einfach)</div>
+    <div class="antwort">
+      <b>JWT</b> = „JSON Web Token", gesprochen „Dschott". Das ist ein <b>digital unterschriebener Ausweis</b>. Er besteht aus drei Teilen, getrennt durch Punkte: <code>Kopf.Inhalt.Signatur</code>.
+      <table>
+        <tr><th>Teil</th><th>Was drinsteht</th></tr>
+        <tr><td><b>Kopf</b></td><td>Welches Signier-Verfahren benutzt wird (bei uns HS256).</td></tr>
+        <tr><td><b>Inhalt</b></td><td>Offen lesbar: E-Mail, Name, Rolle, Ablaufzeit und eine Token-Nummer (<code>jti</code>).</td></tr>
+        <tr><td><b>Signatur</b></td><td>Ein „Prägesiegel", das nur mit unserem <b>Geheimschlüssel</b> passt. Ändert jemand den Inhalt, passt das Siegel nicht mehr.</td></tr>
+      </table>
+      <div class="analogy"><b>🪪 Vergleich:</b> Ein JWT ist wie ein <b>Personalausweis mit Hologramm</b>. Jeder darf ihn lesen (der Inhalt ist nicht geheim), aber <b>nachmachen</b> kann ihn nur, wer das Hologramm (den Geheimschlüssel) besitzt. Deshalb muss sich das Backend keine Token-Liste merken – es prüft einfach das Siegel. Das nennt man <b>„stateless"</b>.</div>
+      <div class="tip"><b>Warum gut fürs Praktikum:</b> Der Geheimschlüssel steht in <code>application.properties</code> als <code>app.jwt.secret</code> und lässt sich im echten Betrieb über die Umgebungsvariable <code>APP_JWT_SECRET</code> ersetzen. Die Gültigkeit (24 h) steht in <code>app.jwt.expiration-minutes</code>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Wie kann „stateless" trotzdem einen echten Logout haben?</div>
+    <div class="antwort">
+      Ein JWT gilt eigentlich bis zu seiner Ablaufzeit – auch nach einem Logout. Damit „Abmelden" wirklich sofort wirkt, führen wir eine kleine <b>Sperrliste</b> (<code>TokenSperrliste</code>): Beim Logout merken wir uns die Token-Nummer (<code>jti</code>) bis zu ihrem Ablauf, und der <code>JwtAuthFilter</code> weist jedes gesperrte Token ab.
+      <div class="analogy"><b>🚫 Vergleich:</b> Wie eine <b>gesperrte Kreditkarte</b>: Die Karte existiert noch, aber sie steht auf der Sperrliste und wird an der Kasse abgelehnt. Nach dem Ablaufdatum fliegt der Eintrag automatisch raus.</div>
     </div>
   </div>
 
@@ -1641,11 +1753,16 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
       <table>
         <tr><th>Datei</th><th>Aufgabe</th></tr>
         <tr><td><code>AuthController</code></td><td>Die REST-Tür: <code>POST /api/auth/registrieren</code>, <code>POST /api/auth/login</code>, <code>GET /api/auth/ich</code>, <code>POST /api/auth/logout</code>.</td></tr>
-        <tr><td><code>AuthService</code></td><td>Prüft Login-Daten, vergibt/merkt sich Tokens, legt das Demo-Konto an.</td></tr>
+        <tr><td><code>AuthService</code></td><td>Prüft Login-Daten, lässt Passwörter hashen/vergleichen und den <code>JwtDienst</code> ein Token erzeugen, legt das Demo-Konto an.</td></tr>
+        <tr><td><code>SecurityConfig</code> <span class="uml">@Configuration</span></td><td><b>Die zentrale Sicherheitsregel (Spring Security):</b> nur Login/Registrieren sind offen, alles andere braucht ein gültiges Token. Stateless, kein Cookie-Login.</td></tr>
+        <tr><td><code>JwtDienst</code></td><td>Erzeugt und prüft den signierten JWT-Ausweis (HS256, mit Ablaufzeit und Token-Nummer).</td></tr>
+        <tr><td><code>JwtAuthFilter</code></td><td>Türsteher pro Anfrage: liest <code>Authorization: Bearer</code>, prüft das Token und meldet den Nutzer im Sicherheits-Kontext an.</td></tr>
+        <tr><td><code>TokenSperrliste</code></td><td>Merkt sich abgemeldete Tokens (für echten Logout), bis sie ablaufen.</td></tr>
+        <tr><td><code>PbkdfPasswortEncoder</code></td><td>Verbindet unser bestehendes PBKDF2-Hashing mit Spring Security – alte Hashes &amp; das Demo-Konto bleiben gültig.</td></tr>
         <tr><td><code>Passwort</code></td><td>Sicheres Hashing mit PBKDF2 + Salt (nur Java-Standardbibliothek, keine Extra-Bibliothek).</td></tr>
         <tr><td><code>Benutzerkonto</code> <span class="uml">@Entity</span></td><td>= Datenbank-Tabelle <code>benutzerkonto</code> (E-Mail, Name, Rolle, Passwort-Hash).</td></tr>
         <tr><td><code>BenutzerkontoRepository</code></td><td>Datenbank-Zugang (<code>findByEmail</code>).</td></tr>
-        <tr><td><code>FehlerBehandlung</code></td><td>Liefert Fehler als verständliches JSON mit Klartext-Meldung ans Frontend.</td></tr>
+        <tr><td><code>FehlerBehandlung</code> · <code>RestAuthEinstieg</code> · <code>RestZugriffVerweigert</code></td><td>Liefern Fehler (auch 401/403 von Spring Security) als verständliches JSON mit Klartext-Meldung ans Frontend.</td></tr>
       </table>
       <div class="tip" style="border-left-color:var(--green)"><b>Schöner Bezug zum OOD:</b> Die <b>Rolle</b> im Konto (Student / Betreuer / Verwaltungsangestellter) ist genau eure Vererbungs-Hierarchie aus dem <code>nutzer/</code>-Paket (Kapitel&nbsp;13). Die Anmeldung ist also keine Fremd-Sache, sondern passt zu eurem Modell.</div>
     </div>
@@ -1654,13 +1771,34 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
   <div class="qa">
     <div class="frage">Ist das „echte" Sicherheit? (ehrliche Antwort für die Präsentation)</div>
     <div class="antwort">
-      Es ist eine <b>saubere, aber bewusst schlanke Demo-Authentifizierung</b> fürs Praktikum:
+      Ja – die Anmeldung läuft jetzt über <b>Spring Security + JWT</b>, also den Industrie-Standard:
       <ul style="margin:6px 0">
-        <li><b>Gut/echt:</b> Passwörter sind sicher gehasht (PBKDF2 + Salt), E-Mails sind eindeutig, Login/Logout funktionieren, der Hash verlässt nie das Backend.</li>
-        <li><b>Demo-Grenzen:</b> Die Tokens liegen im Arbeitsspeicher und laufen nicht ab; der MQTT-Broker erlaubt anonyme Verbindungen; es gibt (noch) kein HTTPS.</li>
-        <li><b>Nächster Profi-Schritt wäre:</b> <b>Spring Security</b> mit JWT/Sessions, Rollen-Rechte pro Endpunkt und HTTPS.</li>
+        <li><b>Echt/produktionsnah:</b> Passwörter sicher gehasht (PBKDF2 + Salt); <b>Spring Security</b> schützt jeden Endpunkt serverseitig; Tokens sind <b>signierte JWTs</b> mit Ablaufzeit; Logout wirkt sofort über die Sperrliste; Fehler kommen als sauberes JSON.</li>
+        <li><b>Noch offen für den echten Produktivbetrieb:</b> <b>HTTPS</b> (Transportverschlüsselung) und ein „echter", zufällig erzeugter Geheimschlüssel per Umgebungsvariable statt des Standardwerts; der MQTT-Broker erlaubt aktuell anonyme Verbindungen.</li>
       </ul>
-      <div class="tip"><b>🎯 30-Sekunden-Satz:</b> „Unser Tool hat eine echte Anmeldung: Registrierung und Login mit <b>gehashten Passwörtern</b> (PBKDF2 + Salt), gespeichert in der MariaDB. Nach dem Login arbeitet das Frontend mit einem <b>Token</b>. Die Rollen entsprechen unserer Nutzer-Vererbung aus dem OOD. Für die Produktion würden wir auf Spring Security mit JWT und HTTPS umstellen."</div>
+      <div class="qa">
+        <div class="frage">Welche ROLLEN gibt es – und was darf wer? <span class="pill done">NEU</span></div>
+        <div class="antwort">
+          Es gibt jetzt <b>drei Demo-Konten</b>, eines pro Rolle (Passwort jeweils <code>passwort123</code>) – damit kann man in der Präsentation alle Sichten zeigen:
+          <table>
+            <tr><th>Demo-Konto</th><th>Rolle</th><th>Darf zusätzlich …</th></tr>
+            <tr><td><code>student@fh-dortmund.de</code></td><td><b>Student</b></td><td>Lern-/Seminarräume und Labore reservieren, Posts + Likes.</td></tr>
+            <tr><td><code>prof@fh-dortmund.de</code></td><td><b>Professor</b></td><td>… auch <b>Hörsäle</b> reservieren (Studierende dürfen das nicht).</td></tr>
+            <tr><td><code>admin@fh-dortmund.de</code></td><td><b>Admin</b></td><td>… <b>alles verwalten</b>: Reservierungen und Pinwand-Posts <b>löschen</b> (🗑-Knöpfe erscheinen nur für ihn).</td></tr>
+          </table>
+          <b>Wie ist das technisch abgesichert?</b>
+          <ul style="margin:6px 0">
+            <li>Die Rolle steht <b>im signierten JWT</b>. Der <code>JwtAuthFilter</code> macht daraus eine Spring-Berechtigung (z.&nbsp;B. <code>ROLE_ADMIN</code>).</li>
+            <li>Die <code>SecurityConfig</code> erlaubt <b>DELETE</b>-Anfragen unter <code>/api/**</code> <b>nur der Rolle ADMIN</b> – ein Student bekommt 403, egal was sein Browser anzeigt.</li>
+            <li>Die <b>Hörsaal-Regel</b> prüft der <code>CampusService</code> anhand der Rolle aus dem Token (siehe <a href="#raumreservierung" style="color:var(--accent)">Kapitel&nbsp;24</a>).</li>
+            <li><b>Fälschungssicher:</b> Bei Reservierungen und Pinwand-Posts kommen Name + Rolle aus dem <b>geprüften Token</b> (Principal), nicht aus dem Request – niemand kann unter fremdem Namen buchen oder posten. Das beweist der <code>RechteIntegrationTest</code>: der Request behauptet „Boesewicht", gespeichert wird „Prof. Demo".</li>
+          </ul>
+          <div class="analogy"><b>🎫 Vergleich:</b> Wie ein <b>Festival-Bändchen</b> in drei Farben: Alle kommen aufs Gelände (Student), das grüne Bändchen darf auch auf die Bühne (Professor), und nur das schwarze Crew-Bändchen darf den Backstage-Bereich <b>umräumen</b> (Admin). Die Farbe steckt fälschungssicher im Bändchen (JWT) – nicht in dem, was man an der Tür behauptet.</div>
+          <div class="small"><b>Einordnung zum OOD (Kapitel 13):</b> Die Rollen entsprechen der Nutzer-Vererbung – Student ↔ <code>Student</code>, Professor ↔ <code>Betreuer</code>, Admin ↔ <code>Verwaltungsangestellter</code>. Bei der Registrierung sind nur <b>Student</b> und <b>Professor</b> wählbar; den Admin gibt es ausschließlich als eingerichtetes Demo-Konto.</div>
+        </div>
+      </div>
+
+      <div class="tip"><b>🎯 30-Sekunden-Satz:</b> „Unsere Anmeldung nutzt <b>Spring Security mit JWT</b>: Registrierung und Login mit <b>gehashten Passwörtern</b> (PBKDF2 + Salt) in der MariaDB. Nach dem Login bekommt der Browser einen <b>signierten Token</b>, den ein Sicherheitsfilter bei jeder Anfrage prüft; Logout sperrt ihn sofort. Es gibt <b>drei Rollen</b> – Student, Professor, Admin: Professoren dürfen zusätzlich Hörsäle reservieren, der Admin darf per DELETE verwalten (nur ROLE_ADMIN). Die Rollen entsprechen unserer Nutzer-Vererbung aus dem OOD. Für den Produktivbetrieb fehlt eigentlich nur noch HTTPS."</div>
     </div>
   </div>
 
@@ -1761,12 +1899,27 @@ flowchart LR
 
   <table>
     <tr><th>Funktion</th><th>Umsetzung</th><th>Datenschutz / Fallback</th></tr>
-    <tr><td>Straße / Satellit</td><td>Leaflet-Layer-Control mit OpenStreetMap und Esri World Imagery.</td><td>Sichtbare Attribution; bei fehlendem CDN erscheint die lokale Skizze.</td></tr>
+    <tr><td>Straße / Satellit</td><td>Leaflet-Layer-Control mit OpenStreetMap und Esri World Imagery.</td><td>Sichtbare Attribution; fällt der Kartendienst aus (kein CDN <b>oder</b> keine Kacheln), erscheint die nutzbare Offline-Ersatzkarte.</td></tr>
     <tr><td>Echte Räume</td><td><code>RaumInfo</code> enthält <code>lat</code>/<code>lng</code>; Koordinaten liegen am Campus EFS 40/42.</td><td>Die fachlichen Raumdaten bleiben im eigenen Backend.</td></tr>
     <tr><td>Meine Position</td><td>Browser-API <code>navigator.geolocation</code>, nur nach Nutzerzustimmung.</td><td>Wird weder ans eigene Backend noch in die DB geschrieben; nur für Karte/Route verwendet.</td></tr>
     <tr><td>Fußweg</td><td>OSRM liefert GeoJSON; Leaflet zeichnet Linie, Pfeile, Entfernung und Dauer.</td><td>Ohne Routing-Dienst bleibt Karte/Reservierung funktionsfähig und zeigt eine Fehlermeldung.</td></tr>
     <tr><td>ÖPNV</td><td><code>VrrAbfahrten</code> → <code>AbfahrtsDaten</code> → MQTT → <code>AbfahrtsSpeicher</code> → <code>TransitController</code>.</td><td>Quelle ist im UI sichtbar; bei Ausfall eindeutig markierter Offline-Fallback.</td></tr>
   </table>
+
+  <h3>Die Karte fällt nie ganz aus 🛟 <span class="pill done">verbessert</span></h3>
+  <div class="qa">
+    <div class="frage">Was passiert, wenn der Kartendienst (die „Luftbilder") gerade nicht erreichbar ist?</div>
+    <div class="antwort">
+      Die App merkt das <b>selbst</b> und wechselt auf eine einfache, gemalte <b>Ersatzkarte</b>, auf der die Räume trotzdem an ihrer Stelle anklickbar bleiben. Es gibt zwei Ausfall-Fälle, beide sind abgedeckt:
+      <table>
+        <tr><th>Was ist kaputt?</th><th>Reaktion der App</th></tr>
+        <tr><td>Die Karten-<b>Bibliothek</b> (Leaflet aus dem Internet) lädt nicht.</td><td>Sofort die Offline-Ersatzkarte.</td></tr>
+        <tr><td>Die Bibliothek lädt, aber die <b>Kacheln</b> (die Bilder von OSM/Esri) kommen nicht.</td><td>Die App zählt die fehlgeschlagenen Kacheln; häufen sie sich, erscheint ein Hinweis <b>„⚠ Kartendienst gestört – zur Offline-Karte wechseln"</b>. Zusätzlich gibt es jederzeit den Knopf <b>„Offline-Karte"</b>.</td></tr>
+      </table>
+      <div class="analogy"><b>🛟 Vergleich:</b> Wie ein Navi, das bei Funkloch automatisch auf die gespeicherte Offline-Karte umschaltet – man bleibt handlungsfähig, statt auf einen leeren Bildschirm zu starren.</div>
+      <div class="tip"><b>Bezug EPIC 2 (US 2.1):</b> Damit ist das Akzeptanzkriterium „<i>Bei Ausfall des Kartendienstes bleibt eine Ersatzkarte nutzbar</i>" wirklich vollständig erfüllt – nicht nur, wenn die Bibliothek fehlt, sondern auch, wenn nur die Bilder ausfallen. In der Ersatzkarte führt der Knopf „Zur Live-Karte" wieder zurück.</div>
+    </div>
+  </div>
 
   <div class="tip"><b>Bezug zu Praktikum&nbsp;4:</b> Das Factory-Klassendiagramm wurde um die tatsächlich vorhandene Klasse <code>VrrAbfahrten</code> ergänzt. Das bestehende Factory-Muster bleibt unverändert: <code>AbfahrtsGenerator.erzeugeDaten()</code> liefert weiterhin das gemeinsame Produkt <code>Fremddatensatz</code>. Damit bleiben Diagramm und Implementierung konsistent.</div>
   <div class="warn"><b>Grenze der Demo:</b> OSM-, Esri-, OSRM- und VRR-Endpunkte sind externe Best-Effort-Dienste. Für Produktion wären API-Verträge, Monitoring, Caching/Rate-Limits und gegebenenfalls selbst betriebene Dienste nötig. Diese ehrliche Abgrenzung gehört in die Architektur-Reflexion.</div>
@@ -1779,8 +1932,776 @@ flowchart LR
     <li>Unter „Live-Daten“ Simulation starten: Der Sender holt VRR, MQTT transportiert, der Empfänger stellt den Snapshot per REST bereit.</li>
   </ol>
 
+  <!-- ============================================================= -->
+  <h2 id="tests">21. ✅ Automatische Tests: JUnit &amp; Frontend-Tests <span class="pill done">NEU</span></h2>
+  <p class="lead">Damit wir sicher sind, dass Login, Sicherheit und die Karte wirklich funktionieren – und auch nach späteren Änderungen weiter funktionieren – gibt es jetzt <b>automatische Tests</b>. Ein Test ist ein kleines Programm, das unser Programm benutzt und prüft, ob das Ergebnis stimmt.</p>
+
+  <div class="qa">
+    <div class="frage">Was ist ein „Unit-Test" – ganz einfach?</div>
+    <div class="antwort">
+      Ein <b>Unit-Test</b> prüft einen einzelnen Baustein („Unit") isoliert. Man gibt etwas Bekanntes hinein und prüft, ob genau das Erwartete herauskommt.
+      <div class="analogy"><b>🔎 Vergleich:</b> Wie die <b>Qualitätskontrolle am Fließband</b>: Bevor das ganze Auto fährt, prüft man einzeln, ob die Bremse bremst und das Licht leuchtet. Fällt ein Teil durch, sieht man <b>sofort</b> welches – nicht erst, wenn alles zusammengebaut ist.</div>
+      <div class="tip"><b>Warum wichtig fürs Praktikum:</b> Tests sind ein Qualitätsnachweis. Sie zeigen den Prüfer:innen, dass die Akzeptanzkriterien nicht nur „von Hand einmal geklickt", sondern <b>wiederholbar geprüft</b> sind.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir im Backend? (Login &amp; Sicherheit)</div>
+    <div class="antwort">
+      Im Ordner <code>backend_receive/src/test/.../auth/</code> liegen <b>27 Tests</b> für Anmeldung und Rollen (Spring Security + JWT):
+      <table>
+        <tr><th>Testdatei</th><th>Prüft</th></tr>
+        <tr><td><code>JwtDienstTest</code></td><td>Ein erzeugtes Token lässt sich prüfen; ein <b>abgelaufenes</b>, <b>verfälschtes</b> oder mit fremdem Schlüssel erstelltes Token wird <b>abgelehnt</b>.</td></tr>
+        <tr><td><code>TokenSperrlisteTest</code></td><td>Ein abgemeldetes Token steht auf der Sperrliste; abgelaufene Einträge fallen automatisch weg.</td></tr>
+        <tr><td><code>PbkdfPasswortEncoderTest</code></td><td>Das richtige Passwort passt auf seinen Hash, ein falsches nicht; im Hash steht nie das Klartext-Passwort.</td></tr>
+        <tr><td><code>AuthIntegrationTest</code></td><td>Der <b>komplette Weg</b> über einen echten Testserver: Login → geschützte Seite mit/ohne Token → Registrieren (auch Dubletten &amp; zu kurzes Passwort) → <b>Logout macht das Token sofort ungültig</b>. Deckt EPIC 1 (US 1.1–1.3) ab.</td></tr>
+        <tr><td><code>RechteIntegrationTest</code> <span class="pill done">NEU</span></td><td>Die <b>drei Rollen</b> über den echten HTTP-Stack: Professor darf den Hörsaal reservieren (Zuordnung kommt aus dem <b>Token</b>, nicht aus dem Request!), Student nicht (400); Admin darf Reservierungen und Posts <b>löschen</b> (200/404), Student bekommt <b>403</b>.</td></tr>
+      </table>
+      <div class="tip"><b>So führt man sie aus:</b> <code>./mvnw -pl backend_receive test</code> → am Ende steht <code>Tests run: 60, Failures: 0</code> und <code>BUILD SUCCESS</code>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir bei der Datenbank? (Persistenz / EPIC 8) <span class="pill done">NEU</span></div>
+    <div class="antwort">
+      <b>EPIC&nbsp;8 – Betrieb und Persistenz</b> verlangt, dass wichtige Daten <b>dauerhaft</b> gespeichert werden und einen Neustart <b>überleben</b> (US&nbsp;8.2, Issue&nbsp;#37). Genau das prüft die Datei <code>backend_receive/src/test/.../persistenz/PersistenzIntegrationTest</code> mit <b>6&nbsp;Tests</b> – einer je Datenart plus ein Gesamttest:
+      <table>
+        <tr><th>Test</th><th>Prüft (Akzeptanzkriterium US 8.2)</th></tr>
+        <tr><td><code>benutzerkontoUeberlebtNeustart</code></td><td>Ein gespeichertes <b>Benutzerkonto</b> lässt sich nach dem „Neustart" per E-Mail wieder laden – und enthält nur den <b>Passwort-Hash</b>, nie das Klartext-Passwort.</td></tr>
+        <tr><td><code>reservierungUeberlebtNeustart</code></td><td>Eine <b>Raumreservierung</b> bleibt mit Raum, Nutzer und Status erhalten.</td></tr>
+        <tr><td><code>pinwandPostUndLikeUeberlebenNeustart</code></td><td>Ein <b>Pinwand-Beitrag</b> <i>und</i> sein <b>Like-Zähler</b> (hier: 2 Likes) werden dauerhaft gespeichert.</td></tr>
+        <tr><td><code>mensaGerichtUeberlebtNeustart</code></td><td>Empfangene <b>Mensadaten</b> (Gericht + Preis) landen in der Historie, „neueste zuerst".</td></tr>
+        <tr><td><code>emailIstEindeutig</code> · <code>alleVierDatenartenWerdenGespeichert</code></td><td>Eine E-Mail gibt es nur einmal; alle vier Datenarten liegen gleichzeitig in der DB (US&nbsp;8.3: „nachvollziehbar").</td></tr>
+      </table>
+      <div class="analogy"><b>🔎 Der Trick mit dem „Neustart":</b> Wir starten die App nicht wirklich neu (das dauert). Stattdessen schreiben wir die Zeile mit <code>flush()</code> in die Datenbank und leeren mit <code>clear()</code> den Arbeitsspeicher. Danach ist der Speicher leer – wie nach einem Neustart – und die Daten können <b>nur noch aus der Datenbank</b> kommen. Klappt das Laden, ist die Persistenz bewiesen.</div>
+      <div class="tip"><b>Warum das den Prüfer:innen genügt:</b> H2 (lokal) und MariaDB (Docker) sprechen dasselbe JPA/SQL. Was mit H2 im Test übersteht, übersteht mit MariaDB einen echten <code>docker compose down/up</code> genauso – zusätzlich abgesichert durch das <code>mariadb_data</code>-Volume (siehe <a href="#persistenz" style="color:var(--accent)">Kapitel&nbsp;22</a>).</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir beim Fremdsystem &amp; MQTT? (EPIC 7) <span class="pill done">NEU</span></div>
+    <div class="antwort">
+      <b>EPIC&nbsp;7</b> ist die ganze Kette <b>Fremdsystem → MQTT → Empfänger</b>. Sie hat <b>13&nbsp;neue Tests</b>, aufgeteilt auf beide Backends – die reinen Bausteine sind <b>ohne Broker und ohne Netz</b> testbar:
+      <table>
+        <tr><th>Testdatei (Backend)</th><th>Prüft (User Story)</th></tr>
+        <tr><td><code>FabrikMethodeTest</code><br><span class="small">backend_send</span></td><td><b>US&nbsp;7.1</b> – Jede Fabrik (Factory Method) erzeugt ihr Produkt: Mensa-, Auslastungs- und Abfahrtsdaten, jeweils als <b>gültiges JSON</b> mit korrektem <code>"typ"</code>. Auch Anführungszeichen im Text zerstören das JSON nicht.</td></tr>
+        <tr><td><code>SimulationServiceTest</code><br><span class="small">backend_send</span></td><td><b>US&nbsp;7.1 / 7.2</b> – Ein Start erzeugt genau <b>3&nbsp;Datensätze</b> und veröffentlicht sie über den MQTT-Sender; ein <b>erneuter Start</b> liefert wieder 3 (kein Neustart nötig). <span class="small">(Ein <i>erfassender</i> Sender ersetzt den echten Broker.)</span></td></tr>
+        <tr><td><code>MqttSenderTest</code><br><span class="small">backend_send</span></td><td><b>US&nbsp;7.2</b> – Ist der Empfänger/Broker nicht erreichbar, <b>stürzt der Sender nicht ab</b>, sondern verwirft die Nachricht sauber.</td></tr>
+        <tr><td><code>MqttDatenAdapterTest</code><br><span class="small">backend_receive</span></td><td><b>US&nbsp;7.3</b> – Der <b>Adapter</b> übersetzt gültigen JSON-Speiseplan in interne <code>Gericht</code>-Objekte; fehlt die Liste, gibt es einen leeren Plan; <b>kaputter JSON</b> führt zu einer klaren Fehlermeldung statt zum Absturz.</td></tr>
+        <tr><td><code>AbfahrtsSpeicherTest</code><br><span class="small">backend_receive</span></td><td><b>US&nbsp;7.3</b> – Empfangene ÖPNV-Abfahrten werden korrekt eingelesen; kommen danach <b>ungültige Daten</b>, bleiben die zuletzt gültigen Abfahrten unbeschädigt erhalten.</td></tr>
+      </table>
+      <div class="analogy"><b>🔎 Warum ohne echten Broker?</b> Ein Test soll <b>schnell</b> und <b>zuverlässig</b> sein. Statt einen echten Mosquitto zu starten, prüfen wir die <b>Bausteine</b>: die Fabriken (erzeugen), den Sender (publish-Logik), den Adapter und den Abfahrts-Speicher (empfangen &amp; übersetzen). Die MQTT-<i>Leitung</i> selbst wird beim <b>Docker-Start</b> real durchlaufen (siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>).</div>
+      <div class="tip"><b>So führt man sie aus:</b> <code>./mvnw test</code> baut &amp; testet <b>beide</b> Backends. Ergebnis: <code>backend_send Tests run: 10</code> und <code>backend_receive Tests run: 60</code>, jeweils <code>Failures: 0</code>. Mehr zu EPIC&nbsp;7 in <a href="#fremdsystem" style="color:var(--accent)">Kapitel&nbsp;23</a>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir bei Räumen &amp; Reservierungen? (EPIC 3) <span class="pill done">NEU</span></div>
+    <div class="antwort">
+      <b>EPIC&nbsp;3</b> dreht sich um Raumbelegung ansehen (US&nbsp;3.1) und Räume reservieren (US&nbsp;3.2). Die Fachlogik steckt im <code>CampusService</code>; <code>CampusServiceTest</code> prüft sie mit <b>13&nbsp;Tests</b> – dabei wird die Datenbank durch ein <b>Mock</b> ersetzt, sodass nur die Regeln getestet werden (schnell, ohne Spring):
+      <table>
+        <tr><th>Test</th><th>Prüft (User Story)</th></tr>
+        <tr><td><code>reservierungWirdDemNutzerUndRaumZugeordnet</code></td><td><b>US&nbsp;3.2</b> – Die Reservierung bekommt den richtigen Raumnamen, wird dem <b>angemeldeten Nutzer</b> zugeordnet, erhält Status „bestaetigt" und wird <b>gespeichert</b>.</td></tr>
+        <tr><td><code>unbekannterRaumWirdAbgelehnt</code></td><td><b>US&nbsp;3.2</b> – Ohne gültigen Raum gibt es eine klare Fehlermeldung und es wird <b>nichts</b> gespeichert.</td></tr>
+        <tr><td><code>mensaUndBibliothekKannNiemandReservieren</code> <span class="pill done">NEU</span></td><td><b>Rollenregel</b> – kostBar und Bibliothek sind offene Orte: nicht reservierbar, <b>auch nicht für den Admin</b>.</td></tr>
+        <tr><td><code>studentDarfHoersaalNichtReservieren</code> · <code>professorUndAdminDuerfenHoersaalReservieren</code> <span class="pill done">NEU</span></td><td><b>Rollenregel</b> – Hörsäle sind für Studierende gesperrt (Klartext-Meldung), Professor:innen und Admins dürfen sie buchen.</td></tr>
+        <tr><td><code>endeVorDemBeginnWirdAbgelehnt</code></td><td><b>US&nbsp;3.2 (Regel&nbsp;2)</b> – Ein Ende <b>vor</b> dem Beginn (14:00→13:00) wird abgelehnt.</td></tr>
+        <tr><td><code>ueberschneidungMitVorhandenerReservierungWirdAbgelehnt</code></td><td><b>US&nbsp;3.2 (Regel&nbsp;3)</b> – Überlappt der Zeitraum eine vorhandene Reservierung desselben Raums, gibt es einen <b>Konflikt</b> (409) statt einer Doppelbuchung.</td></tr>
+        <tr><td><code>angrenzendeReservierungIstErlaubt</code></td><td><b>US&nbsp;3.2 (Grenzfall)</b> – 13:00–14:00 direkt <b>nach</b> 12:00–13:00 ist ausdrücklich erlaubt (Angrenzen ≠ Überschneiden).</td></tr>
+        <tr><td><code>loeschenEntferntVorhandeneReservierung…</code> <span class="pill done">NEU</span></td><td><b>Admin-Verwaltung</b> – Löschen entfernt die Reservierung; unbekannte IDs melden „nicht gefunden" (404).</td></tr>
+        <tr><td><code>leereZeitenBekommenStandardwerte</code></td><td><b>US&nbsp;3.2</b> – Leere Eingaben werden robust auf sinnvolle Standardwerte gesetzt (12:00–13:00).</td></tr>
+        <tr><td><code>veranstaltungenWerdenMitUhrzeitGeliefert</code> · <code>gespeicherteReservierungenWerdenGeliefert</code></td><td><b>US&nbsp;3.1</b> – Veranstaltungen mit Uhrzeit; vorhandene Reservierungen (aus der DB) werden angezeigt.</td></tr>
+        <tr><td><code>raeumeSindDieSechsFhRaeumeOhneAudimax</code> <span class="pill done">NEU</span></td><td><b>Echte FH-Räume</b> – genau 6 Räume (Schwerpunkt Haus 42 Informatik); der <b>TU-Audimax kommt nicht vor</b>, Computerraum &amp; Seminarraum 210 wurden entfernt.</td></tr>
+      </table>
+      <div class="analogy"><b>🎭 Was ist ein „Mock"?</b> Ein <b>Double</b> (Stunt-Double) für die Datenbank: Statt echt zu speichern, tut das Mock nur so und gibt zurück, was wir vorgeben. So testen wir die <b>Denk-Arbeit</b> des Service (zuordnen, prüfen, Standardwerte) blitzschnell und unabhängig von einer echten DB. Das <i>echte</i> Speichern deckt der <code>PersistenzIntegrationTest</code> ab.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir bei Pinwand, Mensa &amp; ÖPNV? (EPIC 4, 5, 6) <span class="pill done">NEU</span></div>
+    <div class="antwort">
+      <table>
+        <tr><th>Testdatei</th><th>Prüft (User Story)</th></tr>
+        <tr><td><code>PinwandServiceTest</code><br><span class="small">backend_receive, 6&nbsp;Tests</span></td><td><b>EPIC&nbsp;4</b> – Erstellen speichert <b>und benachrichtigt automatisch</b> die registrierten Beobachter (Observer LIVE, US&nbsp;4.3, Meldung enthält Titel/Autor/Kategorie); <b>nur registrierte</b> Beobachter werden informiert (abonnieren/abmelden); der Benachrichtigungs-Speicher behält nur die letzten 20; <b>Like</b> erhöht + speichert (US&nbsp;4.2); leere Felder → Standards (US&nbsp;4.1); Admin-Löschen + 404.</td></tr>
+        <tr><td><code>SpeiseplanSpeicherTest</code><br><span class="small">backend_receive, 2&nbsp;Tests</span></td><td><b>EPIC&nbsp;5 / US&nbsp;5.1</b> – Ohne empfangene Daten meldet der Speicher kontrolliert „keine Daten" (kein Absturz); ein neu empfangener Plan <b>ersetzt</b> den alten automatisch.</td></tr>
+        <tr><td><code>AbfahrtsSpeicherTest</code><br><span class="small">backend_receive, 3&nbsp;Tests</span></td><td><b>EPIC&nbsp;6 / US&nbsp;6.2</b> – Der Startzustand liefert klar gekennzeichnete Platzhalter („Warte auf VRR-Daten", Zeit „--:--"); gültige MQTT-Daten werden übernommen; kaputte Daten lassen den letzten guten Stand unberührt.</td></tr>
+        <tr><td><code>VrrAbfahrtenTest</code><br><span class="small">backend_send, 2&nbsp;Tests</span></td><td><b>EPIC&nbsp;6 / US&nbsp;6.2</b> – Der VRR-Dienst wird im Test <b>gezielt ausfallen gelassen</b> (unerreichbare Adresse): statt Absturz kommen Ersatzdaten, eindeutig als <b>„Offline-Fallback"</b> gekennzeichnet und als gültiges JSON für die MQTT-Kette.</td></tr>
+      </table>
+      <div class="tip"><b>Der Observer ist jetzt LIVE nachweisbar:</b> Beitrag anlegen → <code>GET /api/pinwand/benachrichtigungen</code> zeigt z.&nbsp;B. <code>"Neuer Pinwand-Post: Observer-Live-Test (von Demo Student, Campus)"</code>. Details in <a href="#pinwand-epic" style="color:var(--accent)">Kapitel&nbsp;25</a>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was testen wir im Frontend? (Karte / EPIC 2)</div>
+    <div class="antwort">
+      Die Karte selbst braucht einen Browser, aber ihre <b>reinen Rechen-Bausteine</b> haben wir in <code>frontend/src/campusUtils.mjs</code> ausgelagert und mit <b>22 Tests</b> in <code>campusUtils.test.mjs</code> geprüft:
+      <ul style="margin:6px 0">
+        <li><code>richtungsWinkel</code> – dreht die <b>Richtungspfeile</b> der Fußroute (Nord = 0°, Ost = 90°, West = −90°, Süd = 180°). <span class="small">→ US 2.3</span></li>
+        <li><code>escapeHtml</code> – macht Raumnamen sicher, bevor sie in einen Karten-Pin geschrieben werden. <span class="small">→ US 2.1</span></li>
+        <li><code>statusClass</code> – wählt die richtige Farbe je Raum-Status (frei/bald/belegt). <span class="small">→ US 2.1</span></li>
+        <li><code>sollAktualisieren</code> – entscheidet, ob gerade <b>automatisch nachgeladen</b> werden soll: nur eingeloggt, nur bei sichtbarem Tab, nicht während schon geladen wird. <span class="small">→ Polling, siehe <a href="#fremdsystem" style="color:var(--accent)">Kapitel&nbsp;23</a></span></li>
+        <li><code>darfRaumReservieren</code> – die <b>Rollenregel</b> als Anzeige-Logik: Hörsäle nur für Professor/Admin, Mensa/Bibliothek für niemanden. Das Frontend blendet damit das Formular passend aus; verbindlich prüft immer das Backend. <span class="small">→ EPIC 3, Kapitel&nbsp;24</span></li>
+        <li><code>neuerPostHinweis</code> <span class="pill done">NEU</span> – die 🔔-<b>Benachrichtigung über neue Pinwand-Beiträge</b>: meldet nur bei aktiviertem Schalter, nie beim ersten Laden, fasst mehrere neue Beiträge zusammen. <span class="small">→ EPIC 4 / US 4.3, Kapitel&nbsp;25</span></li>
+      </ul>
+      <div class="tip"><b>So führt man sie aus:</b> im Ordner <code>frontend/</code> den Befehl <code>npm test</code> (nutzt Nodes eingebauten Test-Runner <code>node --test</code>, <b>ohne</b> zusätzliche Bibliothek). Ergebnis: <code>pass 27 · fail 0</code>.</div>
+      <div class="analogy"><b>🧩 Warum ausgelagert?</b> Ein Test kann eine Funktion nur prüfen, wenn er sie <b>einzeln aufrufen</b> kann. Deshalb liegen die reinen Formeln jetzt in einer eigenen kleinen Datei – die große <code>App.jsx</code> holt sie sich von dort.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Was wurde sonst noch in dieser Runde verbessert?</div>
+    <div class="antwort">
+      <ul style="margin:6px 0">
+        <li><b>Login auf Profi-Niveau:</b> von der schlanken Demo-Anmeldung auf <b>Spring Security + JWT</b> umgestellt (siehe <a href="#anmeldung">Kapitel&nbsp;18</a>).</li>
+        <li><b>Karte fällt nie ganz aus:</b> Ersatzkarte jetzt auch bei ausfallenden Kacheln, nicht nur bei fehlender Bibliothek (siehe <a href="#realmap">Kapitel&nbsp;20</a>).</li>
+        <li><b>Kleiner Backend-Fehler behoben:</b> In der MQTT-Konfiguration passten die Namen der Einstellungen nicht exakt (<code>mqtt.broker-url</code> statt <code>mqtt.broker.url</code>). Jetzt startet das Backend auch <b>lokal ohne Docker</b> sauber. <span class="pill done">NACHTRAG</span> Derselbe Tippfehler steckte auch noch in <code>backend_send</code> (<code>MqttSendConfig</code>: <code>mqtt.client-id</code> mit Bindestrich) – er fiel erst auf, als das Sende-Backend neu gebaut wurde: Der Container stürzte mit „Could not resolve placeholder" ab, und <b>als Folge</b> startete auch das Frontend nicht mehr (nginx bricht ab, wenn es den Upstream <code>backend_send</code> nicht findet: „host not found in upstream"). <b>Merksatz:</b> Stirbt in Docker ein Container, kann das einen zweiten mitreißen – bei „Frontend geht nicht" also immer zuerst <code>docker logs</code> BEIDER Container lesen; die eigentliche Ursache steht oft im anderen.</li>
+        <li><b>Pinwand-Bug beim Speichern behoben:</b> <span class="pill done">NEU</span> Beim Anlegen eines Beitrags erschien fälschlich „<i>Post konnte nicht gespeichert werden: Cannot read properties of null (reading 'reset')</i>", obwohl der Beitrag längst in der Datenbank lag. Ursache &amp; Fix siehe unten.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">🐞 Der Pinwand-Fehler „Cannot read properties of null (reading 'reset')" – was war los? <span class="pill done">GELÖST</span></div>
+    <div class="antwort">
+      Nach dem Absenden eines Pinwand-Beitrags kam die rote Meldung „<i>Post konnte nicht gespeichert werden: Cannot read properties of null (reading 'reset')</i>" – obwohl der Beitrag <b>tatsächlich gespeichert</b> war (nach einem Neuladen tauchte er auf). Ein <b>falscher Alarm</b> also, aber verwirrend.
+      <div class="frage" style="margin-top:8px">Warum?</div>
+      Der Code wollte nach dem Speichern das Eingabeformular leeren: <code>event.currentTarget.reset()</code>. Das stand aber <b>nach</b> einem <code>await</code> (dem Warten auf die Server-Antwort). Und genau hier liegt eine bekannte <b>React-Falle</b>:
+      <div class="analogy"><b>🎫 Vergleich:</b> <code>event.currentTarget</code> ist wie ein <b>Garderoben-Ticket, das nur während der Veranstaltung gilt</b>. Sobald der Klick-Handler „pausiert" (das <code>await</code>), räumt React das Ticket weg und setzt es auf <code>null</code>. Greift man <b>danach</b> darauf zu, hält man ein <b>leeres Ticket</b> in der Hand – und <code>null.reset()</code> stürzt ab.</div>
+      <div class="frage" style="margin-top:8px">Die Lösung</div>
+      Wir merken uns das Formular-Element <b>vor</b> dem <code>await</code> in einer eigenen Variable und benutzen danach diese:
+      <pre style="white-space:pre-wrap"><code>const formEl = event.currentTarget;   // JETZT sichern (noch gültig)
+const form = new FormData(formEl);
+await apiJson(API.posts, { … });      // hier "verliert" event.currentTarget seinen Wert
+formEl.reset();                        // gesicherte Referenz -> kein Absturz</code></pre>
+      <div class="tip"><b>Merksatz:</b> Nach einem <code>await</code> niemals mehr <code>event.currentTarget</code> anfassen – die Referenz vorher in eine Variable kopieren. Geändert in <code>frontend/src/App.jsx</code> (Funktion <code>postErstellen</code>); Build &amp; die 17 Frontend-Tests bleiben grün.</div>
+      <div class="warn"><b>⚠️ Wichtig beim Testen mit Docker:</b> Der Browser auf <code>localhost:8090</code> zeigt das <b>fertig gebaute</b> Frontend aus dem Container – <b>nicht</b> automatisch deine letzten Code-Änderungen. Nach jeder Frontend-Änderung den Container <b>neu bauen</b>:
+      <pre style="white-space:pre-wrap"><code>docker compose up -d --build frontend</code></pre>
+      Danach im Browser <b>hart neu laden</b> (Mac: <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>R</kbd>), damit nicht das alte, zwischengespeicherte JavaScript benutzt wird. Genau daran lag es, dass der Fehler „zuerst noch da" war: Der Container lief noch mit dem alten Bundle.</div>
+    </div>
+  </div>
+
+  <h2 id="persistenz">22. 💾 EPIC 8 – Betrieb &amp; Persistenz: ein Knopf, alles bleibt erhalten <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;8 (GitHub-Issue&nbsp;#35) hat zwei Versprechen: Man soll das <b>ganze System mit einem Befehl starten</b> können (US&nbsp;8.1) und die <b>wichtigen Daten bleiben dauerhaft erhalten</b> (US&nbsp;8.2) – nachprüfbar über eine Weboberfläche (US&nbsp;8.3). Alle drei sind umgesetzt; dieses Kapitel bündelt, <b>wo</b> das im Projekt steckt.</p>
+
+  <div class="qa">
+    <div class="frage">US 8.1 – Wie startet man das Gesamtsystem mit einem Befehl?</div>
+    <div class="antwort">
+      Mit <code>docker compose up --build</code> im Projekt-Hauptordner. Die <code>docker-compose.yml</code> startet <b>alle</b> nötigen Dienste als Container:
+      <table>
+        <tr><th>Container</th><th>Rolle</th><th>Adresse</th></tr>
+        <tr><td><code>frontend</code></td><td>Nginx liefert die React-App</td><td><b>localhost:8090</b></td></tr>
+        <tr><td><code>backend_receive</code></td><td>Hauptbackend</td><td>localhost:8083</td></tr>
+        <tr><td><code>backend_send</code></td><td>simuliertes Fremdsystem</td><td>localhost:8084</td></tr>
+        <tr><td><code>mosquitto</code></td><td>MQTT-Broker</td><td>localhost:1883</td></tr>
+        <tr><td><code>mariadb</code></td><td>Datenbank</td><td>localhost:3306</td></tr>
+        <tr><td><code>adminer</code></td><td>DB im Browser ansehen (US&nbsp;8.3)</td><td>localhost:8091</td></tr>
+      </table>
+      <div class="tip"><b>Warten auf die DB:</b> <code>backend_receive</code> hat ein <code>depends_on: mariadb (condition: service_healthy)</code>. Docker prüft per <b>healthcheck</b>, ob die Datenbank <i>wirklich</i> bereit ist, und startet das Backend erst dann – so scheitert der Start nicht an einer noch nicht hochgefahrenen DB (Akzeptanzkriterium von US&nbsp;8.1). Stoppen mit <code>docker compose down</code>. Die ausführliche Docker-Erklärung steht in <a href="#docker" style="color:var(--accent)">Kapitel&nbsp;15</a>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 8.2 – Welche Daten werden dauerhaft gespeichert und wo im Code?</div>
+    <div class="antwort">
+      Vier Datenarten, je als <b><code>@Entity</code></b> (= eine Datenbank-Tabelle) im Paket <code>persistenz/</code> bzw. <code>auth/</code>:
+      <table>
+        <tr><th>Datenart</th><th>Java-Klasse (Tabelle)</th><th>US</th></tr>
+        <tr><td>Benutzerkonten</td><td><code>Benutzerkonto</code> (<code>benutzerkonto</code>)</td><td>1.1 / 8.2</td></tr>
+        <tr><td>Raumreservierungen</td><td><code>GespeicherteReservierung</code></td><td>3.2 / 8.2</td></tr>
+        <tr><td>Pinwand-Posts + Likes</td><td><code>GespeicherterPinwandPost</code> (Feld <code>likes</code>)</td><td>4.1 / 4.2 / 8.2</td></tr>
+        <tr><td>Empfangene Mensadaten</td><td><code>GespeichertesGericht</code></td><td>5.2 / 8.2</td></tr>
+      </table>
+      Gespeichert wird über <b>Spring Data JPA</b>: pro Entity ein <code>…Repository</code>-Interface, das Spring automatisch mit <code>save()</code>, <code>findAll()</code>, <code>count()</code> ausstattet. <b>Lokal</b> läuft eine H2-Datenbank, <b>in Docker</b> schalten Umgebungsvariablen auf die echte <b>MariaDB</b> um (siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>).
+      <div class="tip"><b>„Bleibt nach Neustart erhalten":</b> In der <code>docker-compose.yml</code> hängt an der MariaDB ein benanntes <b>Volume</b> <code>mariadb_data:/var/lib/mysql</code>. Dieses Volume überlebt <code>docker compose down</code> – deshalb sind Konten, Reservierungen, Posts und Mensadaten nach einem Neustart <b>noch da</b>. Bewiesen ist das durch die 6 Persistenztests aus <a href="#tests" style="color:var(--accent)">Kapitel&nbsp;21</a>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 8.3 – Wie weist man die gespeicherten Daten nach?</div>
+    <div class="antwort">
+      Über <b>Adminer</b> auf <code>http://localhost:8091</code> – ein kleines Web-Tool, um direkt in die MariaDB-Tabellen zu schauen (statt Konsolen-Befehle zu tippen).
+      <div class="tip"><b>Login:</b> System <code>MySQL</code>, Server <code>mariadb</code>, Benutzer <code>vcuser</code>, Passwort <code>vcpass</code>, Datenbank <code>virtualcollege</code>. Dann sieht man die Tabellen <code>benutzerkonto</code>, <code>gespeicherte_reservierung</code>, <code>gespeicherter_pinwand_post</code> und <code>gespeichertes_gericht</code> mit ihren Zeilen.</div>
+      <div class="small"><b>Einordnung:</b> Adminer ist ein <b>optionales</b> Zusatz-Werkzeug für Entwickler:innen und Prüfer:innen – es gehört nicht zur eigentlichen 5-Container-Architektur (siehe Hinweis in <a href="#docker" style="color:var(--accent)">Kapitel&nbsp;15</a>).</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 8):</b> „<b>Betrieb &amp; Persistenz</b>: <code>docker compose up --build</code> startet Frontend, beide Backends, Mosquitto, MariaDB und Adminer mit <b>einem Befehl</b>; das Backend wartet per healthcheck auf die Datenbank. Vier Datenarten – <b>Konten, Reservierungen, Pinwand-Posts + Likes und Mensadaten</b> – werden per <b>Spring Data JPA</b> in MariaDB gespeichert und überleben dank <b>Volume</b> einen Neustart. Nachweisbar in <b>Adminer</b> (Port 8091) und abgesichert durch <b>6 JUnit-Persistenztests</b>."</div>
+
+  <h2 id="fremdsystem">23. 📡 EPIC 7 – Fremdsystem &amp; asynchrone Datenübertragung (MQTT) <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;7 (GitHub-Issue&nbsp;#31) ist das <b>Herzstück der SWT2-Architektur</b>: Ein <b>simuliertes Fremdsystem</b> (<code>backend_send</code>) erzeugt Daten, schickt sie <b>asynchron über einen Message-Broker</b> (Mosquitto/MQTT), und das Hauptbackend (<code>backend_receive</code>) empfängt, prüft und speichert sie. „Asynchron" heißt: Sender und Empfänger sind <b>entkoppelt</b> – keiner wartet auf den anderen. Die <i>Technik</i> dahinter erklärt <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a> im Detail; dieses Kapitel ordnet sie den <b>drei User Stories</b> zu.</p>
+
+  <div class="qa">
+    <div class="frage">US 7.1 – Wie startet man die Fremddatensimulation und was entsteht?</div>
+    <div class="antwort">
+      Über die Oberfläche wird ein <code>POST /api/simulation/start</code> ausgelöst. Der <code>SimulationService</code> lässt dann <b>drei Fabriken</b> (Muster <b>Factory Method</b>) je einen <code>Fremddatensatz</code> erzeugen:
+      <table>
+        <tr><th>Fabrik</th><th>Erzeugt</th><th>JSON-<code>typ</code></th></tr>
+        <tr><td><code>SpeiseplanGenerator</code></td><td>Mensa-Speiseplan</td><td><code>speiseplan</code></td></tr>
+        <tr><td><code>AuslastungsGenerator</code></td><td>Raum-Auslastung</td><td><code>auslastung</code></td></tr>
+        <tr><td><code>AbfahrtsGenerator</code></td><td>ÖPNV-Abfahrten (echte VRR-Daten, mit Fallback)</td><td><code>abfahrt</code></td></tr>
+      </table>
+      <div class="tip"><b>Verständliche Rückmeldung &amp; erneuter Start:</b> Die Antwort meldet „Simulation gestartet – 3 Datensätze erzeugt." Ein erneuter Klick startet einfach neu – die interne Liste wird jedes Mal geleert. Beides ist durch <code>SimulationServiceTest</code> abgesichert (siehe <a href="#tests" style="color:var(--accent)">Kapitel&nbsp;21</a>).</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 7.2 – Wie werden die Daten asynchron über MQTT übertragen?</div>
+    <div class="antwort">
+      Der <code>MqttSender</code> in <code>backend_send</code> <b>veröffentlicht (publish)</b> jeden JSON-Datensatz im Topic <code>virtualcollege/data</code>. <b>Mosquitto</b> ist der Broker in der Mitte. Der <code>MqttEmpfaenger</code> in <code>backend_receive</code> hat dasselbe Topic <b>abonniert (subscribe)</b> und bekommt die Nachricht zugestellt.
+      <div class="analogy"><b>📮 Vergleich:</b> Wie ein <b>Briefkasten</b>: Der Sender wirft den Brief ein (publish), der Empfänger holt ihn ab (subscribe). Beide müssen <b>nicht gleichzeitig</b> da sein – genau das ist „asynchron / entkoppelt".</div>
+      <div class="tip"><b>Kein Absturz, Fehler werden protokolliert:</b> Ist der Broker/Empfänger gerade weg, verwirft der Sender die Nachricht mit einer Log-Warnung, statt abzustürzen (Akzeptanzkriterium US&nbsp;7.2). Bewiesen durch <code>MqttSenderTest</code>. „retained = true" sorgt zusätzlich dafür, dass ein <b>später</b> verbundener Empfänger sofort den letzten Stand bekommt.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 7.3 – Wie werden die empfangenen Rohdaten verarbeitet und gespeichert?</div>
+    <div class="antwort">
+      Der <code>MqttEmpfaenger</code> erkennt am <code>"typ"</code>, um welche Nachricht es sich handelt, und leitet sie an das passende Modul weiter:
+      <ul style="margin:6px 0">
+        <li><b>Speiseplan:</b> Das Muster <b>Adapter</b> (<code>MqttDatenAdapter</code>) übersetzt den rohen JSON-Text in saubere <code>Gericht</code>-Objekte. Diese werden angezeigt <i>und</i> per JPA in MariaDB <b>dauerhaft gespeichert</b> (Brücke zu <a href="#persistenz" style="color:var(--accent)">EPIC&nbsp;8</a>).</li>
+        <li><b>Abfahrten:</b> Der <code>AbfahrtsSpeicher</code> liest die Liste ein und hält sie für die REST-Schnittstelle bereit.</li>
+      </ul>
+      <div class="tip"><b>Ungültige Daten stürzen nichts ab:</b> Kaputter JSON führt zu einer <b>klaren Fehlermeldung</b> statt zu falschen Daten; ein bereits gültiger Abfahrts-Stand bleibt dabei unbeschädigt. Abgesichert durch <code>MqttDatenAdapterTest</code> und <code>AbfahrtsSpeicherTest</code>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Die „letzte Meile": Warum musste man trotz MQTT früher auf „Aktualisieren" klicken – und wie löst Polling das? <span class="pill done">NEU</span></div>
+    <div class="antwort">
+      <b>MQTT verbindet nur die beiden Backends</b>, nicht das Backend mit deinem Browser. Schau, wo „Push" aufhört:
+      <pre style="white-space:pre-wrap"><code>backend_send ──publish──▶ Mosquitto ──subscribe──▶ backend_receive ──?──▶ Browser
+└──────────── MQTT: automatisch, "push" ───────────┘   └── HTTP/REST: nur "pull" ──┘</code></pre>
+      Zwischen den Backends kommen frische Daten <b>von allein</b> an (Push). Aber das Frontend spricht <b>HTTP</b>, und HTTP funktioniert nach dem <b>Frage-Antwort-Prinzip</b>: Der Browser bekommt neue Daten nur, <b>wenn er fragt</b>. Deshalb war früher der Knopf „Aktualisieren" nötig – das Backend hatte die Daten längst, der Browser wusste es nur nicht.
+      <div class="analogy"><b>📮 Vergleich:</b> MQTT liefert die Zeitung automatisch in den <b>Briefkasten des Hauses</b> (backend_receive). In deine Hand (Browser) springt sie nicht – du musst <b>in den Briefkasten schauen</b>. „Aktualisieren" war genau dieses Nachschauen.</div>
+      <b>Die Lösung – Polling:</b> Die App schaut jetzt <b>selbst in festen Abständen</b> nach (alle <code>POLL_INTERVALL_MS</code> = 8&nbsp;Sekunden), sodass Mensa, ÖPNV, Pinwand &amp; Co. <b>ohne Klick</b> aktuell werden. Die Regeln stecken in der reinen, getesteten Funktion <code>sollAktualisieren</code>:
+      <ul style="margin:6px 0">
+        <li>nur wenn ein Nutzer <b>eingeloggt</b> ist,</li>
+        <li>nur wenn der <b>Tab sichtbar</b> ist (kein Polling im Hintergrund – spart Anfragen),</li>
+        <li>nicht, wenn gerade <b>schon geladen</b> wird (kein „Überholen").</li>
+      </ul>
+      Die automatische Aktualisierung läuft <b>stumm</b> (ohne „Lade…"-Puls, ohne Fehlermeldungen) und meldet in der Statuszeile z.&nbsp;B. „Automatisch aktualisiert (14:03:37)". Der Knopf bleibt zusätzlich für ein <b>sofortiges</b> Nachladen erhalten.
+      <div class="tip"><b>Ehrliche Einordnung:</b> Polling ist die <b>einfachste</b> Lösung der letzten Meile (Browser fragt regelmäßig). „Echtes" Durchreichen des MQTT-Push bis in den Browser ginge mit <b>SSE</b> (Server-Sent Events) oder <b>WebSocket</b> – das ist aufwändiger und für dieses Lern-/Demo-Projekt nicht nötig.</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 7):</b> „<b>Fremdsystem &amp; MQTT</b>: <code>backend_send</code> erzeugt per <b>Factory Method</b> drei Datenarten (Speiseplan, Auslastung, Abfahrten) und <b>publisht</b> sie als JSON im Topic <code>virtualcollege/data</code>. <b>Mosquitto</b> entkoppelt Sender und Empfänger (asynchron). <code>backend_receive</code> <b>subscribed</b>, erkennt den <code>typ</code>, übersetzt Speisepläne per <b>Adapter</b> in interne Objekte und speichert sie in MariaDB. Fällt der Broker aus, stürzt niemand ab. MQTT endet aber am Backend – die <b>letzte Meile</b> zum Browser überbrückt <b>Polling</b> (alle 8&nbsp;s), damit man nicht mehr klicken muss. 13 Backend- + 5 Frontend-Tests decken US&nbsp;7.1–7.3 ab."</div>
+
+  <h2 id="raumreservierung">24. 🏫 EPIC 3 – Raumverwaltung &amp; Reservierung <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;3 (GitHub-Issue&nbsp;#10) macht aus der Campus-Karte eine echte Funktion: Studierende sehen die <b>Belegung</b> eines Raums (US&nbsp;3.1) und können einen freien Raum <b>reservieren</b> (US&nbsp;3.2). Die Fachlogik liegt im <code>CampusService</code>, die REST-Schnittstelle im <code>CampusController</code> (<code>/api/campus/…</code>).</p>
+
+  <div class="qa">
+    <div class="frage">US 3.1 – Wie sieht man die Raumbelegung?</div>
+    <div class="antwort">
+      Ein Aufruf von <code>GET /api/campus/karte</code> liefert in einer Antwort <b>drei Dinge</b> zusammen:
+      <table>
+        <tr><th>Teil</th><th>Enthält</th></tr>
+        <tr><td><b>Räume</b></td><td>Name, Gebäude, Typ, Status (frei/belegt/…), Kapazität, Ausstattung, Koordinaten für die Karte.</td></tr>
+        <tr><td><b>Veranstaltungen</b></td><td>Titel, Raum, <b>Uhrzeit von–bis</b>, Dozent, Status – so ist erkennbar, <b>wann</b> ein Raum belegt ist.</td></tr>
+        <tr><td><b>Reservierungen</b></td><td>Alle gespeicherten Reservierungen (neueste zuerst) aus der Datenbank.</td></tr>
+      </table>
+      Das Frontend zeigt zum <b>ausgewählten Raum</b> genau dessen Veranstaltungen und Reservierungen an – daraus lassen sich die <b>freien Zeiträume</b> ableiten.
+      <div class="small"><b>Hinweis:</b> Räume und Veranstaltungen sind bewusst kuratiert (feste Liste im <code>CampusService</code>). <b>Reservierungen</b> sind dagegen echt persistent.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Welche Räume zeigt die Karte – und warum ist der Audimax weg? <span class="pill done">NEU – echte FH-Räume</span></div>
+    <div class="antwort">
+      Der <b>Audimax gehört zur TU Dortmund</b>, nicht zur FH – er wurde deshalb entfernt. Die Karte zeigt jetzt <b>6 kuratierte Räume der FH Dortmund am Campus Emil-Figge-Straße</b> (recherchiert auf <a href="https://www.fh-dortmund.de/standorte/campus-emil-figge-strasse.php" style="color:var(--accent)">fh-dortmund.de</a> und <a href="https://www.stwdo.de/mensa-cafes-und-catering/fh-dortmund/mensa-kostbar" style="color:var(--accent)">stwdo.de</a>) – der Schwerpunkt liegt im <b>Informatik-Gebäude (Haus 42)</b>, wo auch unser Hörsaal ist:
+      <table>
+        <tr><th>Raum</th><th>Gebäude (echt)</th><th>Typ</th><th>Wer darf reservieren?</th></tr>
+        <tr><td>Hörsaal 1</td><td><b>Haus 42 (FB Informatik)</b></td><td>Vorlesung</td><td>nur <b>Professor/Admin</b></td></tr>
+        <tr><td>Innovation Lab</td><td>Haus 42 (FB Informatik)</td><td>Labor</td><td>alle Angemeldeten</td></tr>
+        <tr><td>Hardware-Labor</td><td>Haus 42 (FB Informatik)</td><td>Labor</td><td>alle Angemeldeten</td></tr>
+        <tr><td>Seminarraum 128</td><td>Haus 42 (FB Informatik)</td><td>Übung</td><td>alle Angemeldeten</td></tr>
+        <tr><td>Mensa <b>kostBar</b></td><td>Haus 40 (Hörsaalgebäude)</td><td>Mensa</td><td><b>niemand</b> – zeigt stattdessen den <b>Live-Speiseplan</b></td></tr>
+        <tr><td>FH-Bibliothek</td><td>Haus 44</td><td>Lernort</td><td><b>niemand</b> – offener Lernort</td></tr>
+      </table>
+      <div class="small"><b>Echte Zuordnung der Häuser</b> (Quelle fh-dortmund.de): Haus 40 = Hörsaalgebäude mit Mensa kostBar des Studierendenwerks, Haus 42 = FB Informatik (dort ist unser Hörsaal, das Innovation Lab, das Hardware-Labor und ein Seminarraum), Haus 44 = FH-Bibliothek. Raumnummern sind für die Demo kuratiert.</div>
+      <div class="tip"><b>🗺️ Marker sitzen auf den echten Gebäuden:</b> Die Kartenpunkte (<code>lat/lng</code> in <code>CampusService</code>) sind <b>echte OpenStreetMap-Gebäudezentren</b> (per Overpass geholt): die <b>vier Informatik-Räume</b> (inkl. Hörsaal) im <b>Haus 42</b> (Mitte), die <b>kostBar</b> genau auf dem OSM-Gebäude „kostBar" im Hörsaalgebäude (Nordosten), die <b>Bibliothek</b> im Haus 44 (Westen). Räume im selben Haus liegen bewusst nah beieinander – sie <i>sind</i> im selben Gebäude – und trennen sich sichtbar, sobald man in die Karte <b>hineinzoomt</b>.</div>
+      <div class="tip"><b>Speiseplan direkt an der Mensa 🍲:</b> Klickt man die <b>kostBar</b> auf der Karte an, zeigt das Raum-Panel direkt den <b>Live-Speiseplan</b> (Gerichte + Preise + Datenquelle) und die Anzahl der gespeicherten Historien-Einträge – die Mensadaten wohnen jetzt dort, wo sie fachlich hingehören. Der frühere Tab „Live-Daten" heißt jetzt <b>„ÖPNV"</b> und zeigt nur noch die Abfahrten + den Simulations-Start.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 3.2 – Wie reserviert man einen Raum, und welche Regeln gelten?</div>
+    <div class="antwort">
+      Das Frontend schickt <code>POST /api/campus/reservierungen</code> mit Raum, Person und Zeit. Der <code>CampusService.reserviere(...)</code> setzt dann die Akzeptanzkriterien um:
+      <ul style="margin:6px 0">
+        <li><b>Raum muss gültig sein:</b> Ein unbekannter Raum wird mit einer klaren Fehlermeldung <b>abgelehnt</b> (nichts wird gespeichert).</li>
+        <li><b>Nur reservierbare Räume:</b> Mensa und Vorlesungssaal sind <b>nicht</b> reservierbar (siehe nächste Frage).</li>
+        <li><b>Zuordnung zum Nutzer:</b> Die Reservierung merkt sich, <b>wer</b> reserviert hat (<code>reserviertVon</code>).</li>
+        <li><b>Beginn &amp; Ende:</b> müssen echte Uhrzeiten sein, das Ende <b>nach</b> dem Beginn; fehlen sie, gibt es robuste Standardzeiten.</li>
+        <li><b>Keine Doppelbuchung:</b> Der Zeitraum darf sich nicht mit einer vorhandenen Reservierung desselben Raums <b>überschneiden</b>.</li>
+        <li><b>Dauerhaft gespeichert:</b> Die Reservierung wird als <code>GespeicherteReservierung</code> per JPA in MariaDB abgelegt (Brücke zu <a href="#persistenz" style="color:var(--accent)">EPIC&nbsp;8</a>) und bekommt Status „bestaetigt".</li>
+        <li><b>Erscheint in der Übersicht:</b> Da <code>karte()</code> alle Reservierungen mitliefert, taucht die neue Reservierung nach dem Aktualisieren beim Raum auf.</li>
+      </ul>
+      <div class="tip"><b>Abgesichert durch Tests:</b> <code>CampusServiceTest</code> (10 Tests) prüft Zuordnung, alle Ablehnungs-Regeln, den Angrenzen-Grenzfall, Standardzeiten und die Belegungsdaten; der <code>PersistenzIntegrationTest</code> beweist zusätzlich, dass eine Reservierung einen Neustart übersteht. Siehe <a href="#tests" style="color:var(--accent)">Kapitel&nbsp;21</a>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">🐞 Warum konnte man früher die <b>Mensa reservieren</b> (sogar doppelt) – und was wurde verbessert? <span class="pill done">GELÖST</span></div>
+    <div class="antwort">
+      Die erste Version von <code>reserviere(...)</code> prüfte nur, <b>ob es den Raum gibt</b> – sonst nichts. Folge: Auch bei der <b>Mensa</b> und dem <b>Audimax</b> stand ein „Reservieren"-Knopf, und derselbe Raum ließ sich für <b>denselben Zeitraum mehrfach</b> buchen (in der Übersicht stand z.&nbsp;B. zweimal „Audimax: 12:00–13:00"). Das widerspricht US&nbsp;3.2, die ausdrücklich von einem <b>freien</b> Raum spricht.
+      <div class="frage" style="margin-top:8px">Die Lösung – drei fachliche Regeln</div>
+      <table>
+        <tr><th>Regel</th><th>Umsetzung</th><th>Antwort des Backends</th></tr>
+        <tr><td><b>1. Nur reservierbare Räume<br>(mit ROLLENREGEL)</b></td><td>Jeder Raum hat ein Merkmal <code>reservierbar</code> – Labore/Seminarräume ✓, Mensa kostBar ✗, Bibliothek ✗. <b>Hörsäle</b> sind eine Ausnahme: Sie dürfen <b>Professor:innen und Admins</b> reservieren, Studierende nicht (siehe <a href="#anmeldung" style="color:var(--accent)">Rollen, Kapitel&nbsp;18</a>).</td><td><code>400</code> „Mensa kostBar kann nicht reserviert werden (Mensa)." bzw. „Hoersaal 1 ist ein Hoersaal – reservieren duerfen ihn nur Professor:innen oder die Verwaltung (Admin)."</td></tr>
+        <tr><td><b>2. Ende nach Beginn</b></td><td>Uhrzeiten werden als echte <code>LocalTime</code> geprüft.</td><td><code>400</code> „Das Ende (13:00) muss nach dem Beginn (14:00) liegen."</td></tr>
+        <tr><td><b>3. Keine Überschneidung</b></td><td>Der neue Zeitraum wird gegen alle Reservierungen <b>desselben Raums</b> geprüft. Zwei Zeiträume überschneiden sich, wenn <b>jeder vor dem Ende des anderen beginnt</b>. Direktes <b>Angrenzen</b> (13:00–14:00 nach 12:00–13:00) bleibt erlaubt.</td><td><code>409</code> „Labor 105 ist von 09:00 bis 10:00 bereits reserviert."</td></tr>
+      </table>
+      <div class="analogy"><b>🪑 Vergleich:</b> Wie beim <b>Restaurant</b>: Man reserviert einen <b>Tisch</b>, nicht die Küche (Regel&nbsp;1). Man kann nicht „von 20 bis 19 Uhr" bleiben (Regel&nbsp;2). Und ein schon vergebener Tisch wird für dieselbe Zeit <b>nicht doppelt</b> versprochen (Regel&nbsp;3) – aber direkt <b>nach</b> den Vorgästen darf man ihn haben.</div>
+      Das <b>Frontend</b> zieht mit: Bei Mensa und Audimax gibt es <b>kein Reservierungsformular</b> mehr, sondern den Hinweis „…kann nicht reserviert werden". Und falls doch eine ungültige Anfrage ankommt (z.&nbsp;B. per Hand gebaut), liefert das Backend dank <code>ResponseStatusException</code> + <code>FehlerBehandlung</code> die Klartext-Meldung, die die Statuszeile direkt anzeigt.
+      <div class="tip"><b>Live verifiziert (Docker):</b> Mensa-Reservierung → 400 mit Klartext · Ende vor Beginn → 400 · gültige Buchung Labor 09:00–10:00 → gespeichert („bestaetigt") · Überschneidung 09:30–10:30 → 409 „bereits reserviert". Dazu 4 neue JUnit-Tests (Tabelle in <a href="#tests" style="color:var(--accent)">Kapitel&nbsp;21</a>).</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 3):</b> „<b>Raumverwaltung &amp; Reservierung</b>: Die Karte zeigt <b>6 echte FH-Räume</b> (Schwerpunkt Haus 42 Informatik) an der Emil-Figge-Straße (der Audimax gehört zur TU und ist raus). <code>GET /api/campus/karte</code> liefert Räume, Veranstaltungen und Reservierungen zusammen – daraus sieht man die <b>Belegung</b>. Reserviert wird per <code>POST /api/campus/reservierungen</code>: der <code>CampusService</code> prüft <b>drei Regeln</b> – Rollenregel (Hörsäle nur Professor/Admin, Mensa/Bibliothek niemand), Ende nach Beginn, keine Überschneidung – ordnet die Buchung <b>fälschungssicher dem Nutzer aus dem JWT</b> zu und speichert sie in MariaDB. Der <b>Admin</b> kann Reservierungen und Posts löschen (DELETE nur für ROLE_ADMIN). 13 Service-Tests + 5 Rechte-Tests + Persistenztest sichern das ab."</div>
+
+  <h2 id="pinwand-epic">25. 📌 EPIC 4 – Virtuelle Pinwand: das Observer-Muster wird LIVE <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;4 (GitHub-Issue&nbsp;#11) umfasst Beiträge lesen/erstellen (US&nbsp;4.1), liken (US&nbsp;4.2) und – das Herzstück – <b>über neue Beiträge benachrichtigt werden</b> (US&nbsp;4.3). Bisher war das Observer-Muster nur ein Diagramm-Beispiel in der Domänen-Schicht; <b>jetzt läuft es im echten Anwendungspfad</b>.</p>
+
+  <div class="qa">
+    <div class="frage">US 4.1 + 4.2 – Beiträge erstellen und liken: was ist abgesichert?</div>
+    <div class="antwort">
+      Beiträge werden mit Autor, Rolle, Kategorie, Titel und Inhalt angezeigt und <b>dauerhaft in MariaDB</b> gespeichert (<code>GespeicherterPinwandPost</code>). <b>Autor und Rolle kommen aus dem geprüften JWT</b> (nicht aus dem Request – US&nbsp;4.1 „aus dem angemeldeten Konto übernommen", fälschungssicher). Ein Like erhöht den Zähler sofort und wird gespeichert (US&nbsp;4.2); der Admin kann Beiträge löschen (<a href="#anmeldung" style="color:var(--accent)">Rollen, Kapitel&nbsp;18</a>). Der <b>Pinwand-Bugfix</b> („Cannot read properties of null") ist in Kapitel&nbsp;21 dokumentiert.
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 4.3 – Wie funktioniert die Benachrichtigung? (Observer LIVE)</div>
+    <div class="antwort">
+      Die Kette bei jedem neuen Beitrag:
+      <pre style="white-space:pre-wrap"><code>erstellePost() ──speichert──▶ Datenbank
+      └──▶ Pinwand (SUBJEKT) ──benachrichtige()──▶ BenachrichtigungsSpeicher (BEOBACHTER)
+                                                      └──▶ GET /api/pinwand/benachrichtigungen</code></pre>
+      <ul style="margin:6px 0">
+        <li><b>Subjekt:</b> die Domänen-Klasse <code>Pinwand</code> (aus Kapitel&nbsp;13) – der <code>PinwandService</code> benutzt sie jetzt wirklich.</li>
+        <li><b>Registrierter Beobachter:</b> der neue <code>BenachrichtigungsSpeicher</code> (implementiert <code>Beobachter</code>) wird per <code>abonniere()</code> angemeldet und sammelt die letzten 20 Meldungen mit Zeitstempel.</li>
+        <li><b>Benachrichtigung enthält Beitrags-Infos:</b> z.&nbsp;B. <code>„Neuer Pinwand-Post: Observer-Live-Test (von Demo Student, Campus)"</code> – live verifiziert.</li>
+        <li><b>Nicht registrierte Beobachter erhalten nichts:</b> bewiesen im Test (erst nach <code>abonniere()</code> kommen Meldungen an, nach <code>meldeAb()</code> nicht mehr – Stichwort „Lapsed Listener" aus den Folien).</li>
+      </ul>
+      <b>Und im Frontend?</b> Der Einstellungs-Schalter <b>„Neue Pinwand-Posts melden"</b> ist jetzt wirksam: Das Polling (Kapitel&nbsp;23) vergleicht bei jeder Aktualisierung die Post-Liste – kommt ein Beitrag dazu, erscheint in der Statuszeile z.&nbsp;B. <b>„🔔 Neuer Pinwand-Beitrag: ‚Mensa zu' von Verwaltung"</b>. Schalter aus = keine Meldungen (= nicht registrierter Beobachter). Die Logik ist der reine, getestete Helfer <code>neuerPostHinweis</code>.
+      <div class="analogy"><b>🔔 Vergleich:</b> Wie ein <b>YouTube-Abo mit Glocke</b>: Nur wer die Glocke aktiviert hat (abonniert = registriert), bekommt bei jedem neuen Video (Beitrag) eine Meldung – alle anderen sehen das Video erst, wenn sie selbst vorbeischauen.</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 4):</b> „<b>Virtuelle Pinwand</b>: Beiträge und Likes liegen dauerhaft in MariaDB, Autor/Rolle kommen fälschungssicher aus dem JWT. Das <b>Observer-Muster läuft live</b>: Die Pinwand (Subjekt) benachrichtigt beim neuen Beitrag automatisch alle <b>registrierten</b> Beobachter – im Backend den <code>BenachrichtigungsSpeicher</code> (abrufbar per REST), im Frontend die 🔔-Meldung über den Einstellungs-Schalter. Nicht Registrierte erhalten nichts. 6 Service-Tests + 5 Frontend-Tests decken US&nbsp;4.1–4.3 ab."</div>
+
+  <h2 id="mensa-epic">26. 🍲 EPIC 5 – Mensa-Informationen <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;5 (GitHub-Issue&nbsp;#12): den aktuellen <b>Speiseplan</b> sehen (US&nbsp;5.1) und die <b>Historie</b> der empfangenen Daten nachvollziehen (US&nbsp;5.2). Die Mensa ist der Haupt-<b>Konsument</b> der MQTT-Kette aus <a href="#fremdsystem" style="color:var(--accent)">EPIC&nbsp;7</a>.</p>
+
+  <div class="qa">
+    <div class="frage">Wo sieht man den Speiseplan – und woher kommen die Daten?</div>
+    <div class="antwort">
+      <b>Direkt an der Mensa kostBar auf der Campus-Karte</b> (seit dem Umbau in Kapitel&nbsp;24): Raum anklicken → das Panel zeigt die Gerichte mit <b>Preisen</b>, die <b>Datenquelle</b> (z.&nbsp;B. „empfangen über MQTT") und die Historien-Anzahl. Der Weg der Daten: <code>backend_send</code> erzeugt den Plan (Factory) → MQTT → <code>MqttEmpfaenger</code> → <b>Adapter</b> übersetzt in <code>Gericht</code>-Objekte → <code>SpeiseplanSpeicher</code> (aktueller Stand) <b>und</b> <code>SpeisearchivService</code> (dauerhaft in MariaDB, Tabelle <code>gespeichertes_gericht</code>).
+      <div class="tip"><b>Kein Absturz ohne Daten (US&nbsp;5.1):</b> Vor dem ersten Empfang meldet der <code>SpeiseplanSpeicher</code> kontrolliert „keine Daten" – der Controller liefert dann gekennzeichnete Demo-Daten. Getestet im <code>SpeiseplanSpeicherTest</code>; kaputte MQTT-Nachrichten fängt der Adapter ab (<code>MqttDatenAdapterTest</code>, Kapitel&nbsp;23).</div>
+      <b>US 5.2 Historie:</b> Jedes empfangene Gericht landet mit <b>Preis und Empfangszeit</b> in der Datenbank; die Gesamtzahl ist im Mensa-Panel sichtbar, die Persistenz beweist der <code>PersistenzIntegrationTest</code> (Kapitel&nbsp;22) und Adminer (Port&nbsp;8091).
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 5):</b> „<b>Mensa</b>: Der Speiseplan kommt als Fremddatensatz über MQTT, wird per <b>Adapter</b> in interne Objekte übersetzt und direkt <b>an der Mensa kostBar auf der Karte</b> angezeigt – mit Preisen und erkennbarer Quelle. Jedes empfangene Gericht wird mit Empfangszeit in MariaDB <b>archiviert</b> (Historie). Ohne Daten oder bei kaputten Nachrichten stürzt nichts ab – Demo-Daten bzw. Adapter-Fehlermeldung. Abgesichert durch SpeiseplanSpeicher-, Adapter- und Persistenztests."</div>
+
+  <h2 id="oepnv-epic">27. 🚌 EPIC 6 – Öffentlicher Nahverkehr <span class="pill done">NEU</span></h2>
+  <p class="lead">EPIC&nbsp;6 (GitHub-Issue&nbsp;#28): aktuelle <b>Abfahrten an „Dortmund Universität S"</b> anzeigen (US&nbsp;6.1) – und auch beim <b>Ausfall</b> des Verkehrsdienstes nutzbar bleiben (US&nbsp;6.2).</p>
+
+  <div class="qa">
+    <div class="frage">US 6.1 – Woher kommen die Abfahrten und wo sieht man sie?</div>
+    <div class="antwort">
+      Im Header-Tab <b>„ÖPNV"</b>: Linie, Ziel und Abfahrtszeit, dazu die Haltestelle und die Quelle. Die Daten holt das <b>simulierte Fremdsystem</b> (<code>backend_send</code>, Klasse <code>VrrAbfahrten</code>) live vom öffentlichen <b>VRR-EFA-Abfahrtsmonitor</b> und veröffentlicht sie als Fremddatensatz über MQTT; <code>backend_receive</code> hält sie im <code>AbfahrtsSpeicher</code> bereit. Dank <b>Polling</b> (alle 8&nbsp;s) erscheinen neue Abfahrten ohne Seitenneustart.
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">US 6.2 – Was passiert, wenn der VRR-Dienst ausfällt?</div>
+    <div class="antwort">
+      <b>Zwei Sicherheitsnetze</b>, beide getestet:
+      <ul style="margin:6px 0">
+        <li><b>Im Fremdsystem:</b> Erreicht <code>VrrAbfahrten</code> den VRR nicht (Timeout 4/7&nbsp;s), liefert es <b>Ersatz-Abfahrten</b> mit der Quelle <b>„Offline-Fallback · zuletzt keine VRR-Verbindung"</b> – eindeutig gekennzeichnet, kein Absturz. Im <code>VrrAbfahrtenTest</code> lassen wir den Dienst <b>gezielt ausfallen</b> (unerreichbare Adresse) und prüfen genau das.</li>
+        <li><b>Im Hauptbackend:</b> Bevor die erste MQTT-Nachricht ankommt, zeigt der <code>AbfahrtsSpeicher</code> Platzhalter („Warte auf VRR-Daten via MQTT", Zeit „--:--"); kaputte Nachrichten lassen den letzten guten Stand unberührt (<code>AbfahrtsSpeicherTest</code>).</li>
+      </ul>
+      <div class="analogy"><b>🪧 Vergleich:</b> Wie die <b>Anzeigetafel an der Haltestelle</b>: Fällt die Funkverbindung aus, zeigt sie den Fahrplan-Aushang statt Echtzeit – mit dem Hinweis „keine Echtzeitdaten". Besser eine ehrliche Ersatzanzeige als eine schwarze Tafel.</div>
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (EPIC 6):</b> „<b>ÖPNV</b>: Das Fremdsystem holt echte <b>VRR-Abfahrten</b> für ‚Dortmund Universität S' und schickt sie über die MQTT-Kette; das Frontend zeigt Linie/Ziel/Zeit im ÖPNV-Tab, neue Daten kommen per Polling ohne Neustart. Fällt der VRR aus, gibt es <b>klar gekennzeichnete Offline-Ersatzdaten</b> statt eines Absturzes – auf Sende- UND Empfangsseite, jeweils durch JUnit-Tests bewiesen (Ausfall wird im Test gezielt provoziert)."</div>
+
+  <h2 id="praktika">28. 📋 Praktikums-Nachweis: Jede Aufgabe der Professor:innen → unsere Antwort <span class="pill done">NEU</span></h2>
+  <p class="lead">Dieses Kapitel geht die <b>offiziellen Praktikumsaufgaben 1–4</b> (aus der Vorlesungs-PDF <code>SWT2ALLIN7.pdf</code>) <b>Teilaufgabe für Teilaufgabe</b> durch: Was wurde verlangt, was haben wir gemacht, und <b>wo genau</b> ist es zu finden. Das ist die Landkarte für die Abschlusspräsentation – wenn jemand fragt „Wo ist Aufgabe X?", steht die Antwort hier.</p>
+
+  <div class="qa">
+    <div class="frage">Praktikum 1 (KW 18) – Kanban, Epics, User Stories</div>
+    <div class="antwort">
+      <table>
+        <tr><th>Aufgabe (Prof.)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
+        <tr><td><b>1. Kanban-Board + Burndown-Chart</b> anlegen</td><td>Kanban-Board mit den User Stories als Karten; die GitHub-Issues sind die Kanban-Karten des Repos.</td><td><code>canbanboard1–3.pdf</code> (Projekt-Root) · GitHub-Repo <code>selim-28/swt26-Virtual-College</code> (Issues #3–#38) · <span class="small">🟡 Burndown fürs finale Sprint-Kapitel aktuell halten!</span></td></tr>
+        <tr><td><b>2. Epics</b> formulieren („großes Anforderungspaket mit übergeordnetem Ziel")</td><td><b>8 Epics</b>: Benutzerkonto, Campus/Navigation, Raumreservierung, Pinwand, Mensa, ÖPNV, Fremdsystem/MQTT, Betrieb/Persistenz – jedes mit Ziel-Satz.</td><td><code>CLAUDE.md</code> (Projekt-Root, komplette Liste mit GitHub-Issue-Nummern)</td></tr>
+        <tr><td><b>3. User Stories</b> („Als [Nutzer] möchte ich [Funktion], damit [Nutzen]" – klein, verständlich, echter Mehrwert)</td><td><b>21 User Stories</b>, alle exakt im geforderten Schema, jede mit <b>Akzeptanzkriterien</b> als prüfbare Kontrollkästchen.</td><td><code>CLAUDE.md</code> · Nachweis der Umsetzung: Kapitel&nbsp;21–27 (jede US ist getestet)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Praktikum 2 (KW 18/19) – Maven, Build-Prozess, Sprint-Planning</div>
+    <div class="antwort">
+      <table>
+        <tr><th>Aufgabe (Prof.)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
+        <tr><td><b>1. Maven-Projektstruktur</b>: zwei Backend-Systeme + MQTT-Broker + (progressive) Web-Frontend + Datenbank; Module in der pom.xml</td><td>Eltern-<code>pom.xml</code> mit den Modulen <code>backend_receive</code> + <code>backend_send</code>; React/Vite-Frontend hinter Nginx; Mosquitto + MariaDB per Docker Compose.</td><td><code>pom.xml</code> (Root, <code>&lt;modules&gt;</code>) · Kapitel&nbsp;4+5 (pom Zeile für Zeile) · <code>docker-compose.yml</code></td></tr>
+        <tr><td><b>2. Build-Prozess testen</b>: main-Funktion je Backend; Feature-Branch → Pull-Request → Actions grün → Merge</td><td>Startklassen <code>ReceiveApplication</code>/<code>SendApplication</code> (Spring Boot main). Git-Workflow mit Feature-Branches und PRs wurde genutzt; GitHub-Actions-Konfiguration liegt unter <code>.github/</code>.</td><td><code>backend_*/src/main/java/.../ReceiveApplication.java</code> bzw. <code>SendApplication.java</code> · <code>.github/</code> · PR-Historie im GitHub-Repo</td></tr>
+        <tr><td><b>3. Sprint-Planning</b>: User Stories Teammitgliedern zuweisen; GitHub <b>Milestones</b> = Sprints</td><td>Issues sind den Epics/Stories zugeordnet; Zuweisung an Mitglieder + Milestones je Sprint im GitHub-Repo.</td><td>GitHub-Repo (Issues/Milestones) · <span class="small">🟡 Vor der Präsentation prüfen: 3 Milestones (Sprint 1–3) sauber gepflegt + Stories zugewiesen (zählt zu den 30&nbsp;% Projektmanagement!)</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Praktikum 3 (KW 20+23) – Verteilungsdiagramm, MQTT-Abhängigkeiten, REST als Modulith</div>
+    <div class="antwort">
+      <table>
+        <tr><th>Aufgabe (Prof.)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
+        <tr><td><b>1. Verteilungsdiagramm</b> mit ALLEN Technologien; zwei Spring-Backends, asynchron über MQTT-Broker; ein Backend simuliert ein Fremdsystem (Studentenwerk/ÖPNV)</td><td>UML-Verteilungsdiagramm exakt in der Folien-Notation (<code>«device»</code>, <code>«execution environment»</code>, <code>«artifact»</code>, <code>«deployment spec»</code>, <code>«protocol»</code> publish/subscribe) – inkl. der <b>externen Internet-Dienste</b> (OSM/Esri, OSRM, VRR) und des Docker-Test-Setups als zweite Sicht.</td><td>Kapitel&nbsp;2 (Hauptdiagramm + Erklärung zum Vorzeigen) · Kapitel&nbsp;15 (Docker-Container-Sicht)</td></tr>
+        <tr><td><b>2. Maven-Abhängigkeiten</b> für Mosquitto/Spring ermitteln und eintragen</td><td><code>spring-boot-starter-integration</code> + <code>spring-integration-mqtt</code> + <code>org.eclipse.paho.client.mqttv3</code> in beiden Backend-poms.</td><td><code>backend_*/pom.xml</code> · erklärt in Kapitel&nbsp;5 und&nbsp;7</td></tr>
+        <tr><td><b>3. REST-Schnittstellen als Modulith</b> (Vertical Slicing): pro Modul ein REST-Controller mit Endpunkten</td><td>Je fachlichem Slice ein Controller: <code>auth</code>, <code>campus</code>, <code>pinwand</code>, <code>mensa</code>, <code>transit</code> (receive) und <code>simulation</code> (send) – keine technischen Schichten-Pakete.</td><td>Kapitel&nbsp;8 (REST) + Kapitel&nbsp;9 (Vertical Slicing) + Kapitel&nbsp;10 (Dateiliste) · Code: <code>backend_receive/src/main/java/.../&lt;slice&gt;/*Controller.java</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Praktikum 4 (ab KW 24) – OOD-Klassendiagramme + 3 Entwurfsmuster + 3 Sprints</div>
+    <div class="antwort">
+      <table>
+        <tr><th>Anforderung (Prof., wörtlich zusammengefasst)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
+        <tr><td><b>OOD-Klassendiagramm je Backend</b>, aus dem SWT1-OOA verfeinert (Designprinzipien)</td><td>Zwei Mermaid-Klassendiagramme (receive + send), abgeleitet aus unserem echten SWT1-OOA; Verfeinerung mit Kapselung, Kopplung/Kohäsion, OCP, LSP, Delegation wird Schritt für Schritt erklärt.</td><td>Kapitel&nbsp;13 (inkl. „Wie erkläre ich das?"-Blöcke + Pfeil-Legende)</td></tr>
+        <tr><td><b>Konsistenz Modell ↔ Code</b>: alle Modell-Klassen existieren; Assoziationen/Vererbung korrekt; Interfaces/abstrakte Klassen gemäß UML</td><td>Alle Diagramm-Klassen existieren im Code (Paketliste beweist es). Neuzugänge seit dem Entwurf sind <b>nachgezogen</b>: <code>BenachrichtigungsSpeicher</code> (Observer LIVE) im Hauptdiagramm, <code>MqttSender</code> im send-Diagramm, Auth-Slice als kompaktes <b>Zusatz-Diagramm</b>.</td><td>Kapitel&nbsp;13 (Diagramme) ↔ Kapitel&nbsp;10 (echte Dateiliste) · Auth-Zusatzdiagramm direkt unter dem receive-Diagramm</td></tr>
+        <tr><td><b>Übersichtlichkeit</b>: Methoden/Attribute NUR bei Muster-Klassen, mit korrekten Sichtbarkeiten</td><td>Genau so umgesetzt: nur <code>Pinwand</code>, <code>Beobachter</code>, <code>BenachrichtigungsSpeicher</code>, <code>MqttDatenAdapter</code>, <code>DatenGenerator</code>-Familie &amp; Co. tragen Methoden (+/− Sichtbarkeiten); alle anderen Klassen sind bewusst leer.</td><td>Kapitel&nbsp;13 (beide Diagramme)</td></tr>
+        <tr><td><b>≥3 Entwurfsmuster</b>, je Kategorie mindestens eins, <b>kein Singleton</b>, im Diagramm gekennzeichnet</td><td><span class="pat pcre">Factory Method</span> (Erzeugung, backend_send) · <span class="pat pstr">Adapter</span> (Struktur, mensa) · <span class="pat pbeh">Observer</span> (Verhalten, pinwand – läuft LIVE). Kennzeichnung über farbige Muster-Pills in den Tabellen. Singleton bewusst nicht gewählt.</td><td>Kapitel&nbsp;13 (Muster-Spalten) · Kapitel&nbsp;23 (Factory/Adapter im Datenfluss) · Kapitel&nbsp;25 (Observer live)</td></tr>
+        <tr><td><b>Jedes Teammitglied</b> kann pro Muster <b>Name / Motivation / Umsetzung</b> erklären</td><td>Fertige Ein-Satz-Antworten pro Muster als Lerntabelle – zum Auswendiglernen für ALLE.</td><td><code>PRAESENTATION.md</code> Abschnitt&nbsp;2 · 30-Sek-Spickzettel in Kapitel&nbsp;23/25</td></tr>
+        <tr><td><b>Entwicklung in 3 Sprints + Projektdokumentation</b> (laut Praktikumsplan)</td><td>Implementierung ist fertig und getestet (97 Tests). <span class="small">🟡 Team-Aufgabe vor der Präsentation: 3-Sprint-Rückblick (Planung vs. Ist + Abweichungen) und Rollenverteilung dokumentieren – Vorlage liegt bereit.</span></td><td><code>PRAESENTATION.md</code> Abschnitte&nbsp;1 und&nbsp;5</td></tr>
+      </table>
+      <div class="tip"><b>🎯 Ein Satz für die Präsentation:</b> „Alle vier Praktikumsaufgaben sind vollständig bearbeitet und <b>nachweisbar</b>: Epics/Stories in CLAUDE.md, Maven-Module und CI in Git, das Verteilungsdiagramm in Kapitel&nbsp;2, die konsistenten OOD-Diagramme mit drei gekennzeichneten Mustern in Kapitel&nbsp;13 – und jede User Story ist durch JUnit-/Frontend-Tests belegt."</div>
+    </div>
+  </div>
+
+  <h2 id="compliance">29. ⚖️ Compliance im Software Engineering – auf Virtual College angewendet <span class="pill done">NEU</span></h2>
+  <p class="lead"><b>Compliance wird in der Abschlusspräsentation gefragt!</b> Die Vorlesungen „Compliance im Software Engineering I+II" (11.05. + 01.06.) definieren: <b>Compliance = regulatorische Regeln in technische und organisatorische Anforderungen überführen</b> – keine reine Rechtsfrage, sondern eine <b>Engineering-Aufgabe</b>. Dieses Kapitel wendet jeden Vorlesungsbaustein direkt auf unser Projekt an.</p>
+
+  <div class="qa">
+    <div class="frage">Normen zerlegen: Wer ist bei uns Akteur, was sind Rechte und Pflichten?</div>
+    <div class="antwort">
+      Die Vorlesung zerlegt Normtexte in <b>Akteure, Rechte, Pflichten, Bedingungen und Fristen</b> – am Beispiel des DSGVO-Auskunftsrechts. Übersetzt auf Virtual College:
+      <table>
+        <tr><th>Norm-Baustein</th><th>Im DSGVO-Beispiel der Folien</th><th>Bei Virtual College</th></tr>
+        <tr><td>Akteur: <b>Betroffene Person</b></td><td>hat das <b>Recht</b> auf Auskunft über ihre Daten</td><td>Unsere Nutzer (Student/Professor/Admin) – ihre Daten: E-Mail, Name, Rolle, Reservierungen, Posts.</td></tr>
+        <tr><td>Akteur: <b>Verantwortlicher</b></td><td>hat die <b>Pflicht</b>, Auskunft zu erteilen</td><td>Der Betreiber der App (im Praktikum: unser Team). Auskunft ist technisch sofort möglich: <code>GET /api/auth/ich</code> zeigt die Kontodaten; Adminer zeigt alle gespeicherten Datensätze pro Nutzer.</td></tr>
+        <tr><td><b>Bedingung / Frist</b></td><td>„auf Ersuchen … innerhalb eines Monats"</td><td>Prozess-Regel, die der Betreiber organisieren muss – Technik (RESTAbfragen, DB-Zugriff) macht die Frist locker einhaltbar.</td></tr>
+        <tr><td>Akteur: <b>Auftragsverarbeiter</b></td><td>unterstützt den Verantwortlichen</td><td>Externe Dienste, die wir aufrufen (OSM/Esri, OSRM, VRR) – wichtig: Dorthin senden wir <b>keine Kontodaten</b>, nur Kartenkoordinaten/Anfragen.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Aus funktionalen Anforderungen werden regulatorische – welche erfüllen wir schon?</div>
+    <div class="antwort">
+      Die Folien zeigen das am Bewerbungssystem („Welche rechtlichen Anforderungen resultieren daraus?"). Dieselbe Ableitung für uns:
+      <table>
+        <tr><th>Regulatorische Anforderung (abgeleitet)</th><th>Status</th><th>Umsetzung bei uns</th></tr>
+        <tr><td><b>Rollen- und Berechtigungskonzept</b></td><td>🟢</td><td>Drei Rollen (Student/Professor/Admin) im signierten JWT; <code>SecurityConfig</code>: DELETE nur <code>ROLE_ADMIN</code>, Hörsaal-Regel im Service (Kapitel&nbsp;18/24). Durch <code>RechteIntegrationTest</code> bewiesen.</td></tr>
+        <tr><td><b>Zugriff nur für Autorisierte</b></td><td>🟢</td><td>Alle <code>/api/**</code>-Endpunkte verlangen ein gültiges JWT (außer Login/Registrieren); 401/403 als saubere JSON-Fehler.</td></tr>
+        <tr><td><b>Passwörter niemals im Klartext</b></td><td>🟢</td><td>PBKDF2 + Salt (<code>PbkdfPasswortEncoder</code>); getestet, dass der Hash das Klartext-Passwort nie enthält.</td></tr>
+        <tr><td><b>Datenminimierung beim Standort</b></td><td>🟢</td><td>Standort nur <b>nach aktiver Zustimmung</b> (Browser-Dialog + Schalter) und <b>nie im Backend gespeichert</b> – er bleibt im Browser (US&nbsp;2.2).</td></tr>
+        <tr><td><b>Löschkonzept</b></td><td>🟡</td><td>Manuelles Löschen durch die Verwaltung (Admin, DELETE-Endpunkte) ist da. Eine <b>automatische Fristen-Löschung</b> (z.&nbsp;B. alte Reservierungen nach X Monaten) wäre der ehrliche nächste Schritt – so benennen wir das auch in der Präsentation.</td></tr>
+        <tr><td><b>Nachvollziehbarkeit</b></td><td>🟢</td><td>Verbindungs-/Fehler-Logs (MQTT, Auth), Zeitstempel an allen Datensätzen (<code>erstelltAm</code>/<code>empfangenAm</code>), Persistenz-Nachweis über Adminer.</td></tr>
+      </table>
+      <div class="analogy"><b>🏛️ Merksatz der Folien:</b> „Regularien geben das Ziel vor – die <b>Architektur</b> schafft die technische Grundlage zur Umsetzung." Unsere Architekturentscheidungen (JWT statt Session, Rollen im Token, Standort nur im Browser, Hash statt Klartext) sind genau solche <b>rechtlich relevanten Gestaltungsentscheidungen</b>.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Privacy/Security by Design &amp; by Default – wo leben diese Prinzipien bei uns?</div>
+    <div class="antwort">
+      <ul style="margin:6px 0">
+        <li><b>by Design</b> (von Anfang an im Entwurf): Passwort-Hashing und JWT waren Teil des Auth-Entwurfs, nicht nachgerüstet; die Rollenregel steckt im <code>CampusService</code>-Entwurf; der Standort wurde bewusst NIE ins Datenmodell aufgenommen.</li>
+        <li><b>by Default</b> (sichere Voreinstellungen): Ohne Login ist ALLES gesperrt (Whitelist statt Blacklist); Benachrichtigungen und Standortfreigabe sind bewusste Nutzer-Entscheidungen; das Admin-Konto ist nicht über die Registrierung wählbar.</li>
+        <li><b>Accountability/Nachweisbarkeit</b> („aus Umsetzung wird erst durch <b>Evidenz</b> prüfbare Compliance"): Die Folien nennen als Nachweise Rollen-/Berechtigungskonzept, Architektur-/Datenflussdiagramme, Audit-Logs, Test-/Freigabedoku – bei uns: Kapitel&nbsp;18 (Rollen), Kapitel&nbsp;2/13 (Diagramme), Logs, <b>97 automatische Tests</b> und diese Doku selbst.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">STRIDE in 60 Sekunden – mit Beispielen aus UNSEREM System</div>
+    <div class="antwort">
+      STRIDE ist das Bedrohungs-Denkraster aus Compliance II. Pro Buchstabe ein Virtual-College-Beispiel:
+      <table>
+        <tr><th>Kategorie</th><th>Bedrohung (Beispiel bei uns)</th><th>Unsere Gegenmaßnahme</th></tr>
+        <tr><td><b>S</b>poofing (Identität fälschen)</td><td>Jemand gibt sich als anderer Nutzer aus</td><td>Signierte JWTs (HS256); Name/Rolle stammen aus dem Token, nicht aus dem Request („Boesewicht"-Test!)</td></tr>
+        <tr><td><b>T</b>ampering (Daten manipulieren)</td><td>Token unterwegs verändern</td><td>Signaturprüfung – der <code>JwtDienstTest</code> beweist: verfälschte Tokens werden abgelehnt</td></tr>
+        <tr><td><b>R</b>epudiation (Abstreiten)</td><td>„Ich habe das nie reserviert"</td><td>Zeitstempel + Zuordnung aus dem Token; Logs</td></tr>
+        <tr><td><b>I</b>nformation Disclosure</td><td>Angreifer liest Passwörter aus der DB</td><td>Nur PBKDF2-Hashes gespeichert – selbst bei DB-Leak kein Klartext</td></tr>
+        <tr><td><b>D</b>enial of Service</td><td>Flut von Anfragen</td><td>🟡 Ehrlich: kein Rate-Limiting – als bewusste Grenze des Praktikums benennen</td></tr>
+        <tr><td><b>E</b>levation of Privilege</td><td>Student verschafft sich Admin-Rechte</td><td><code>hasRole("ADMIN")</code> serverseitig; 403 im Test bewiesen – UI-Verstecken allein wäre KEIN Schutz</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">SBOM und KI-Verordnung (AI Act) – was bedeutet das für uns?</div>
+    <div class="antwort">
+      <b>SBOM (Software Bill of Materials)</b> = maschinenlesbare „Zutatenliste" aller Software-Komponenten. Der <b>EU Cyber Resilience Act</b> macht sie ab <b>September 2026</b> für „Products with Digital Elements" zur Pflicht. Bei uns sind <code>pom.xml</code> (Spring Boot, Paho, jjwt, …) und <code>package.json</code> (React, Vite, Leaflet, lucide) bereits die vollständige, versionierte Zutatenliste – mit <code>./mvnw dependency:tree</code> bzw. <code>npm ls</code> auf Knopfdruck auflistbar. Nutzen laut Folien: Bei einer neuen Sicherheitslücke (CVE) sofort sehen, ob wir betroffen sind.<br><br>
+      <b>AI Act</b> (risikobasierter Ansatz: verboten → Hochrisiko → begrenzt → minimal): Virtual College <b>enthält kein KI-System</b> – keine automatisierten Entscheidungen über Personen, kein Scoring. Damit fallen wir in die Klasse „minimales Risiko". <b>Aber:</b> Teile unseres Codes sind <b>KI-generiert</b> (Coding-Assistent). Die Verantwortung bleibt beim Team – unser Umgang damit: (1) jede Änderung wird <b>reviewt</b>, (2) durch <b>97 Tests</b> abgesichert, (3) in <code>docs/code-verstehen.html</code> so erklärt, dass das Team jeden Baustein <b>versteht und verteidigen kann</b>. Genau diese Transparenz ist die richtige Antwort auf die Compliance-Frage in der Präsentation.
+    </div>
+  </div>
+
+  <div class="tip"><b>🎯 30-Sekunden-Spickzettel (Compliance):</b> „Compliance heißt für uns, <b>regulatorische Regeln technisch umzusetzen und nachweisen zu können</b>: DSGVO-gedacht speichern wir nur nötige Daten (Standort nie!), hashen Passwörter mit PBKDF2, kapseln Zugriff über <b>JWT + drei Rollen</b> (DELETE nur Admin – per Test bewiesen) und halten die Nachweise bereit: Diagramme, Rollen­konzept, Logs, 97 Tests, Adminer. <b>Privacy/Security by Design &amp; Default</b> leben in der Architektur. Unsere <code>pom.xml</code>/<code>package.json</code> sind die SBOM-Basis (CRA ab 09/2026). Nach AI Act ist die App minimales Risiko – KI-generierter Code ist reviewt, getestet und dokumentiert, die Verantwortung liegt beim Team."</div>
+
+  <!-- ================= BLOCK E: DER CODE-RUNDGANG ================= -->
+  <h2 id="rundgang">30. 🔎 Der Code-Rundgang: das große Bild &amp; die zwei Schichten <span class="pill done">EINGEGLIEDERT</span></h2>
+  <p class="lead">Ab hier beginnt der <b>Rundgang durch unseren echten Code</b> (früher die eigene Seite <code>code-verstehen.html</code> – jetzt hier integriert und <b>auf den aktuellen Stand gebracht</b>). Ziel: Auch wer <b>keine Programmiererfahrung</b> hat, versteht danach, was wo liegt und wie es zusammenspielt.</p>
+
+  <div class="qa">
+    <div class="frage">In welcher Reihenfolge sollte ich lernen? 🧭</div>
+    <div class="antwort">
+      <table>
+        <tr><th>#</th><th>Was</th><th>Wo</th></tr>
+        <tr><td>1</td><td>Das große Bild + die zwei Schichten</td><td>dieses Kapitel</td></tr>
+        <tr><td>2</td><td>Ordnerstruktur einmal komplett durchgehen</td><td>Kapitel&nbsp;31</td></tr>
+        <tr><td>3</td><td>Die 4 Datenflüsse „nachfühlen" (Login, Reservierung, Pinwand, Simulation)</td><td>Kapitel&nbsp;32</td></tr>
+        <tr><td>4</td><td>Jedes Backend Paket für Paket</td><td>Kapitel&nbsp;33–34</td></tr>
+        <tr><td>5</td><td>Das Frontend (was klickt der Nutzer?)</td><td>Kapitel&nbsp;35</td></tr>
+        <tr><td>6</td><td>Theorie &amp; Diagramme für die Prüfung</td><td>Kapitel&nbsp;2 + 13</td></tr>
+        <tr><td>7</td><td>Präsentations-Ablauf + Spickzettel</td><td><code>PRAESENTATION.md</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">Die Architektur in 60 Sekunden 🗺️</div>
+    <div class="antwort">
+      <p>Unser Projekt besteht aus <b>fünf laufenden Programmen</b> (in Docker „Container"):</p>
+      <div class="flow">
+        <div class="box">🖥️ Browser<small>der Nutzer</small></div>
+        <div class="arrow">→</div>
+        <div class="box">🌐 Frontend<small>React + Nginx<br>Port 8090</small></div>
+        <div class="arrow">→</div>
+        <div class="box">🧠 backend_receive<small>unsere App<br>Port 8083</small></div>
+        <div class="arrow">↔</div>
+        <div class="box">🗄️ MariaDB<small>Datenbank<br>Port 3306</small></div>
+      </div>
+      <div class="flow">
+        <div class="box">🚏 backend_send<small>Fremdsystem<br>Port 8084</small></div>
+        <div class="arrow">→</div>
+        <div class="box">📨 Mosquitto<small>MQTT-Broker<br>Port 1883</small></div>
+        <div class="arrow">→</div>
+        <div class="box">🧠 backend_receive<small>empfängt &amp; speichert</small></div>
+      </div>
+      <div class="analogy"><b>🍕 Merksatz:</b> Frontend = Gast · backend_receive = Kellner · backend_send = Koch · Mosquitto = der Bestellzettel-Spieß zwischen ihnen · MariaDB = das Kassenbuch. Dazu kommt das <b>Internet</b> (Karten, Routing, VRR) als „Lieferdienst von draußen" – fällt er aus, kochen wir mit Vorräten (Offline-Fallbacks).</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="frage">⭐ Die wichtigste Erkenntnis: unser Code hat ZWEI Schichten</div>
+    <div class="antwort">
+      <p>Im Code gibt es <b>scheinbar doppelte</b> Klassen (ein <code>Raum</code> <em>und</em> ein <code>RaumInfo</code>; eine <code>Pinwand</code> <em>und</em> ein <code>GespeicherterPinwandPost</code>). Das ist <b>kein Fehler</b>, sondern Absicht:</p>
+      <table>
+        <tr><th></th><th><span class="run">LAUFENDE Schicht</span></th><th><span class="model">MODELL-Schicht</span></th></tr>
+        <tr><td><b>Was</b></td><td>Was beim Klick <b>wirklich ausgeführt</b> wird.</td><td>Die Klassen aus unseren <b>UML-Diagrammen</b> (OOD, Kapitel&nbsp;13).</td></tr>
+        <tr><td><b>Typische Klassen</b></td><td><code>…Controller</code>, <code>…Service</code>, <code>…Repository</code>, <code>Gespeichert…</code>-Entities, MQTT-Klassen, <code>auth/</code></td><td><code>DigitalerCampus</code>, <code>LiveCampusKarte</code>, <code>Gebaeude</code>, <code>Raum</code>, <code>Nutzer</code>-Vererbung …</td></tr>
+        <tr><td><b>Warum?</b></td><td>Damit die App funktioniert (REST, DB, MQTT).</td><td>Damit <b>Diagramm und Code übereinstimmen</b> (P4-Konsistenzregel) und die Muster sauber sichtbar sind.</td></tr>
+      </table>
+      <div class="key"><b>Der Satz für die Präsentation (aktueller Stand!):</b> „Unser Backend hat eine <b>lauffähige Spring-Schicht</b> und ein <b>OOD-Domänenmodell</b>. Die drei Entwurfsmuster laufen inzwischen <b>alle drei im echten Datenfluss</b>: die Factory beim Simulieren, der Adapter beim MQTT-Empfang – und seit EPIC&nbsp;4 auch der <b>Observer</b>: die Domänen-<code>Pinwand</code> benachrichtigt bei jedem neuen Post den registrierten <code>BenachrichtigungsSpeicher</code> (Kapitel&nbsp;25)."</div>
+      <table>
+        <tr><th>Muster</th><th>Kategorie</th><th>Dateien (zum Nachschlagen)</th></tr>
+        <tr><td><span class="pat pcre">Factory&nbsp;Method</span></td><td>Erzeugung</td><td><code>backend_send/…/simulation/</code>: <code>DatenGenerator</code> + 3 Generatoren, <code>Fremddatensatz</code> + 3 Produkte</td></tr>
+        <tr><td><span class="pat pstr">Adapter</span></td><td>Struktur</td><td><code>backend_receive/…/mensa/</code>: <code>SpeiseplanQuelle</code>, <code>MqttDatenAdapter</code>, <code>MqttRohNachricht</code></td></tr>
+        <tr><td><span class="pat pbeh">Observer</span></td><td>Verhalten</td><td><code>backend_receive/…/pinwand/</code>: <code>Pinwand</code>, <code>Beobachter</code>, <b><code>BenachrichtigungsSpeicher</code> (live!)</b>; dazu <code>nutzer/Nutzer</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2 id="ordnerbaum">31. 🗂️ Der Projekt-Ordnerbaum – komplett erklärt</h2>
+  <p><span style="color:var(--green)">Grün</span> = Code zum Verstehen. <span style="color:var(--accent)">Blau</span> = Konfiguration. <span style="color:#94a3b8">Grau</span> = Erklärung.</p>
+<div class="tree"><span class="fld">swt26-Virtual-College/</span>
+├── <span class="cfg">docker-compose.yml</span>        <span class="note"># startet ALLE Container mit einem Befehl (+ Adminer)</span>
+├── <span class="cfg">Dockerfile.java</span>           <span class="note"># Bauplan für EIN Backend-Image (Parameter MODULE)</span>
+├── <span class="cfg">pom.xml</span>                   <span class="note"># Maven-Chef-Datei: listet die zwei Backend-Module</span>
+├── <span class="cfg">CLAUDE.md</span>                 <span class="note"># die 8 Epics + 21 User Stories (Praktikum 1!)</span>
+├── <span class="cfg">README.md</span> · <span class="cfg">PRAESENTATION.md</span>   <span class="note"># Einstieg + Präsentations-Spickzettel</span>
+├── <span class="fld">docs/</span>
+│   └── <span class="keep">erklaerung.html</span>         <span class="note"># DIESE eine Datei: Konzepte + Prüfung + Code-Rundgang</span>
+│
+├── <span class="fld">unterlagen/</span>                <span class="note"># NEU: Lernmaterial &amp; Alt-Dateien (Folien-PDF, Kanban-PDFs, altes OOD, Übungsprojekt) – nicht Teil der App</span>
+│
+├── <span class="fld">frontend/</span>                  <span class="note"># das, was der Nutzer sieht</span>
+│   ├── <span class="cfg">nginx.conf</span>              <span class="note"># leitet /api/... an die richtigen Backends</span>
+│   ├── <span class="cfg">Dockerfile.frontend</span>     <span class="note"># baut React, liefert es mit Nginx aus</span>
+│   └── <span class="fld">src/</span>
+│       ├── <span class="keep">App.jsx</span>             <span class="note"># DIE ganze Oberfläche (alle Tabs)</span>
+│       ├── <span class="keep">campusUtils.mjs</span>     <span class="note"># reine, TESTBARE Helfer (Winkel, Rollenregel, Polling, 🔔)</span>
+│       ├── <span class="keep">campusUtils.test.mjs</span><span class="note"># 27 Frontend-Tests (npm test)</span>
+│       └── <span class="keep">styles.css</span>          <span class="note"># das komplette Aussehen</span>
+│
+├── <span class="fld">backend_receive/</span>           <span class="note"># UNSERE App (Port 8083)</span>
+│   ├── src/main/java/…/receive/
+│   │   ├── <span class="keep">ReceiveApplication.java</span>  <span class="note"># Startknopf</span>
+│   │   ├── <span class="fld">auth/</span>        <span class="note"># Login, JWT, ROLLEN (Student/Professor/Admin)</span>
+│   │   ├── <span class="fld">campus/</span>      <span class="note"># 6 FH-Räume, Reservierungen + Regeln</span>
+│   │   ├── <span class="fld">pinwand/</span>     <span class="note"># Posts, Likes, Observer LIVE + Benachrichtigungen</span>
+│   │   ├── <span class="fld">nutzer/</span>      <span class="note"># Nutzer-Vererbung (Modell-Schicht)</span>
+│   │   ├── <span class="fld">mensa/</span>       <span class="note"># Speiseplan + MQTT-Empfang + Adapter</span>
+│   │   ├── <span class="fld">transit/</span>     <span class="note"># ÖPNV-Abfahrten</span>
+│   │   └── <span class="fld">persistenz/</span>  <span class="note"># Entities + Repositories (Tabellen)</span>
+│   └── src/test/java/…               <span class="note"># 60 JUnit-Tests (auth, campus, pinwand, mensa, transit, persistenz)</span>
+│
+├── <span class="fld">backend_send/</span>              <span class="note"># simuliertes Fremdsystem (Port 8084)</span>
+│   ├── src/main/java/…/send/
+│   │   ├── <span class="keep">SendApplication.java</span>     <span class="note"># Startknopf</span>
+│   │   ├── <span class="fld">mensa/</span>           <span class="note"># fachliche Mensa-Daten</span>
+│   │   └── <span class="fld">simulation/</span>      <span class="note"># Factory-Muster + MqttSender + VrrAbfahrten</span>
+│   └── src/test/java/…               <span class="note"># 10 JUnit-Tests (Factory, Sender, VRR-Fallback)</span>
+│
+└── <span class="fld">mosquitto/</span>
+    └── <span class="cfg">mosquitto.conf</span>          <span class="note"># Broker-Einstellungen (Port 1883, anonym für die Demo)</span>
+</div>
+  <div class="tip"><b>Faustregel zum Wiederfinden:</b> Ein <code>…Controller</code> = die Tür von außen (REST). Ein <code>…Service</code> = die Fachlogik dahinter. Ein <code>…Repository</code> = der Datenbank-Zugang. Eine <code>Gespeichert…</code>-Klasse = eine Datenbank-Tabelle. Ein <code>…Test</code> = der automatische Beweis. Alles andere = Modell-/Muster-Klassen.</div>
+
+  <h2 id="fluesse">32. 🔁 Wie eine Anfrage durch das System fließt (4 Szenarien)</h2>
+  <p>Software versteht man am besten, wenn man <b>einer Aktion folgt</b> – mit echten Datei- und Methodennamen.</p>
+
+  <h3>Szenario 0: Einloggen (passiert immer zuerst) 🔑</h3>
+  <div class="step"><div class="n">1</div><div class="t">Wer die Seite öffnet, sieht die <b>Login-Seite</b> (<code>AuthView</code>). Drei Demo-Konten (alle <code>passwort123</code>): <code>student@…</code>, <code>prof@…</code>, <code>admin@fh-dortmund.de</code>. <span class="file">frontend/src/App.jsx</span></div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>login()</code> schickt <code>POST /api/auth/login</code>; Nginx leitet an <code>backend_receive:8083</code>.</div></div>
+  <div class="step"><div class="n">3</div><div class="t"><code>AuthService.login()</code> sucht das <code>Benutzerkonto</code>, prüft das Passwort (<code>PasswordEncoder</code>/PBKDF2) und lässt den <code>JwtDienst</code> einen signierten <b>JWT</b> erzeugen – <b>mit der Rolle darin</b>. <span class="file">receive/auth/</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t">Ab jetzt trägt jede Anfrage <code>Authorization: Bearer &lt;token&gt;</code>. Der <code>JwtAuthFilter</code> prüft Signatur + Sperrliste und macht aus der Rolle eine Berechtigung (<code>ROLE_ADMIN</code> …). Logout sperrt das Token sofort (<code>TokenSperrliste</code>).</div></div>
+
+  <h3>Szenario A: Ein Student reserviert einen Raum 🏫</h3>
+  <div class="step"><div class="n">1</div><div class="t">Klick auf „Reservieren" → <code>reservieren()</code> schickt <code>POST /api/campus/reservierungen</code> mit <code>{raumId, von, bis}</code>. <span class="file">frontend/src/App.jsx</span></div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>CampusController.reservieren(...)</code> holt Name + Rolle <b>aus dem geprüften Token</b> (nicht aus dem Request – fälschungssicher!). <span class="file">campus/CampusController.java</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t"><code>CampusService.reserviere(...)</code> prüft <b>drei Regeln</b>: (1) Rollenregel – Hörsäle nur Professor/Admin, kostBar/Bibliothek niemand; (2) Ende nach Beginn; (3) keine Überschneidung. Verstöße → Klartext-Fehler (400/409). <span class="file">campus/CampusService.java</span></div></div>
+  <div class="step"><div class="n">4</div><div class="t">Ist alles ok, speichert <code>repository.save(...)</code> eine <code>GespeicherteReservierung</code> → Tabelle <code>gespeicherte_reservierung</code> (H2 lokal, MariaDB in Docker). Das Frontend lädt neu; der Admin sieht 🗑-Löschknöpfe.</div></div>
+
+  <h3>Szenario B: Ein Post entsteht – und der Observer feuert 📌🔔</h3>
+  <div class="step"><div class="n">1</div><div class="t"><code>postErstellen()</code> schickt <code>POST /api/pinwand/posts</code>; Autor/Rolle kommen wieder <b>aus dem Token</b>.</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>PinwandService.erstellePost(...)</code> speichert den Post in der DB <b>und</b> ruft <code>pinwand.neuerPost(...)</code> – das <b>Subjekt</b> benachrichtigt automatisch alle registrierten <b>Beobachter</b>. <span class="file">pinwand/PinwandService.java</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t">Der registrierte Beobachter <code>BenachrichtigungsSpeicher</code> merkt sich die Meldung („Neuer Pinwand-Post: … (von …, Kategorie)"). Abrufbar: <code>GET /api/pinwand/benachrichtigungen</code>.</div></div>
+  <div class="step"><div class="n">4</div><div class="t">Im Frontend vergleicht das <b>Polling</b> die Post-Listen: Ist ein neuer dabei und der Schalter „Neue Pinwand-Posts melden" an, erscheint die <b>🔔-Meldung</b> in der Statuszeile (reine Funktion <code>neuerPostHinweis</code>, getestet).</div></div>
+
+  <h3>Szenario C: Die volle Kette – Simulation (Factory → MQTT → Adapter → DB) ⚡</h3>
+  <div class="flow">
+    <div class="box">Klick<small>„Simulation starten"</small></div><div class="arrow">→</div>
+    <div class="box">backend_send<small>Factory baut JSON</small></div><div class="arrow">→</div>
+    <div class="box">Mosquitto<small>publish/subscribe</small></div><div class="arrow">→</div>
+    <div class="box">backend_receive<small>Adapter übersetzt</small></div><div class="arrow">→</div>
+    <div class="box">MariaDB<small>speichert</small></div>
+  </div>
+  <div class="step"><div class="n">1</div><div class="t"><code>POST /api/simulation/start</code> → Nginx leitet an <b><code>backend_send:8084</code></b> (die einzige Route, die NICHT zu receive geht).</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><code>SimulationService</code> ruft bei den drei Fabriken <code>erzeugeDaten()</code> (<b>Factory Method</b>); der <code>AbfahrtsGenerator</code> holt dabei <b>echte VRR-Daten</b> (bei Ausfall: gekennzeichneter Fallback). <span class="file">send/simulation/</span></div></div>
+  <div class="step"><div class="n">3</div><div class="t">Jedes Produkt beschreibt sich per <code>alsJson()</code>; <code>MqttSender.publish(...)</code> schickt es ins Topic <code>virtualcollege/data</code> (QoS 1, retained).</div></div>
+  <div class="step"><div class="n">4</div><div class="t"><code>MqttEmpfaenger.messageArrived(...)</code> in receive erkennt den <code>"typ"</code>: Speiseplan → <b>Adapter</b> <code>MqttDatenAdapter</code> → <code>SpeiseplanSpeicher</code> + dauerhaft via <code>SpeisearchivService</code>; Abfahrten → <code>AbfahrtsSpeicher</code>.</div></div>
+  <div class="step"><div class="n">5</div><div class="t">Das Frontend lädt neu: Speiseplan an der <b>Mensa kostBar auf der Karte</b>, Abfahrten im <b>ÖPNV-Tab</b> – dank Polling auch ohne Klick.</div></div>
+
+  <h2 id="receive-pakete">33. 🧠 backend_receive – Paket für Paket</h2>
+  <p class="lead">Unser Haupt-Backend (Port 8083). Jedes Unter-Paket = ein Thema (Vertical Slicing). <span class="run">L</span> = laufende Schicht, <span class="model">M</span> = Modell-Schicht.</p>
+
+  <h3>📦 auth/ – Login, JWT &amp; Rollen <span class="run">L</span></h3>
+  <table>
+    <tr><th>Klasse</th><th>Aufgabe (einfach gesagt)</th></tr>
+    <tr><td><code>AuthController</code></td><td>REST-Tür: <code>registrieren</code>, <code>login</code>, <code>ich</code>, <code>logout</code>.</td></tr>
+    <tr><td><code>AuthService</code></td><td>Fachlogik; legt beim Start die <b>drei Demo-Konten</b> an (Student/Professor/Admin).</td></tr>
+    <tr><td><code>SecurityConfig</code></td><td>Türsteher-Regeln: nur Login/Registrieren offen; <b>DELETE nur <code>ROLE_ADMIN</code></b>.</td></tr>
+    <tr><td><code>JwtDienst</code> / <code>JwtAuthFilter</code></td><td>Ausweis-Drucker/-Prüfer (HS256) / Türsteher pro Anfrage, setzt den <code>AngemeldeterNutzer</code>-Principal <b>mit Rolle</b>.</td></tr>
+    <tr><td><code>TokenSperrliste</code></td><td>Logout = Ausweis einziehen (jti-Denylist).</td></tr>
+    <tr><td><code>Passwort</code> + <code>PbkdfPasswortEncoder</code></td><td>PBKDF2+Salt-Hashing, angebunden ans Spring-Interface <code>PasswordEncoder</code>.</td></tr>
+    <tr><td><code>Benutzerkonto</code> <span class="small">@Entity</span> + Repository</td><td>= Tabelle <code>benutzerkonto</code> (E-Mail unique, nie Klartext-Passwort).</td></tr>
+    <tr><td><code>FehlerBehandlung</code> u.&nbsp;a.</td><td>Fehler als sauberes JSON mit deutscher Klartext-Meldung (401/403/400/404/409).</td></tr>
+  </table>
+  <div class="analogy"><b>🎟️ JWT = Festival-Bändchen mit Prägesiegel</b> (Signatur): Der Türsteher erkennt Fälschungen sofort, und die <b>Farbe des Bändchens ist die Rolle</b>. Abmelden = Bändchen einziehen (Sperrliste). Details: Kapitel&nbsp;18.</div>
+
+  <h3>📦 campus/ – 6 FH-Räume, Reservierungen + Regeln</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>CampusController</code></td><td><span class="run">L</span></td><td><code>GET /karte</code>, <code>POST /reservierungen</code> (Zuordnung aus dem Token!), <code>DELETE /reservierungen/{id}</code> (Admin).</td></tr>
+    <tr><td><code>CampusService</code></td><td><span class="run">L</span></td><td>Die <b>6 kuratierten FH-Räume</b> (Schwerpunkt Haus 42 Informatik) + die <b>drei Reservierungs-Regeln</b> (Rollenregel, Ende&gt;Beginn, keine Überschneidung) + Löschen.</td></tr>
+    <tr><td><code>DigitalerCampus</code>, <code>LiveCampusKarte</code>, <code>Gebaeude</code>, <code>Raum</code>, <code>Koordinaten</code>, <code>Belegung</code>→<code>Reservierung</code>/<code>Veranstaltung</code></td><td><span class="model">M</span></td><td>Das OOD-Domänenmodell aus SWT1 (Kapitel&nbsp;13).</td></tr>
+  </table>
+
+  <h3>📦 pinwand/ – Posts, Likes &amp; der LIVE-Observer</h3>
+  <table>
+    <tr><th>Klasse</th><th>Schicht</th><th>Aufgabe</th></tr>
+    <tr><td><code>PinwandController</code></td><td><span class="run">L</span></td><td><code>GET/POST /posts</code>, <code>POST /posts/{id}/like</code>, <code>DELETE /posts/{id}</code> (Admin), <code>GET /benachrichtigungen</code>.</td></tr>
+    <tr><td><code>PinwandService</code></td><td><span class="run">L</span></td><td>Speichert Posts/Likes <b>und stößt den Observer an</b> (<code>pinwand.neuerPost(...)</code>).</td></tr>
+    <tr><td><code>Pinwand</code> (Subjekt), <code>Beobachter</code> «interface», <code>Post</code>/<code>Kommentar</code>/<code>Like</code>/<code>Benachrichtigung</code></td><td><span class="model">M</span></td><td>Das Observer-Muster aus dem Diagramm.</td></tr>
+    <tr><td><code>BenachrichtigungsSpeicher</code></td><td><span class="run">L</span>+<span class="model">M</span></td><td><b>Der konkrete Beobachter im echten System</b>: sammelt die letzten 20 Meldungen für REST/Frontend (Kapitel&nbsp;25).</td></tr>
+  </table>
+
+  <h3>📦 mensa/ + transit/ + persistenz/ + nutzer/</h3>
+  <table>
+    <tr><th>Paket</th><th>Kern</th></tr>
+    <tr><td><code>mensa/</code></td><td><code>MqttEmpfaenger</code> (abonniert Topic) → <b>Adapter</b> <code>MqttDatenAdapter</code> (JSON → <code>Gericht</code>-Objekte) → <code>SpeiseplanSpeicher</code> (aktuell) + <code>SpeisearchivService</code> (Historie in DB). <code>MensaController</code> liefert beides.</td></tr>
+    <tr><td><code>transit/</code></td><td><code>AbfahrtsSpeicher</code> hält den letzten VRR-Snapshot (Startzustand: „Warte auf VRR-Daten", „--:--"); <code>TransitController</code> liefert ihn.</td></tr>
+    <tr><td><code>persistenz/</code></td><td>4 Entities = 4 Tabellen (<code>benutzerkonto</code>, <code>gespeicherte_reservierung</code>, <code>gespeicherter_pinwand_post</code>, <code>gespeichertes_gericht</code>) + Repositories (Spring Data JPA schreibt den SQL-Code für uns).</td></tr>
+    <tr><td><code>nutzer/</code></td><td>Modell-Schicht: <code>Nutzer</code> (implements <code>Beobachter</code>) → <code>Student</code>/<code>Betreuer</code>/<code>Verwaltungsangestellter</code> – die Vererbung, auf die unsere Login-Rollen abbilden.</td></tr>
+  </table>
+  <div class="analogy"><b>📓 Entity ↔ Tabelle:</b> Eine <code>@Entity</code>-Klasse ist die <b>Vorlage einer Tabelle</b>, jedes Objekt eine <b>Zeile</b>. Spring/Hibernate legt die Tabellen beim Start automatisch an.</div>
+
+  <h2 id="send-pakete">34. 🚏 backend_send – Paket für Paket + Infrastruktur</h2>
+  <table>
+    <tr><th>Klasse</th><th>Rolle</th></tr>
+    <tr><td><code>SimulationController</code> / <code>SimulationService</code></td><td>REST-Tür + <b>Client der Factory</b>: kennt nur <code>erzeugeDaten()</code>, kein <code>if typ==…</code>.</td></tr>
+    <tr><td><code>DatenGenerator</code> «abstract» + <code>SpeiseplanGenerator</code>/<code>AuslastungsGenerator</code>/<code>AbfahrtsGenerator</code></td><td><b>Factory Method</b>: je Datenart eine Fabrik. Neue Datenart = neue Klasse + eine Listen-Zeile (Offen-Geschlossen-Prinzip).</td></tr>
+    <tr><td><code>Fremddatensatz</code> «interface» + <code>SpeiseplanDaten</code>/<code>AuslastungsDaten</code>/<code>AbfahrtsDaten</code></td><td>Die Produkte – jedes baut seinen JSON-Text selbst (<code>alsJson()</code>).</td></tr>
+    <tr><td><code>VrrAbfahrten</code></td><td>Holt echte VRR-EFA-Abfahrten („Dortmund Universität S"); bei Ausfall <b>gekennzeichneter Offline-Fallback</b> (per Test bewiesen).</td></tr>
+    <tr><td><code>MqttSender</code></td><td>Verbindet (mit Wiederholung) zum Broker und <b>publisht</b>; ohne Broker: Warnung statt Absturz.</td></tr>
+  </table>
+  <h3>Die Infrastruktur-Dateien 🐳</h3>
+  <table>
+    <tr><th>Datei</th><th>Wofür</th></tr>
+    <tr><td><code>docker-compose.yml</code></td><td>Definiert alle Container (+ optional <code>adminer</code>, Port 8091 = DB im Browser); verdrahtet DB-Zugang und Broker-Adresse per Umgebungsvariablen.</td></tr>
+    <tr><td><code>Dockerfile.java</code></td><td>Baut EIN Backend (Maven → .jar → Java 21); Parameter <code>MODULE</code> wählt receive/send.</td></tr>
+    <tr><td><code>frontend/nginx.conf</code></td><td>Der „Empfang": <code>/api/simulation</code> → backend_send, alle anderen <code>/api/…</code> → backend_receive, Rest = React-Seite.</td></tr>
+    <tr><td><code>mosquitto/mosquitto.conf</code></td><td>Broker-Minimal-Konfig (Port 1883, anonym – Demo-Entscheidung, siehe Kapitel&nbsp;29 „ehrlich offen").</td></tr>
+    <tr><td><code>application.properties</code></td><td>Je Backend: Port, MQTT (<b>Punkt-Schreibweise!</b> <code>mqtt.broker.url</code> – der Bindestrich-Tippfehler hat uns zweimal erwischt, Kapitel&nbsp;21), DB-Zugang.</td></tr>
+  </table>
+
+  <h2 id="frontend-rundgang">35. 🖥️ Das Frontend – Bildschirm für Bildschirm</h2>
+  <p>Die ganze Oberfläche steckt in <code>frontend/src/App.jsx</code>; die <b>testbaren reinen Funktionen</b> liegen in <code>campusUtils.mjs</code>.</p>
+  <table>
+    <tr><th>Bereich (Tab)</th><th>Komponente</th><th>Was er tut</th></tr>
+    <tr><td><b>Live Campus</b></td><td><code>CampusView</code> + <code>CampusMap</code> + <code>RoomPanel</code></td><td>Leaflet-Karte (Straße/Satellit) mit den 6 FH-Räumen; Standort + OSRM-Fußroute mit Pfeilen; <b>RoomPanel</b>: Reservieren nach <b>Rollenregel</b> (<code>darfRaumReservieren</code>), an der <b>kostBar der Live-Speiseplan</b> (<code>MensaPanel</code>), Reservierungen mit 🗑 für Admins.</td></tr>
+    <tr><td><b>Pinwand</b></td><td><code>PinwandView</code></td><td>Posts lesen/erstellen/liken; Admin darf löschen; 🔔-Meldung bei neuen Posts (über Polling).</td></tr>
+    <tr><td><b>ÖPNV</b></td><td><code>DatenView</code></td><td>VRR-Abfahrten (Quelle sichtbar) + „Simulation starten".</td></tr>
+    <tr><td><b>Einstellungen</b></td><td><code>EinstellungenView</code></td><td>Konto (read-only), Schalter für Standort + Pinwand-Benachrichtigungen, Logout.</td></tr>
+    <tr><td><b>Login</b> (vorgeschaltet)</td><td><code>AuthView</code></td><td>Login/Registrieren (Rollen: Student/Professor – Admin nur als Demo-Konto).</td></tr>
+  </table>
+  <h4>Die wichtigsten Funktionen in App.jsx</h4>
+  <table>
+    <tr><th>Funktion</th><th>Was sie macht</th></tr>
+    <tr><td><code>apiJson()</code></td><td>Zentrale Fetch-Hilfe: hängt das JWT als <code>Authorization: Bearer</code> an, zeigt Backend-Klartext-Fehler.</td></tr>
+    <tr><td><code>ladeAlles({stumm})</code></td><td>Holt parallel alle 5 Datenquellen; im stummen Modus (Polling) ohne Lade-Puls; erkennt neue Posts (🔔).</td></tr>
+    <tr><td>Polling-<code>useEffect</code></td><td>Alle 8&nbsp;s automatisch nachladen – nur eingeloggt, nur bei sichtbarem Tab, kein Überholen (<code>sollAktualisieren</code>, Kapitel&nbsp;23).</td></tr>
+    <tr><td><code>reservieren()</code> / <code>postErstellen()</code> / <code>postLiken()</code></td><td>Schreiben + neu laden; <code>postErstellen</code> merkt sich das Formular VOR dem <code>await</code> (der berühmte reset-Bug, Kapitel&nbsp;21).</td></tr>
+    <tr><td><code>reservierungLoeschen()</code> / <code>postLoeschen()</code></td><td>Admin-Verwaltung (DELETE – das Backend prüft die Rolle, nicht das UI!).</td></tr>
+  </table>
+  <div class="analogy"><b>🧩 React in einem Satz:</b> React hält „Zustand" (z.&nbsp;B. die Postliste) und zeichnet die Seite automatisch neu, sobald sich der Zustand ändert – wir beschreiben <em>was</em> angezeigt wird, nicht <em>wie</em> gemalt wird.</div>
+
+  <h2 id="glossar">36. 📖 Mini-Glossar (jeder Begriff in einem Satz)</h2>
+  <table>
+    <tr><td><b>Spring Boot</b></td><td>Java-Baukasten, der den Server-Aufbau (Web, DB, …) automatisch erledigt.</td></tr>
+    <tr><td><b>REST-Controller</b></td><td>Klasse, die auf Web-Adressen (<code>/api/...</code>) antwortet.</td></tr>
+    <tr><td><b>Service / Repository / Entity</b></td><td>Fachlogik hinter dem Controller / automatischer DB-Zugang / Klasse = Tabelle.</td></tr>
+    <tr><td><b>record</b></td><td>Kurze, unveränderliche Java-Datenklasse – ideal für JSON.</td></tr>
+    <tr><td><b>MQTT / Broker / Topic</b></td><td>Nachrichten-Protokoll (publish/subscribe) / der Vermittler (Mosquitto) / der Themenkanal (<code>virtualcollege/data</code>).</td></tr>
+    <tr><td><b>JPA / Hibernate · H2 / MariaDB</b></td><td>Objekt↔Tabelle-Übersetzer · Mini-DB im Speicher (Entwicklung) / echte DB (Docker).</td></tr>
+    <tr><td><b>Nginx · Container/Image</b></td><td>Web-Server + Weiterleiter · laufendes Programm / seine eingefrorene Vorlage.</td></tr>
+    <tr><td><b>Vertical Slicing / Modulith</b></td><td>Ein Backend, aber pro <b>Thema</b> ein Paket (statt technischer Schichten).</td></tr>
+    <tr><td><b>JWT · Spring Security · Rolle (ROLE_…)</b></td><td>Signierter Login-Ausweis · der Türsteher, der ihn prüft · die Berechtigung darin (Student/Professor/Admin).</td></tr>
+    <tr><td><b>Hash + Salt (PBKDF2)</b></td><td>Einbahn-Prüfsumme des Passworts mit Zufalls-Zutat – nicht zurückrechenbar.</td></tr>
+    <tr><td><b>Observer / Subjekt / Beobachter</b></td><td>Muster „bei Neuigkeit automatisch melden": Pinwand = Sender, BenachrichtigungsSpeicher/Nutzer = Empfänger.</td></tr>
+    <tr><td><b>Polling</b></td><td>Das Frontend fragt regelmäßig selbst nach (alle 8&nbsp;s) – unsere „letzte Meile", weil HTTP nicht pushen kann.</td></tr>
+    <tr><td><b>Mock</b></td><td>Test-Double: ersetzt im Test z.&nbsp;B. die Datenbank, damit nur die Fachregel geprüft wird.</td></tr>
+    <tr><td><b>JUnit / node --test</b></td><td>Die Test-Werkzeuge für Java bzw. JavaScript – ein Befehl, 97 Beweise.</td></tr>
+  </table>
+
   <hr>
-  <p class="small">Erstellt für das Verständnis von Softwaretechnik 2 (Stand: Praktikum 4 – Klassen, MQTT, Datenbank, Authentifizierung, reale Karte/Navigation und VRR-Daten umgesetzt &amp; per Docker testbar). Kapitel&nbsp;20 dokumentiert die externen Dienste und das ergänzte Diagramm.</p>
+  <p class="small">Erstellt für das Verständnis von Softwaretechnik 2 – <b>alles in dieser einen Datei</b>: Konzepte (Block A), Praktika (Block B), Betrieb (Block C), Nachweise/EPICs/Compliance (Block D) und der Code-Rundgang (Block E). Stand: Spring Security/JWT mit <b>drei Rollen</b>, <b>6 echte FH-Räume</b> (Emil-Figge-Str., Schwerpunkt Informatik), Speiseplan an der Mensa kostBar, ÖPNV-Tab, <b>Observer live</b> (🔔), Polling, MQTT, MariaDB – per Docker startbar und durch <b>97 Tests</b> abgesichert. Präsentations-Spickzettel: <code>PRAESENTATION.md</code> · Epics/User Stories: <code>CLAUDE.md</code> · Lernmaterial: <code>unterlagen/</code>.</p>
 
 </div>
 <!-- Mermaid: zeichnet die UML-Klassendiagramme automatisch.

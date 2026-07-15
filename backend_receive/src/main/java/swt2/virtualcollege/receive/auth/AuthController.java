@@ -1,5 +1,6 @@
 package swt2.virtualcollege.receive.auth;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * Endpunkte (alle unter /api/auth):
  *   POST /registrieren  -> neues Konto anlegen (und direkt einloggen)
- *   POST /login         -> einloggen, Token erhalten
- *   GET  /ich           -> "wer bin ich?" (mit Token im Header X-Auth-Token)
- *   POST /logout        -> Token ungueltig machen
+ *   POST /login         -> einloggen, JWT-Token erhalten
+ *   GET  /ich           -> "wer bin ich?" (Token im Header Authorization: Bearer)
+ *   POST /logout        -> aktuelles Token sperren
  *
- * Das Frontend speichert das Token nach dem Login und schickt es bei
- * geschuetzten Aufrufen im Header "X-Auth-Token" mit.
+ * PRODUKTIONS-VARIANTE: Login/Registrieren geben einen signierten JWT-Ausweis
+ * zurueck. Das Frontend speichert ihn und schickt ihn bei jeder geschuetzten
+ * Anfrage im Header "Authorization: Bearer <token>" mit. Ob eine Anfrage
+ * durchgelassen wird, entscheidet Spring Security (siehe SecurityConfig).
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -31,29 +34,46 @@ public class AuthController {
 
     @PostMapping("/registrieren")
     public NutzerAntwort registrieren(@RequestBody RegistrierAnfrage anfrage) {
-        Benutzerkonto konto = service.registriere(
+        AuthService.Sitzung sitzung = service.registriere(
                 anfrage.email(), anfrage.name(), anfrage.rolle(), anfrage.passwort());
-        // Nach dem Registrieren gleich automatisch einloggen.
-        String token = service.login(anfrage.email(), anfrage.passwort());
-        return new NutzerAntwort(token, konto.getEmail(), konto.getName(), konto.getRolle());
+        return antwort(sitzung);
     }
 
     @PostMapping("/login")
     public NutzerAntwort login(@RequestBody LoginAnfrage anfrage) {
-        String token = service.login(anfrage.email(), anfrage.passwort());
-        Benutzerkonto konto = service.ausToken(token);
-        return new NutzerAntwort(token, konto.getEmail(), konto.getName(), konto.getRolle());
+        AuthService.Sitzung sitzung = service.login(anfrage.email(), anfrage.passwort());
+        return antwort(sitzung);
     }
 
+    /*
+     * "Wer bin ich?" – Der JwtAuthFilter hat das Token bereits geprueft und den
+     * angemeldeten Nutzer bereitgestellt. Wir geben das mitgeschickte Token
+     * unveraendert zurueck, damit das Frontend seinen gespeicherten Ausweis behaelt.
+     */
     @GetMapping("/ich")
-    public NutzerAntwort ich(@RequestHeader(value = "X-Auth-Token", required = false) String token) {
-        Benutzerkonto konto = service.ausToken(token);
-        return new NutzerAntwort(token, konto.getEmail(), konto.getName(), konto.getRolle());
+    public NutzerAntwort ich(@AuthenticationPrincipal AngemeldeterNutzer nutzer,
+                             @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        return new NutzerAntwort(bearerToken(authHeader), nutzer.email(), nutzer.name(), nutzer.rolle());
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestHeader(value = "X-Auth-Token", required = false) String token) {
-        service.logout(token);
+    public void logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        service.abmelden(bearerToken(authHeader));
+    }
+
+    // ---- Hilfsfunktionen ----
+
+    private NutzerAntwort antwort(AuthService.Sitzung sitzung) {
+        Benutzerkonto k = sitzung.konto();
+        return new NutzerAntwort(sitzung.token(), k.getEmail(), k.getName(), k.getRolle());
+    }
+
+    /** Holt das reine Token aus dem Header "Authorization: Bearer <token>". */
+    private String bearerToken(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7).trim();
+        }
+        return null;
     }
 
     // ---- Anfrage-/Antwort-Formate (JSON) ----

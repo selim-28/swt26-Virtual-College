@@ -124,3 +124,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+### Projekt-spezifisch ###
+# Grosse Referenz-/Lerndateien nur lokal halten (Repo schlank), aber
+# Praktikums-Abgaben (Kanban-Boards, OOD-Diagramm) BLEIBEN im Repo.
+unterlagen/SWT2ALLIN7.pdf
+unterlagen/Sonntag.pdf
