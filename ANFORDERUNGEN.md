@@ -1,9 +1,9 @@
 # Virtual College – Epics und User Stories
 
-Diese Datei ist der fachliche Projektkontext für Claude Code und andere Coding-Assistenten.
+Diese Datei ist das Product Backlog des Projekts.
 Sie beschreibt die aktuell vereinbarten Epics, User Stories und Akzeptanzkriterien.
 
-## Arbeitsregeln für Coding-Assistenten
+## Arbeitsregeln für die Weiterentwicklung
 
 - Vor Änderungen zuerst prüfen, welche Anforderungen bereits umgesetzt sind.
 - Bestehende Funktionen nicht ohne ausdrücklichen Auftrag entfernen oder grundlegend verändern.
