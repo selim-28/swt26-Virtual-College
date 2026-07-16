@@ -102,7 +102,7 @@
   </div>
 
   <div class="card" style="border-color:var(--green)">
-    <p style="margin:0"><b>📖 ALLES in dieser EINEN Datei:</b> die Konzepte &amp; Prüfungsthemen (Block&nbsp;A), der Praktikums-Stand (Block&nbsp;B), Betrieb &amp; Umsetzung (Block&nbsp;C), die Nachweise – Tests, EPICs, Praktika, Compliance (Block&nbsp;D) – und der komplette <b>Code-Rundgang für Einsteiger</b> (Block&nbsp;E, ab <a href="#rundgang" style="color:var(--green)"><b>Kapitel&nbsp;30</b></a>: welche Datei macht was, wie die Daten fließen, Ordner für Ordner). Nutze das Inhaltsverzeichnis direkt hierunter als Landkarte.</p>
+    <p style="margin:0"><b>📖 ALLES in dieser EINEN Datei:</b> die Konzepte &amp; Prüfungsthemen (Block&nbsp;A), der Praktikums-Stand (Block&nbsp;B), Betrieb &amp; Umsetzung (Block&nbsp;C), die Nachweise – Tests, EPICs, Praktika, Compliance (Block&nbsp;D) – und der komplette <b>Code-Rundgang für Einsteiger</b> (Block&nbsp;E, ab <a href="#rundgang" style="color:var(--green)"><b>Kapitel&nbsp;30</b></a>: welche Datei macht was, wie die Daten fließen, Ordner für Ordner). Nutze das Inhaltsverzeichnis direkt hierunter als Landkarte. <b>Einzige bewusste Ausnahme:</b> die schonungslose Generalproben-Kritik (was Prüfer bemängeln würden + Rettungsplan) steht separat in <a href="kritik.html" style="color:var(--red)"><b>kritik.html</b></a> – Zusammenfassung in <a href="#generalprobe" style="color:var(--green)">Kapitel&nbsp;28.b</a>.</p>
   </div>
 
   <div class="toc">
@@ -143,6 +143,7 @@
     <a href="#mensa-epic">26. 🍲 EPIC 5 – Mensa-Informationen (Speiseplan &amp; Historie)</a>
     <a href="#oepnv-epic">27. 🚌 EPIC 6 – Öffentlicher Nahverkehr (VRR + Offline-Fallback)</a>
     <a href="#praktika">28. 📋 Praktikums-Nachweis: jede Prof-Aufgabe → unsere Antwort + Fundort</a>
+    <a href="#generalprobe">28.b 🔍 Generalprobe: Selbstkritik gegen die Folien (→ eigene Seite kritik.html)</a>
     <a href="#compliance">29. ⚖️ Compliance im Software Engineering – auf unser Projekt angewendet</a>
 
     <strong style="display:block;margin-top:10px;color:var(--accent)">🔎 Block E – Der Code-Rundgang (für Einsteiger: jede Datei, jeder Fluss)</strong>
@@ -2348,7 +2349,7 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
       <table>
         <tr><th>Aufgabe (Prof.)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
         <tr><td><b>1. Maven-Projektstruktur</b>: zwei Backend-Systeme + MQTT-Broker + (progressive) Web-Frontend + Datenbank; Module in der pom.xml</td><td>Eltern-<code>pom.xml</code> mit den Modulen <code>backend_receive</code> + <code>backend_send</code>; React/Vite-Frontend hinter Nginx; Mosquitto + MariaDB per Docker Compose.</td><td><code>pom.xml</code> (Root, <code>&lt;modules&gt;</code>) · Kapitel&nbsp;4+5 (pom Zeile für Zeile) · <code>docker-compose.yml</code></td></tr>
-        <tr><td><b>2. Build-Prozess testen</b>: main-Funktion je Backend; Feature-Branch → Pull-Request → Actions grün → Merge</td><td>Startklassen <code>ReceiveApplication</code>/<code>SendApplication</code> (Spring Boot main). Git-Workflow mit Feature-Branches und PRs wurde genutzt; GitHub-Actions-Konfiguration liegt unter <code>.github/</code>.</td><td><code>backend_*/src/main/java/.../ReceiveApplication.java</code> bzw. <code>SendApplication.java</code> · <code>.github/</code> · PR-Historie im GitHub-Repo</td></tr>
+        <tr><td><b>2. Build-Prozess testen</b>: main-Funktion je Backend; Feature-Branch → Pull-Request → Actions grün → Merge</td><td>Startklassen <code>ReceiveApplication</code>/<code>SendApplication</code> (Spring Boot main). Der geforderte Workflow ist <b>konkret belegbar</b>: <b>PR&nbsp;#17</b> (REST-Endpunkte + Doku, Juni) und <b>PR&nbsp;#39</b> (Endstand: Auth + alle 8 Epics + 97 Tests, gemergt am <b>15.07.2026</b>) liefen beide über Feature-Branch → Pull-Request → <b>grüne Pre-Merge-Checks</b> (<code>verify</code> = <code>mvn verify</code> über alle Module) → Merge nach <code>main</code>.</td><td><code>backend_*/src/main/java/.../ReceiveApplication.java</code> bzw. <code>SendApplication.java</code> · <code>.github/workflows/pre-merge.yaml</code> · PR&nbsp;#17 und&nbsp;#39 im GitHub-Repo (Checks-Tab = Beweis)</td></tr>
         <tr><td><b>3. Sprint-Planning</b>: User Stories Teammitgliedern zuweisen; GitHub <b>Milestones</b> = Sprints</td><td>Issues sind den Epics/Stories zugeordnet; Zuweisung an Mitglieder + Milestones je Sprint im GitHub-Repo.</td><td>GitHub-Repo (Issues/Milestones) · <span class="small">🟡 Vor der Präsentation prüfen: 3 Milestones (Sprint 1–3) sauber gepflegt + Stories zugewiesen (zählt zu den 30&nbsp;% Projektmanagement!)</span></td></tr>
       </table>
     </div>
@@ -2379,6 +2380,37 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
         <tr><td><b>Entwicklung in 3 Sprints + Projektdokumentation</b> (laut Praktikumsplan)</td><td>Implementierung ist fertig und getestet (97 Tests). <span class="small">🟡 Team-Aufgabe vor der Präsentation: 3-Sprint-Rückblick (Planung vs. Ist + Abweichungen) und Rollenverteilung dokumentieren – Vorlage liegt bereit.</span></td><td><code>PRAESENTATION.md</code> Abschnitte&nbsp;1 und&nbsp;5</td></tr>
       </table>
       <div class="tip"><b>🎯 Ein Satz für die Präsentation:</b> „Alle vier Praktikumsaufgaben sind vollständig bearbeitet und <b>nachweisbar</b>: Epics/Stories in CLAUDE.md, Maven-Module und CI in Git, das Verteilungsdiagramm in Kapitel&nbsp;2, die konsistenten OOD-Diagramme mit drei gekennzeichneten Mustern in Kapitel&nbsp;13 – und jede User Story ist durch JUnit-/Frontend-Tests belegt."</div>
+    </div>
+  </div>
+
+  <h3 id="generalprobe">28.b 🔍 Generalprobe (16.07.2026): das Projekt gegen die Folien geprüft → <a href="kritik.html" style="color:var(--red)">kritik.html</a></h3>
+
+  <p>Zwei Wochen vor der Abschlusspräsentation haben wir das Projekt einer <b>bewusst harten
+  Selbstprüfung</b> unterzogen: alle 715 Folien-Seiten (<code>unterlagen/SWT2ALLIN7.pdf</code>,
+  v.&nbsp;a. die Praktikumsaufgaben 1–4 im Wortlaut und die Folie „Arbeitsergebnisse für die
+  Abschlusspräsentation") gegen den <b>tatsächlichen Repo-Zustand</b> gehalten. Das Ergebnis ist
+  eine eigene Seite: <a href="kritik.html" style="color:var(--accent)"><b>kritik.html</b></a> –
+  zehn Kritikpunkte (K1–K10), jeder mit Folien-Zitat, Repo-Befund, erwartbarer Prüferfrage und
+  konkretem Fix, dazu ein nach Notenwirkung sortierter Rettungsplan und ein Frage-Antwort-Training.</p>
+
+  <div class="qa">
+    <div class="frage">Was kam bei der Generalprobe heraus – und was wurde daraufhin gemacht?</div>
+    <div class="antwort">
+      <p><b>Der kritischste Verdacht (K1) hat sich in Luft aufgelöst – mit einer Lehre:</b> Die erste
+      Analyse behauptete, der Endstand läge un-gemergt auf einem Feature-Branch und <code>main</code>
+      sei veraltet. Die Prüfung <b>direkt auf GitHub</b> zeigte dann: <b>PR&nbsp;#39</b> war bereits am
+      <b>15.07.2026</b> mit <b>grünen Pre-Merge-Checks</b> nach <code>main</code> gemergt – nur der
+      <b>lokale Klon</b> hatte den Stand nie abgeholt. Lehre (und jetzt Arbeitsregel): vor jeder
+      Analyse und jedem Arbeitsbeginn <code>git fetch</code> bzw. <code>git pull</code>. Der lokale
+      Klon wurde auf <code>main</code> aktualisiert und kritik.html entsprechend <b>korrigiert</b> –
+      eine Kritikseite, die selbst einen veralteten Stand kritisiert, wäre genau der Fehler, den sie anprangert.</p>
+      <p><b>Was weiterhin offen ist, steht jetzt an einer Stelle:</b> Die verbleibenden roten Punkte
+      sind Team-Aufgaben fürs Projektmanagement (30&nbsp;% der Note): Rollenverteilung ausfüllen (K2/K4),
+      3-Sprint-Rückblick mit Abweichungen schreiben (K2), Burndown-Chart rekonstruieren (K5) – Details
+      und Reihenfolge im <a href="kritik.html#plan" style="color:var(--accent)">Rettungsplan</a>.</p>
+      <p><b>Und diese Doku-Änderung selbst?</b> Ging mustergültig den Weg, den Praktikum&nbsp;2
+      verlangt: eigener Feature-Branch (<code>docs/generalprobe-kritik-und-pipeline-nachweis</code>)
+      → Pull-Request → grüne Checks → Merge. Ab jetzt gilt das für <b>jede</b> Änderung, auch an der Doku.</p>
     </div>
   </div>
 
@@ -2701,7 +2733,7 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
   </table>
 
   <hr>
-  <p class="small">Erstellt für das Verständnis von Softwaretechnik 2 – <b>alles in dieser einen Datei</b>: Konzepte (Block A), Praktika (Block B), Betrieb (Block C), Nachweise/EPICs/Compliance (Block D) und der Code-Rundgang (Block E). Stand: Spring Security/JWT mit <b>drei Rollen</b>, <b>6 echte FH-Räume</b> (Emil-Figge-Str., Schwerpunkt Informatik), Speiseplan an der Mensa kostBar, ÖPNV-Tab, <b>Observer live</b> (🔔), Polling, MQTT, MariaDB – per Docker startbar und durch <b>97 Tests</b> abgesichert. Präsentations-Spickzettel: <code>PRAESENTATION.md</code> · Epics/User Stories: <code>CLAUDE.md</code> · Lernmaterial: <code>unterlagen/</code>.</p>
+  <p class="small">Erstellt für das Verständnis von Softwaretechnik 2 – <b>alles in dieser einen Datei</b>: Konzepte (Block A), Praktika (Block B), Betrieb (Block C), Nachweise/EPICs/Compliance (Block D) und der Code-Rundgang (Block E). Stand: Spring Security/JWT mit <b>drei Rollen</b>, <b>6 echte FH-Räume</b> (Emil-Figge-Str., Schwerpunkt Informatik), Speiseplan an der Mensa kostBar, ÖPNV-Tab, <b>Observer live</b> (🔔), Polling, MQTT, MariaDB – per Docker startbar und durch <b>97 Tests</b> abgesichert. Präsentations-Spickzettel: <code>PRAESENTATION.md</code> · Epics/User Stories: <code>CLAUDE.md</code> · Generalproben-Kritik + Rettungsplan: <a href="kritik.html" style="color:var(--accent)"><code>docs/kritik.html</code></a> · Lernmaterial: <code>unterlagen/</code>.</p>
 
 </div>
 <!-- Mermaid: zeichnet die UML-Klassendiagramme automatisch.
