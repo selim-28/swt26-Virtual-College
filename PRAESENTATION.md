@@ -220,7 +220,7 @@ können. Das ist eine Engineering-Aufgabe, keine reine Rechtsfrage."*
 | Nachweisbarkeit (Accountability) | „Aus Umsetzung wird erst durch **Evidenz** prüfbare Compliance": Diagramme (Kap. 2/13), Rollenkonzept (Kap. 18), Logs, **97 Tests**, Adminer, diese Doku. |
 | STRIDE-Bedrohungen | Spoofing→JWT-Signatur · Tampering→Manipulations-Test · Info-Disclosure→nur Hashes in der DB · Elevation→`hasRole("ADMIN")` · ehrlich offen: kein Rate-Limiting (DoS). |
 | SBOM (CRA, Pflicht ab 09/2026) | `pom.xml` + `package.json` sind unsere versionierte „Zutatenliste"; `./mvnw dependency:tree` / `npm ls` listet alles auf. |
-| AI Act | App enthält **kein KI-System** → minimales Risiko. KI-generierter **Code** ist reviewt, durch 97 Tests abgesichert und in `docs/code-verstehen.html` erklärt – Verantwortung liegt beim Team. |
+| AI Act | App enthält **kein KI-System** (keine automatisierten Entscheidungen über Personen, kein Scoring) → minimales Risiko. Der Code ist reviewt (PRs + Pre-Merge-Checks), durch 97 Tests abgesichert und in `docs/erklaerung.html` (Block E) erklärt – Verantwortung liegt beim Team. |
 
 → Ausführlich mit allen Tabellen und dem 30-Sekunden-Spickzettel:
 *erklaerung.html Kapitel 29*.
