@@ -579,6 +579,18 @@ mqtt.topic=virtualcollege/data</code></pre>
   <h2 id="rest">8. REST &amp; Controller 🎛️</h2>
   <p>Wie redet das Frontend mit <code>backend_receive</code>? Über <b>REST</b>. Das ist eine Regel, bei der man Daten über normale <b>Web-Adressen (URLs)</b> abruft – genau wie beim Aufrufen einer Webseite.</p>
 
+  <div class="tip"><b>✅ NEU (17.07.): Die komplette REST-Schnittstellen-Doku gibt es jetzt auf Knopfdruck – OpenAPI/Swagger.</b>
+  Die Bibliothek <code>springdoc-openapi</code> (in beiden Backend-<code>pom.xml</code>) liest alle
+  Controller automatisch aus und erzeugt eine klickbare Übersicht <b>aller</b> Endpunkte mit Methode,
+  Pfad, Parametern und Antwortformat: <code>http://localhost:8090/swagger-ui.html</code>
+  (über Nginx; nach Frontend-Rebuild) bzw. direkt <code>localhost:8083</code> (receive) und
+  <code>localhost:8084</code> (send). Über den <b>„Authorize“-Knopf</b> kann man das JWT aus
+  <code>POST /api/auth/login</code> eintragen und geschützte Endpunkte <b>live ausprobieren</b> –
+  die Doku-Seiten selbst sind frei lesbar, die API bleibt geschützt (ohne Token: 401).
+  Konfiguration: <span class="file">backend_receive/src/main/java/…/OpenApiKonfiguration.java</span>.
+  Damit ist die Kurs-Anforderung „Kommunikationsschnittstellen ausführlich dokumentieren“ an
+  <b>einer</b> Stelle erfüllt (den asynchronen MQTT-Teil beschreibt <a href="#mqtt" style="color:var(--green)">Kapitel&nbsp;7</a>).</div>
+
   <p>Beispiel: Das Frontend ruft die Adresse <code>/api/mensa/speiseplan</code> auf und bekommt den Speiseplan zurück.</p>
 
   <p>Ein <b>Controller</b> ist die Java-Klasse, die solche Adressen <em>beantwortet</em>. Die Aufkleber (Annotationen) sagen, welche Adresse zuständig ist. So sieht unser echter <code>MensaController</code> aus:</p>

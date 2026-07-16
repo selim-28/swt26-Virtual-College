@@ -118,6 +118,19 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!--
+          Bibliothek 8b: springdoc-openapi = automatische Schnittstellen-Doku.
+          Liest alle REST-Controller aus und erzeugt daraus eine OpenAPI-
+          Beschreibung (/v3/api-docs) plus klickbare Oberflaeche (/swagger-ui.html).
+          Damit ist die Anforderung "Kommunikationsschnittstellen ausfuehrlich
+          dokumentieren" an EINER Stelle erfuellt und live vorzeigbar.
+          Version noetig, weil Spring Boot springdoc nicht vorgibt.
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <!--
           Bibliothek 9-11: JJWT = erzeugt und prueft JWT-Token ("JSON Web Token").
           Ein JWT ist ein digital signierter Ausweis: Das Backend stellt ihn beim
           Login aus, der Browser zeigt ihn bei jeder Anfrage vor. Weil er signiert
