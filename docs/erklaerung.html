@@ -97,8 +97,18 @@
   <p class="lead">Diese Seite erklärt dir von Grund auf, was in deinem Projekt steckt – <b>ohne Vorwissen</b>. Lies sie von oben nach unten wie eine Geschichte. Jeder Fachbegriff wird mit einem Vergleich aus dem Alltag erklärt. Am Ende erfährst du genau, <b>wo wir gerade stehen</b> und <b>was als Nächstes zu tun ist</b>.</p>
 
   <div class="card" style="border-color:var(--accent)">
-    <p style="margin:0"><b>📍 Wo stehen wir gerade? (in einem Satz)</b><br>
-    Praktikum&nbsp;2 (Infrastruktur) und Praktikum&nbsp;3 (Verteilungsdiagramm + MQTT-Vorbereitung + REST-Schnittstellen) sind <span class="pill done">erledigt</span>. Bei <b>Praktikum&nbsp;4</b> ist der <b>Entwurf</b> (OOD-Klassendiagramme + drei Entwurfsmuster) fertig (<a href="#p4" style="color:var(--accent)"><b>Kapitel&nbsp;13</b></a>). <b>Neu &amp; getestet:</b> Das Projekt lässt sich per <b>Docker</b> mit einem Befehl starten (<a href="#docker" style="color:var(--accent)"><b>Kapitel&nbsp;15</b></a>), die <b>echte Backend-Funktion</b> läuft (Factory → MQTT → Adapter → Datenbank, <a href="#echt" style="color:var(--accent)"><b>Kapitel&nbsp;16</b></a>) und es gibt jetzt ein <b>React-Frontend 1.0</b>, das den Kanban-Entwurf wirklich nutzbar macht: Campus-Karte, Raumreservierung, Pinwand, Likes, Live-Daten und DB-Nachweis (<a href="#frontend" style="color:var(--accent)"><b>Kapitel&nbsp;17</b></a>).</p>
+    <p style="margin:0"><b>📍 Wo stehen wir gerade? (Stand 17.07.2026)</b><br>
+    <b>Alle vier Praktika sind fachlich fertig:</b> alle <b>8 Epics / 21 User Stories</b> umgesetzt,
+    abgesichert durch <b>97 automatische Tests</b>, mit Login + <b>3 Rollen</b> (JWT,
+    <a href="#anmeldung" style="color:var(--accent)"><b>Kapitel&nbsp;18</b></a>), per Docker mit einem Befehl startbar
+    (<a href="#docker" style="color:var(--accent)"><b>Kapitel&nbsp;15</b></a>). Der Endstand ist regelkonform auf
+    <code>main</code> (PR&nbsp;#39 mit grünen Checks); seither läuft <b>jede</b> Änderung über kleine PRs.
+    <b>Neu (16./17.07.):</b> Burndown + bereinigtes Kanban-Board (<a href="#burndown" style="color:var(--accent)"><b>Kap.&nbsp;28.c</b></a>),
+    <b>OpenAPI/Swagger</b>-Schnittstellendoku (<a href="#rest" style="color:var(--accent)"><b>Kap.&nbsp;8</b></a>) und das Frontend ist
+    nach <b>Fachmodulen</b> geschnitten wie das Backend (<a href="#frontend-rundgang" style="color:var(--accent)"><b>Kap.&nbsp;35</b></a>).
+    <b>Was noch fehlt, ist Team-Arbeit für die Präsentation:</b> Namen in die Rollentabelle, Sprint-Rückblick,
+    Team-Folie – die ehrliche Liste steht in <a href="#todo" style="color:var(--accent)"><b>Kapitel&nbsp;12</b></a>,
+    die Generalprobe in <a href="kritik.html" style="color:var(--red)"><b>kritik.html</b></a>.</p>
   </div>
 
   <div class="card" style="border-color:var(--green)">
@@ -392,41 +402,44 @@
 ├── <span class="fld">docs/</span>
 │   └── <span class="keep">erklaerung.html</span>  <span class="note">← genau diese Seite hier 🙂</span>
 │
-├── <span class="fld">frontend/</span> <span class="keep">★ NEU: React-Web-App (Vite + Nginx)</span>
+├── <span class="fld">frontend/</span> <span class="keep">★ React-Web-App (Vite + Nginx)</span>
 │   ├── <span class="keep">package.json</span>      <span class="note">React/Vite-Abhängigkeiten und Build-Befehle</span>
 │   ├── <span class="keep">Dockerfile.frontend</span><span class="note">baut React und liefert es mit Nginx aus</span>
-│   ├── <span class="fld">src/</span>
+│   ├── <span class="fld">src/</span>              <span class="keep">★ seit 17.07. nach FACHMODULEN geschnitten (wie das Backend!)</span>
 │   │   ├── <span class="keep">main.jsx</span>      <span class="note">React-Startpunkt</span>
-│   │   ├── <span class="keep">App.jsx</span>       <span class="note">Campus, Pinwand, Live-Daten, Einstellungen</span>
+│   │   ├── <span class="keep">App.jsx</span>       <span class="note">nur noch Zustand + Handler + Verdrahtung (353 Zeilen)</span>
+│   │   ├── <span class="fld">gemeinsam/</span>    <span class="note">api.js (Token+fetch), format.js, Bausteine.jsx (Header, …)</span>
+│   │   ├── <span class="fld">auth/</span> <span class="fld">campus/</span> <span class="fld">mensa/</span> <span class="fld">pinwand/</span> <span class="fld">transit/</span> <span class="fld">einstellungen/</span>  <span class="note">je eine Ansicht pro Fachthema (Kap. 35)</span>
+│   │   ├── <span class="keep">campusUtils.mjs</span><span class="note">testbare reine Funktionen (+ campusUtils.test.mjs: 27 Tests)</span>
 │   │   └── <span class="keep">styles.css</span>    <span class="note">Layout, Farben, responsive Oberfläche</span>
-│   └── <span class="cfg">nginx.conf</span>        <span class="note">leitet API-Aufrufe an die Backends weiter</span>
+│   └── <span class="cfg">nginx.conf</span>        <span class="note">leitet API-Aufrufe an die Backends weiter (+ Swagger-Route)</span>
 │
-├── <span class="skip">PHOTO-...-17-15-45.jpg  ← alter Foto-Entwurf, ersetzt durch die Grafik in Kapitel 2. Kann weg.</span>
-├── <span class="skip">app/        ← Reste der Vorlage. Wird nicht gebaut. Kannst du ignorieren/löschen.</span>
-├── <span class="skip">.github/    ← Automatik-Einstellungen für GitHub (Actions). Nicht nötig anzufassen.</span>
+├── <span class="fld">docs/</span>       <span class="keep">★ die Doku: erklaerung.html (diese Datei) + kritik.html (Generalprobe)</span>
+├── <span class="fld">unterlagen/</span> <span class="note">← Lernmaterial: SWT2ALLIN7.pdf (Folien), OOD-Diagramm, Conceptboard-Exporte, …</span>
+├── <span class="cfg">ANFORDERUNGEN.md</span>  <span class="keep">★ Product Backlog: 8 Epics + 21 User Stories mit Akzeptanzkriterien (Praktikum 1!)</span>
+├── <span class="cfg">PRAESENTATION.md</span>  <span class="keep">★ Spickzettel für die Abschlusspräsentation (Rollen, Demo, Reflexion)</span>
+├── <span class="cfg">.github/</span>    <span class="keep">★ WICHTIG: GitHub-Actions (pre-merge.yaml prüft jeden PR mit mvn verify!)</span>
 ├── <span class="skip">.mvn/       ← Hilfsdateien für Maven. IGNORIEREN.</span>
 ├── <span class="cfg">pom.xml</span>     <span class="note">← die CHEF-pom: listet die beiden Backends auf</span>
 ├── <span class="skip">mvnw / mvnw.cmd   ← Maven-Starter (mitgeliefert). Nicht anfassen.</span>
-├── <span class="cfg">Dockerfile.java</span>       <span class="note">← Bauplan für EINEN Container (siehe Kapitel 15)</span>
-├── <span class="cfg">docker-compose.yml</span>    <span class="keep">★ NEU: startet ALLES mit einem Befehl (Kapitel 15)</span>
-├── <span class="fld">mosquitto/</span>            <span class="note">← NEU: Einstellung (mosquitto.conf) für den Broker-Container</span>
+├── <span class="cfg">Dockerfile.java</span>       <span class="note">← Bauplan für EINEN Backend-Container (siehe Kapitel 15)</span>
+├── <span class="cfg">docker-compose.yml</span>    <span class="keep">★ startet ALLES mit einem Befehl (Kapitel 15)</span>
+├── <span class="fld">mosquitto/</span>            <span class="note">← Einstellung (mosquitto.conf) für den Broker-Container</span>
 ├── <span class="skip">.gitignore / .dockerignore   ← sagen, was NICHT gespeichert wird. Egal.</span>
-├── <span class="skip">"git commands" / Linkboard   ← lose Notizdateien. Unwichtig.</span>
-├── <span class="cfg">README.md</span>   <span class="note">← Projektbeschreibung (Team-Namen eintragen!)</span>
-└── <span class="skip">swt2_praktikum_Vorlesungen.pdf   ← die Vorlesungs- & Aufgaben-PDF.</span></code></pre>
+└── <span class="cfg">README.md</span>   <span class="note">← Projektbeschreibung mit Schnellstart und curl-Beispielen</span></code></pre>
 
-  <div class="tip"><b>Das Wichtigste in einem Satz:</b> Du arbeitest praktisch <b>nur</b> in den <span style="color:var(--green)">grünen</span> <code>src/main/</code>-Ordnern der beiden <code>backend_…</code>-Module und manchmal in den <span style="color:var(--accent)">blauen</span> <code>pom.xml</code> / <code>application.properties</code>. <b>Alles andere kannst du ignorieren.</b></div>
+  <div class="tip"><b>Das Wichtigste in einem Satz:</b> Gearbeitet wird in den <span style="color:var(--green)">grünen</span> Ordnern – <code>src/main/</code> der beiden <code>backend_…</code>-Module und <code>frontend/src/</code> – plus gelegentlich in den <span style="color:var(--accent)">blauen</span> Konfigurationsdateien (<code>pom.xml</code>, <code>application.properties</code>, <code>nginx.conf</code>). <b>Alles andere ist Technik im Hintergrund.</b></div>
 
   <h3>Warum gibt es so viele „unwichtige" Sachen?</h3>
   <table>
     <tr><th>Ordner/Datei</th><th>Wofür? Warum ignorieren?</th></tr>
     <tr><td><code>target/</code></td><td>Hier legt Maven beim Bauen das <b>fertige Ergebnis</b> ab (die <code>.class</code>-Dateien und die <code>.jar</code>). Wird bei jedem Bauen neu erzeugt – du schreibst da <b>nie</b> selbst rein.</td></tr>
     <tr><td><code>.class</code>-Dateien</td><td>Das ist dein <code>.java</code>-Code, in „Maschinensprache" übersetzt. Liegt in <code>target/</code>. Automatisch – ignorieren.</td></tr>
-    <tr><td><code>app/</code></td><td>Ein Beispiel-Modul aus der ursprünglichen Vorlage. Es ist <b>nicht</b> in der Chef-<code>pom.xml</code> eingetragen, wird also nicht mitgebaut. Du kannst es liegen lassen oder löschen.</td></tr>
+    <tr><td><code>unterlagen/</code></td><td>Alles, was <b>nicht zur App</b> gehört: Vorlesungsfolien (SWT2ALLIN7.pdf), OOD-Diagramm-Quellen, Conceptboard-Exporte aus SWT&nbsp;1, das alte Maven-Übungsprojekt. Zum Nachschlagen – nicht zum Bauen.</td></tr>
     <tr><td><code>.mvn/</code>, <code>mvnw</code>, <code>mvnw.cmd</code></td><td>Der „Maven-Wrapper": sorgt dafür, dass Maven funktioniert, ohne dass du es installierst. Einfach da lassen.</td></tr>
-    <tr><td><code>.github/</code></td><td>Vorlagen &amp; Automatik für GitHub (z.&nbsp;B. automatisches Bauen/Testen = „Actions"). Für deinen Code irrelevant.</td></tr>
+    <tr><td><code>.github/</code> <span class="pill done">WICHTIG</span></td><td>Unsere <b>Entwicklungspipeline</b>: <code>pre-merge.yaml</code> baut und testet bei <b>jedem Pull-Request</b> alle Maven-Module (<code>mvn verify</code>) – erst wenn das grün ist, darf gemergt werden. Genau das verlangt Praktikum&nbsp;2, und es ist ein Vorzeige-Artefakt für die Präsentation.</td></tr>
     <tr><td><code>Dockerfile.java</code></td><td>Bauplan, um <b>ein</b> Backend in einen „Container" zu verpacken. Wird vom <code>docker-compose.yml</code> benutzt – ausführlich erklärt in <a href="#docker" style="color:var(--accent)">Kapitel&nbsp;15</a>.</td></tr>
-    <tr><td><code>docker-compose.yml</code> <span class="pill done">NEU</span></td><td>Startet mit <b>einem Befehl</b> beide Backends (und den vorbereiteten MQTT-Broker) als Container. Damit können z.&nbsp;B. <b>Professor:innen</b> das Projekt testen, ohne Java/Maven zu installieren. Siehe <a href="#docker" style="color:var(--accent)">Kapitel&nbsp;15</a>.</td></tr>
+    <tr><td><code>docker-compose.yml</code></td><td>Startet mit <b>einem Befehl</b> alle <b>sechs</b> Dienste (Frontend/Nginx, beide Backends, Mosquitto, MariaDB, Adminer). Damit können z.&nbsp;B. <b>Professor:innen</b> das Projekt testen, ohne Java/Maven zu installieren. Siehe <a href="#docker" style="color:var(--accent)">Kapitel&nbsp;15</a>.</td></tr>
     <tr><td><code>mosquitto/mosquitto.conf</code> <span class="pill done">NEU</span></td><td>Kleine Einstell-Datei für den Mosquitto-Container (Port 1883 öffnen, anonyme Verbindungen erlauben). Nur fürs Docker-Test-Setup.</td></tr>
   </table>
 
@@ -702,58 +715,53 @@ mqtt.topic=virtualcollege/data</code></pre>
   <div class="tip"><b>Geprüft:</b> Der Befehl <code>./mvnw verify</code> läuft mit <b>„BUILD SUCCESS"</b> durch – das Projekt baut also fehlerfrei. Auch die GitHub-„Actions" (automatischer Bau beim Pull-Request) sind grün. ✔️</div>
 
   <!-- ============================================================= -->
-  <h2 id="todo">12. ⭐ Was ist noch zu tun?</h2>
-  <p>Hier ist die ehrliche Liste der offenen Punkte – sortiert nach „kommt als Nächstes".</p>
+  <h2 id="todo">12. ⭐ Was ist noch zu tun? <span class="pill done">Stand 17.07.2026</span></h2>
+  <p>Hier ist die ehrliche Liste – zuerst kurz, was <b>fertig</b> ist, dann die echten offenen Punkte
+  (alles Team-Aufgaben für die Präsentation, kein Code mehr).</p>
 
-  <h3>🔵 Aktuelles Praktikum 4 – Dokumentation &amp; Design</h3>
-  <div class="todo">
-    <b>Aufgabe 1 – OOD-Klassendiagramme</b> <span class="pill done">Entwurf fertig → Kap. 13</span><br>
-    Für <b>jedes</b> Backend-System ein objektorientiertes <b>Entwurfs-Klassendiagramm</b> (OOD) in korrekter UML zeichnen. Grundlage sind die OOA-Klassendiagramme aus SWT&nbsp;1, verfeinert mit den Designprinzipien aus der Vorlesung.
-    <ul style="margin:8px 0 0">
-      <li>Jede Klasse im Diagramm muss es auch im <b>Code</b> geben (Diagramm &amp; Code müssen zusammenpassen!).</li>
-      <li>Assoziationen, Vererbung, Interfaces und abstrakte Klassen sauber modellieren <em>und</em> umsetzen.</li>
-      <li>Diagramm übersichtlich halten: Methoden/Attribute <b>nur</b> bei den Klassen zeigen, die an einem Entwurfsmuster beteiligt sind.</li>
-    </ul>
-  </div>
-  <div class="todo">
-    <b>Aufgabe 2 – Entwurfsmuster (Design Patterns)</b> <span class="pill done">Entwurf fertig → Kap. 13</span><br>
-    Mindestens <b>drei verschiedene</b> Entwurfsmuster einbauen – je mindestens eins aus jeder der drei Kategorien:
-    <table style="margin-top:8px">
-      <tr><th>Kategorie</th><th>Beispiele aus der Vorlesung</th></tr>
-      <tr><td>Erzeugungsmuster (Creational)</td><td>Factory, …&nbsp; <em>(Singleton ist verboten!)</em></td></tr>
-      <tr><td>Strukturmuster (Structural)</td><td>Adapter, Decorator, Composite</td></tr>
-      <tr><td>Verhaltensmuster (Behavioral)</td><td>Observer, Strategy, Command</td></tr>
-    </table>
-    Die Muster im Klassendiagramm <b>deutlich markieren</b>. In der Abschlusspräsentation muss jedes Team-Mitglied zu jedem Muster <b>Name, Motivation und Umsetzung</b> erklären können.
-  </div>
-  <div class="todo">
-    <b>Verteilungsdiagramm fertigstellen</b> <span class="pill wip">offen</span><br>
-    Das Diagramm aus Kapitel&nbsp;2 ist <b>noch ein Entwurf</b>. Final entscheiden: Welche Datenbank wirklich (MariaDB?), welcher Frontend-Server, welche Verbindungen genau. Danach das Diagramm „einfrieren".
+  <h3>🟢 Fachlich fertig (jeweils mit Nachweis-Kapitel)</h3>
+  <div class="tip" style="border-left-color:var(--green)">
+    <b>Alle 8 Epics / 21 User Stories umgesetzt und getestet</b> <span class="pill done">✓</span> –
+    97 automatische Tests (<a href="#tests" style="color:var(--accent)">Kap.&nbsp;21</a>), Login + 3 Rollen
+    (<a href="#anmeldung" style="color:var(--accent)">Kap.&nbsp;18</a>), OOD + 3 Muster
+    (<a href="#p4" style="color:var(--accent)">Kap.&nbsp;13</a>), MQTT-Kette
+    (<a href="#echt" style="color:var(--accent)">Kap.&nbsp;16</a>), Docker-Start
+    (<a href="#docker" style="color:var(--accent)">Kap.&nbsp;15</a>), Swagger-API-Doku
+    (<a href="#rest" style="color:var(--accent)">Kap.&nbsp;8</a>), Frontend in Fachmodulen
+    (<a href="#frontend-rundgang" style="color:var(--accent)">Kap.&nbsp;35</a>).
+    Endstand regelkonform auf <code>main</code> (PR&nbsp;#39, Checks grün); Kanban-Board bereinigt +
+    Burndown erstellt (<a href="#burndown" style="color:var(--accent)">Kap.&nbsp;28.c</a>).
   </div>
 
-  <h3>🟣 Implementierung – Stand (vieles ist jetzt umgesetzt!)</h3>
-  <div class="tip" style="border-left-color:var(--green)">
-    <b>OOD-Klassen im Code</b> <span class="pill done">erledigt ✓</span><br>
-    Die Klassen aus den Diagrammen (Kapitel&nbsp;13) sind angelegt – Diagramm und Code passen jetzt zusammen. Siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>.
-  </div>
-  <div class="tip" style="border-left-color:var(--green)">
-    <b>Echte MQTT-Kommunikation</b> <span class="pill done">erledigt ✓</span><br>
-    <code>backend_send</code> sendet wirklich (publish), <code>backend_receive</code> empfängt (subscribe) – über den Mosquitto-Broker. Getestet per Docker. Siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>.
-  </div>
-  <div class="tip" style="border-left-color:var(--green)">
-    <b>Datenbank (MariaDB)</b> <span class="pill done">erledigt ✓</span><br>
-    Empfangene Daten werden dauerhaft gespeichert (per JPA/JDBC); abrufbar unter <code>/api/mensa/historie</code>. Lokal H2, in Docker MariaDB. Siehe <a href="#echt" style="color:var(--accent)">Kapitel&nbsp;16</a>.
-  </div>
-  <div class="tip" style="border-left-color:var(--green)">
-    <b>React-Frontend 1.0</b> <span class="pill done">neu umgesetzt ✓</span><br>
-    Im Diagramm war ein „Frontend Web Server (Nginx)" geplant – jetzt gibt es ihn wirklich: <code>frontend/</code> enthält eine React-Web-App, und <code>docker-compose.yml</code> startet Nginx auf <code>http://localhost:8090</code>. Details stehen in <a href="#frontend" style="color:var(--accent)">Kapitel&nbsp;17</a>.
+  <h3>🔴 Offen – der Team-Abend (Projektdoku, zählt auf die 30 %)</h3>
+  <div class="todo">
+    <b>Namen in die Rollentabelle eintragen + Muster-Drill üben</b> <span class="pill open">offen</span><br>
+    Die sechs Verantwortungsbereiche mit Zeig-Aufgaben stehen fertig in <code>PRAESENTATION.md</code>
+    Abschnitt&nbsp;5 – es fehlen nur die Namen. Danach: jede Person übt alle 3 Muster
+    (Name → Motivation → Umsetzung) + die Bonus-Muster-Frage.
   </div>
   <div class="todo">
-    <b>Automatisierte Fachtests</b> <span class="pill open">optional</span><br>
-    Build-, Docker-, REST- und Datenbank-Tests wurden manuell erfolgreich ausgeführt. Eigene JUnit-Tests wären eine sinnvolle Politur, aber nicht mehr der nächste Pflichtschritt.
+    <b>3-Sprint-Rückblick verfeinern + GitHub-Milestones anlegen</b> <span class="pill open">offen</span><br>
+    Gerüst existiert: Burndown + Datenbasis in <a href="#burndown" style="color:var(--accent)">Kap.&nbsp;28.c</a>,
+    Abweichungs-/Reflexionstext in <code>PRAESENTATION.md</code> Abschnitt&nbsp;8. Beim Team-Abend:
+    pro Sprint 2–3 Sätze (geplant vs. geschafft) + drei Milestones „Sprint 1–3“ auf GitHub.
+  </div>
+  <div class="todo">
+    <b>Präsentations-Pflichtteile</b> <span class="pill open">offen</span><br>
+    Team-Folie (Fotos, Namen, <b>Matrikelnummern</b>), 2–3 Frontend-Screenshots für den Teaser,
+    Screenshot des grünen PR-Checks, Kanban/Burndown-Screenshot. Dazu: Issue&nbsp;#4
+    („Vorlesungs-Benachrichtigungen“) entscheiden – umsetzen oder als „durch US&nbsp;4.3 ersetzt“ schließen.
+  </div>
+  <div class="todo">
+    <b>Generalprobe durchspielen</b> <span class="pill wip">empfohlen</span><br>
+    Vor der Demo einmal <code>docker compose up -d --build</code> (damit Swagger + neues Frontend-Bundle
+    live sind), dann den roten Faden aus <code>PRAESENTATION.md</code> durchklicken und die
+    Prof-Fragen aus <a href="kritik.html#fragen" style="color:var(--red)">kritik.html</a> laut beantworten.
   </div>
 
-  <div class="tip"><b>Kurz gesagt:</b> Das <b>Gerüst steht</b>, der <b>Entwurf</b> (Klassendiagramme + Muster) ist fertig, die <b>echte Funktion</b> läuft über <b>MQTT</b> und <b>Datenbank</b> (Kapitel&nbsp;16), und jetzt gibt es auch ein erstes <b>Frontend</b> (Kapitel&nbsp;17). Als größter offener Punkt bleiben eigene <b>Tests</b> und Feinschliff für die Abschlusspräsentation.</div>
+  <div class="tip"><b>Kurz gesagt:</b> Es gibt <b>keinen offenen Code mehr</b> – alles Übrige ist
+  Vorbereitung: Namen, Rückblick, Folien, Üben. Die Reihenfolge nach Notenwirkung steht im
+  <a href="kritik.html#plan" style="color:var(--red)">Rettungsplan der kritik.html</a>.</div>
 
   <!-- ============================================================= -->
   <h2 id="p4">13. ⭐⭐ Praktikum 4 LÖSEN – Schritt für Schritt</h2>
@@ -1567,7 +1575,7 @@ curl http://localhost:8083/api/mensa/historie</code></pre>
   </table>
 
   <h3>Welche Kanban-Screens wurden umgesetzt?</h3>
-  <p>Die Kanban-PDFs zeigen die Richtung: Campus-Karte, Raumdetails, Pinwand, Profil/Einstellungen und Live-Informationen. In Version&nbsp;1.0 haben wir die Browser-/Rechner-Variante umgesetzt, weil sie am besten zu Docker und zur Präsentation passt.</p>
+  <p>Die Conceptboard-Mockups aus der Entwurfsphase (<code>unterlagen/canbanboard1–3.pdf</code> – trotz des Dateinamens sind das UI-Entwürfe, keine Kanban-Boards) zeigen die Richtung: Campus-Karte, Raumdetails, Pinwand, Profil/Einstellungen und Live-Informationen. In Version&nbsp;1.0 haben wir die Browser-/Rechner-Variante umgesetzt, weil sie am besten zu Docker und zur Präsentation passt.</p>
   <table>
     <tr><th>Kanban-Idee</th><th>Umsetzung jetzt</th><th>Echter Nutzen</th></tr>
     <tr><td>Live-Campus-Karte</td><td>Interaktive Karte mit Räumen, Status, Auslastung, Ausstattung und Veranstaltungen.</td><td>Studierende sehen sofort, welcher Raum frei oder belegt ist.</td></tr>
@@ -1586,7 +1594,7 @@ curl http://localhost:8083/api/mensa/historie</code></pre>
     <tr><td><code>frontend/Dockerfile.frontend</code></td><td>Baut zuerst React mit Node und liefert danach die fertigen Dateien mit Nginx aus.</td></tr>
     <tr><td><code>frontend/.dockerignore</code></td><td>Verhindert, dass lokale <code>node_modules</code> und <code>dist</code> in den Docker-Build-Kontext wandern.</td></tr>
     <tr><td><code>frontend/src/main.jsx</code></td><td>React-Startpunkt; rendert die App in <code>#root</code>.</td></tr>
-    <tr><td><code>frontend/src/App.jsx</code></td><td>Alle React-Funktionen: Daten laden, Simulation starten, Reservierung speichern, Post speichern, Like speichern, Ansichten wechseln.</td></tr>
+    <tr><td><code>frontend/src/App.jsx</code></td><td>Zustand + Handler + Verdrahtung (Daten laden, Reservierung/Post/Like speichern, Ansichten wechseln). Die Ansichten selbst liegen seit 17.07. in <b>Fachordnern</b> (<code>auth/</code>, <code>campus/</code>, <code>mensa/</code>, <code>pinwand/</code>, <code>transit/</code>, <code>einstellungen/</code>, <code>gemeinsam/</code>) – Details in <a href="#frontend-rundgang" style="color:var(--accent)">Kapitel&nbsp;35</a>.</td></tr>
     <tr><td><code>frontend/src/styles.css</code></td><td>Das komplette Layout: Arbeitsoberfläche, Kartenmarker, Sidepanel, Pinwand, Datenkacheln und responsive Ansicht.</td></tr>
     <tr><td><code>frontend/nginx.conf</code></td><td>Liefert React aus und leitet <code>/api/...</code> an die richtigen Backends weiter.</td></tr>
     <tr><td><code>backend_receive/.../campus/CampusController.java</code></td><td>REST-Endpunkte für Campus-Karte und Reservierungen.</td></tr>
@@ -1849,11 +1857,11 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
       Die Folie „Teams und Prüfung" nennt drei Phasen mit Gewichten – Team- <b>und</b> Einzelleistung zählen:
       <table>
         <tr><th>Phase</th><th>Gewicht</th><th>Was bei uns dazugehört</th></tr>
-        <tr><td>Architekturmodellierung</td><td><b>20&nbsp;%</b></td><td>Verteilungsdiagramm, OOD-Klassendiagramme, die 3 Muster (Kap.&nbsp;2 &amp; 13). <span class="pill done">weitgehend fertig</span></td></tr>
-        <tr><td>Projektmanagement</td><td><b>30&nbsp;%</b></td><td>3-Sprint-Planung, Rollen-/Aufgabenverteilung, Abweichungen. <span class="pill open">noch zu dokumentieren</span></td></tr>
-        <tr><td>Implementierung <b>und Test</b></td><td><b>50&nbsp;%</b></td><td>Der Code (steht!) – aber „<b>und Test</b>": eigene Tests fehlen noch. <span class="pill wip">Test offen</span></td></tr>
+        <tr><td>Architekturmodellierung</td><td><b>20&nbsp;%</b></td><td>Verteilungsdiagramm, OOD-Klassendiagramme, die 3 Muster (Kap.&nbsp;2 &amp; 13) + Swagger-API-Doku (Kap.&nbsp;8). <span class="pill done">fertig</span></td></tr>
+        <tr><td>Projektmanagement</td><td><b>30&nbsp;%</b></td><td>3-Sprint-Planung, Rollen-/Aufgabenverteilung, Abweichungen. <span class="pill wip">Gerüst steht</span> – Burndown (Kap.&nbsp;28.c), Bereichstabelle + Reflexion (PRAESENTATION §5/§8); offen: Namen + Rückblick + Milestones.</td></tr>
+        <tr><td>Implementierung <b>und Test</b></td><td><b>50&nbsp;%</b></td><td>Alle 8 Epics umgesetzt + <b>97 automatische Tests, alle grün</b> (Kap.&nbsp;21). <span class="pill done">fertig</span></td></tr>
       </table>
-      <div class="analogy"><b>💡 Erkenntnis:</b> Eure <b>Implementierung</b> ist schon stark. Punkte „liegen auf der Straße" jetzt vor allem bei dem, was noch fehlt: <b>Projektdoku (30&nbsp;%)</b> und <b>Tests</b> (Teil der 50&nbsp;%).</div>
+      <div class="analogy"><b>💡 Erkenntnis (aktualisiert 17.07.):</b> Implementierung, Tests und Architektur stehen. Punkte „liegen auf der Straße" nur noch beim <b>Projektdoku-Rest (30&nbsp;%)</b> – Namen, Sprint-Rückblick, Milestones – und beim <b>Üben der Präsentation</b> (Einzelnote!).</div>
     </div>
   </div>
 
@@ -1863,8 +1871,8 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
       Genau in dieser Reihenfolge – von „bringt am meisten Note" zu „nice to have":
       <table>
         <tr><th>#</th><th>Aufgabe</th><th>Warum / welche Phase</th></tr>
-        <tr><td>1</td><td><b>Projektdokumentation schreiben:</b> 3-Sprint-Planung (was wurde wann gemacht), Rollen-/Aufgabenverteilung im Team, Abweichungen von der Planung und warum.</td><td>Pflicht in P4 · zahlt auf <b>Projektmanagement 30&nbsp;%</b> ein. Quelle: euer Kanban-Board / GitHub-Milestones.</td></tr>
-        <tr><td>2</td><td><b>Ein paar automatische Tests</b> (JUnit) schreiben – z.&nbsp;B. für den Adapter (JSON → Speiseplan), die Factory und die Reservierungs-Standardwerte.</td><td>„Implementierung <b>und Test</b>" ist <b>50&nbsp;%</b>. Aktuell gibt es 0 eigene Tests – hier ist der größte einfache Gewinn.</td></tr>
+        <tr><td>1</td><td><b>Projektdoku fertigstellen:</b> Namen in die Bereichstabelle (PRAESENTATION §5), 3-Sprint-Rückblick verfeinern (Gerüst: Kap.&nbsp;28.c + §8), GitHub-Milestones anlegen.</td><td>Pflicht in P4 · zahlt auf <b>Projektmanagement 30&nbsp;%</b> ein. Details: <a href="#todo" style="color:var(--accent)">Kapitel&nbsp;12</a>.</td></tr>
+        <tr><td>2</td><td><b>✅ Erledigt – automatische Tests:</b> inzwischen <b>97 Tests</b> (60 receive / 10 send / 27 Frontend), alle grün: <code>./mvnw test</code> + <code>npm test</code>.</td><td>„Implementierung <b>und Test</b>" ist <b>50&nbsp;%</b> – abgehakt (Kap.&nbsp;21).</td></tr>
         <tr><td>3</td><td><b>Abschlusspräsentation vorbereiten</b> nach der offiziellen Folien-Checkliste (Team-Folie mit Matrikelnummern, Teaser-Screenshots, Technologiestack + DBMS-Begründung, Verteilungsdiagramm mit Zoom-in, Reflexion). Jede:r übt seinen Bereich.</td><td>Das ist <b>die Prüfung</b>. Checkliste: <a href="../PRAESENTATION.md" style="color:var(--accent)"><b>PRAESENTATION.md</b></a>.</td></tr>
         <tr><td>4</td><td><b>Erledigte Politur:</b> ÖPNV wird live vom VRR geholt, als Factory-Produkt per MQTT übertragen und in <code>backend_receive</code> ausgewertet. Auslastung bleibt der nächste mögliche Datentyp.</td><td>Die volle asynchrone Kette ist jetzt für Speiseplan <b>und</b> ÖPNV sichtbar.</td></tr>
       </table>
@@ -1877,7 +1885,7 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
     <div class="antwort">
       <table>
         <tr><th>Ich will …</th><th>… dann öffne</th></tr>
-        <tr><td>verstehen, was unser Code macht (Datei für Datei)</td><td><a href="code-verstehen.html" style="color:var(--accent)">code-verstehen.html</a></td></tr>
+        <tr><td>verstehen, was unser Code macht (Datei für Datei)</td><td><a href="#rundgang" style="color:var(--accent)">Kapitel&nbsp;30–36 (Code-Rundgang, Block&nbsp;E)</a></td></tr>
         <tr><td>die Konzepte/Diagramme für die Präsentation lernen</td><td>diese Datei, Kapitel 2 &amp; 13</td></tr>
         <tr><td>den Präsentations-Ablauf + Spickzettel</td><td><a href="../PRAESENTATION.md" style="color:var(--accent)">PRAESENTATION.md</a></td></tr>
         <tr><td>das Projekt schnell starten</td><td><a href="../README.md" style="color:var(--accent)">README.md</a> (<code>docker compose up --build</code>)</td></tr>
@@ -2058,7 +2066,7 @@ flowchart LR
         <li><code>neuerPostHinweis</code> <span class="pill done">NEU</span> – die 🔔-<b>Benachrichtigung über neue Pinwand-Beiträge</b>: meldet nur bei aktiviertem Schalter, nie beim ersten Laden, fasst mehrere neue Beiträge zusammen. <span class="small">→ EPIC 4 / US 4.3, Kapitel&nbsp;25</span></li>
       </ul>
       <div class="tip"><b>So führt man sie aus:</b> im Ordner <code>frontend/</code> den Befehl <code>npm test</code> (nutzt Nodes eingebauten Test-Runner <code>node --test</code>, <b>ohne</b> zusätzliche Bibliothek). Ergebnis: <code>pass 27 · fail 0</code>.</div>
-      <div class="analogy"><b>🧩 Warum ausgelagert?</b> Ein Test kann eine Funktion nur prüfen, wenn er sie <b>einzeln aufrufen</b> kann. Deshalb liegen die reinen Formeln jetzt in einer eigenen kleinen Datei – die große <code>App.jsx</code> holt sie sich von dort.</div>
+      <div class="analogy"><b>🧩 Warum ausgelagert?</b> Ein Test kann eine Funktion nur prüfen, wenn er sie <b>einzeln aufrufen</b> kann. Deshalb liegen die reinen Formeln in einer eigenen kleinen Datei – <code>App.jsx</code> und die Fachmodule (z.&nbsp;B. <code>campus/CampusKarte.jsx</code>) holen sie sich von dort.</div>
     </div>
   </div>
 
@@ -2087,7 +2095,7 @@ flowchart LR
 const form = new FormData(formEl);
 await apiJson(API.posts, { … });      // hier "verliert" event.currentTarget seinen Wert
 formEl.reset();                        // gesicherte Referenz -> kein Absturz</code></pre>
-      <div class="tip"><b>Merksatz:</b> Nach einem <code>await</code> niemals mehr <code>event.currentTarget</code> anfassen – die Referenz vorher in eine Variable kopieren. Geändert in <code>frontend/src/App.jsx</code> (Funktion <code>postErstellen</code>); Build &amp; die 17 Frontend-Tests bleiben grün.</div>
+      <div class="tip"><b>Merksatz:</b> Nach einem <code>await</code> niemals mehr <code>event.currentTarget</code> anfassen – die Referenz vorher in eine Variable kopieren. Geändert in <code>frontend/src/App.jsx</code> (Funktion <code>postErstellen</code>); Build &amp; die 27 Frontend-Tests bleiben grün.</div>
       <div class="warn"><b>⚠️ Wichtig beim Testen mit Docker:</b> Der Browser auf <code>localhost:8090</code> zeigt das <b>fertig gebaute</b> Frontend aus dem Container – <b>nicht</b> automatisch deine letzten Code-Änderungen. Nach jeder Frontend-Änderung den Container <b>neu bauen</b>:
       <pre style="white-space:pre-wrap"><code>docker compose up -d --build frontend</code></pre>
       Danach im Browser <b>hart neu laden</b> (Mac: <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>R</kbd>), damit nicht das alte, zwischengespeicherte JavaScript benutzt wird. Genau daran lag es, dass der Fehler „zuerst noch da" war: Der Container lief noch mit dem alten Bundle.</div>
@@ -2349,7 +2357,7 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
     <div class="antwort">
       <table>
         <tr><th>Aufgabe (Prof.)</th><th>Unsere Antwort</th><th>Fundort</th></tr>
-        <tr><td><b>1. Kanban-Board + Burndown-Chart</b> anlegen</td><td>Kanban-Board mit den User Stories als Karten; die GitHub-Issues sind die Kanban-Karten des Repos.</td><td><code>canbanboard1–3.pdf</code> (Projekt-Root) · GitHub-Repo <code>selim-28/swt26-Virtual-College</code> (Issues #3–#38) · <span class="small">🟡 Burndown fürs finale Sprint-Kapitel aktuell halten!</span></td></tr>
+        <tr><td><b>1. Kanban-Board + Burndown-Chart</b> anlegen</td><td>GitHub-Projects-Board <b>„Virtual College – Kanban"</b> mit den Issues #3–#38 als Karten (am 16.07. bereinigt: fertige Stories mit Nachweis-Kommentar geschlossen); Burndown erstellt.</td><td>GitHub-Repo <code>selim-28/swt26-Virtual-College</code> (Projects + Issues) · Burndown: <a href="#burndown" style="color:var(--accent)">Kapitel&nbsp;28.c</a></td></tr>
         <tr><td><b>2. Epics</b> formulieren („großes Anforderungspaket mit übergeordnetem Ziel")</td><td><b>8 Epics</b>: Benutzerkonto, Campus/Navigation, Raumreservierung, Pinwand, Mensa, ÖPNV, Fremdsystem/MQTT, Betrieb/Persistenz – jedes mit Ziel-Satz.</td><td><code>ANFORDERUNGEN.md</code> (Projekt-Root, komplette Liste mit GitHub-Issue-Nummern)</td></tr>
         <tr><td><b>3. User Stories</b> („Als [Nutzer] möchte ich [Funktion], damit [Nutzen]" – klein, verständlich, echter Mehrwert)</td><td><b>21 User Stories</b>, alle exakt im geforderten Schema, jede mit <b>Akzeptanzkriterien</b> als prüfbare Kontrollkästchen.</td><td><code>ANFORDERUNGEN.md</code> · Nachweis der Umsetzung: Kapitel&nbsp;21–27 (jede US ist getestet)</td></tr>
       </table>
@@ -2664,15 +2672,23 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
 ├── <span class="cfg">ANFORDERUNGEN.md</span>                 <span class="note"># die 8 Epics + 21 User Stories (Praktikum 1!)</span>
 ├── <span class="cfg">README.md</span> · <span class="cfg">PRAESENTATION.md</span>   <span class="note"># Einstieg + Präsentations-Spickzettel</span>
 ├── <span class="fld">docs/</span>
-│   └── <span class="keep">erklaerung.html</span>         <span class="note"># DIESE eine Datei: Konzepte + Prüfung + Code-Rundgang</span>
+│   ├── <span class="keep">erklaerung.html</span>         <span class="note"># DIESE Datei: Konzepte + Prüfung + Code-Rundgang</span>
+│   └── <span class="keep">kritik.html</span>             <span class="note"># Generalprobe: Kritik aus Prüfer-Sicht (K1–K10) + Rettungsplan</span>
 │
-├── <span class="fld">unterlagen/</span>                <span class="note"># NEU: Lernmaterial &amp; Alt-Dateien (Folien-PDF, Kanban-PDFs, altes OOD, Übungsprojekt) – nicht Teil der App</span>
+├── <span class="fld">unterlagen/</span>                <span class="note"># Lernmaterial &amp; Alt-Dateien (Folien-PDF, Conceptboard-Exporte mit SWT1-UML, altes OOD, Übungsprojekt) – nicht Teil der App</span>
 │
 ├── <span class="fld">frontend/</span>                  <span class="note"># das, was der Nutzer sieht</span>
-│   ├── <span class="cfg">nginx.conf</span>              <span class="note"># leitet /api/... an die richtigen Backends</span>
+│   ├── <span class="cfg">nginx.conf</span>              <span class="note"># leitet /api/... an die richtigen Backends (+ Swagger-Route)</span>
 │   ├── <span class="cfg">Dockerfile.frontend</span>     <span class="note"># baut React, liefert es mit Nginx aus</span>
-│   └── <span class="fld">src/</span>
-│       ├── <span class="keep">App.jsx</span>             <span class="note"># DIE ganze Oberfläche (alle Tabs)</span>
+│   └── <span class="fld">src/</span>                    <span class="note"># seit 17.07. nach Fachmodulen geschnitten (wie das Backend)</span>
+│       ├── <span class="keep">App.jsx</span>             <span class="note"># Zustand + Handler + Verdrahtung (353 Zeilen)</span>
+│       ├── <span class="fld">gemeinsam/</span>          <span class="note"># api.js (Token+fetch) · format.js · Bausteine.jsx (Header, StatusBar, …)</span>
+│       ├── <span class="fld">auth/</span>               <span class="note"># AuthView.jsx – Login/Registrieren</span>
+│       ├── <span class="fld">campus/</span>             <span class="note"># CampusView.jsx + CampusKarte.jsx (Leaflet + Offline-Fallback)</span>
+│       ├── <span class="fld">mensa/</span>              <span class="note"># MensaPanel.jsx – Live-Speiseplan an der kostBar</span>
+│       ├── <span class="fld">pinwand/</span>            <span class="note"># PinwandView.jsx – Posts, Likes, Admin-Löschen</span>
+│       ├── <span class="fld">transit/</span>            <span class="note"># DatenView.jsx – ÖPNV + Simulation</span>
+│       ├── <span class="fld">einstellungen/</span>      <span class="note"># EinstellungenView.jsx – Profil + Schalter</span>
 │       ├── <span class="keep">campusUtils.mjs</span>     <span class="note"># reine, TESTBARE Helfer (Winkel, Rollenregel, Polling, 🔔)</span>
 │       ├── <span class="keep">campusUtils.test.mjs</span><span class="note"># 27 Frontend-Tests (npm test)</span>
 │       └── <span class="keep">styles.css</span>          <span class="note"># das komplette Aussehen</span>
@@ -2705,7 +2721,7 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
   <p>Software versteht man am besten, wenn man <b>einer Aktion folgt</b> – mit echten Datei- und Methodennamen.</p>
 
   <h3>Szenario 0: Einloggen (passiert immer zuerst) 🔑</h3>
-  <div class="step"><div class="n">1</div><div class="t">Wer die Seite öffnet, sieht die <b>Login-Seite</b> (<code>AuthView</code>). Drei Demo-Konten (alle <code>passwort123</code>): <code>student@…</code>, <code>prof@…</code>, <code>admin@fh-dortmund.de</code>. <span class="file">frontend/src/App.jsx</span></div></div>
+  <div class="step"><div class="n">1</div><div class="t">Wer die Seite öffnet, sieht die <b>Login-Seite</b> (<code>AuthView</code>). Drei Demo-Konten (alle <code>passwort123</code>): <code>student@…</code>, <code>prof@…</code>, <code>admin@fh-dortmund.de</code>. <span class="file">frontend/src/auth/AuthView.jsx</span></div></div>
   <div class="step"><div class="n">2</div><div class="t"><code>login()</code> schickt <code>POST /api/auth/login</code>; Nginx leitet an <code>backend_receive:8083</code>.</div></div>
   <div class="step"><div class="n">3</div><div class="t"><code>AuthService.login()</code> sucht das <code>Benutzerkonto</code>, prüft das Passwort (<code>PasswordEncoder</code>/PBKDF2) und lässt den <code>JwtDienst</code> einen signierten <b>JWT</b> erzeugen – <b>mit der Rolle darin</b>. <span class="file">receive/auth/</span></div></div>
   <div class="step"><div class="n">4</div><div class="t">Ab jetzt trägt jede Anfrage <code>Authorization: Bearer &lt;token&gt;</code>. Der <code>JwtAuthFilter</code> prüft Signatur + Sperrliste und macht aus der Rolle eine Berechtigung (<code>ROLE_ADMIN</code> …). Logout sperrt das Token sofort (<code>TokenSperrliste</code>).</div></div>
@@ -2800,19 +2816,23 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
   </table>
 
   <h2 id="frontend-rundgang">35. 🖥️ Das Frontend – Bildschirm für Bildschirm</h2>
-  <p>Die ganze Oberfläche steckt in <code>frontend/src/App.jsx</code>; die <b>testbaren reinen Funktionen</b> liegen in <code>campusUtils.mjs</code>.</p>
+  <p>Seit 17.07. ist die Oberfläche – wie das Backend – nach <b>Fachmodulen</b> geschnitten
+  (Vertical Slicing): <code>App.jsx</code> hält nur noch Zustand, Handler und Verdrahtung
+  (353 statt 1163 Zeilen); jede Ansicht wohnt in ihrem Fachordner, Gemeinsames in
+  <code>gemeinsam/</code> (API-Schicht, Formatierung, UI-Bausteine wie Header/StatusBar);
+  die <b>testbaren reinen Funktionen</b> liegen weiter in <code>campusUtils.mjs</code>.</p>
   <table>
-    <tr><th>Bereich (Tab)</th><th>Komponente</th><th>Was er tut</th></tr>
-    <tr><td><b>Live Campus</b></td><td><code>CampusView</code> + <code>CampusMap</code> + <code>RoomPanel</code></td><td>Leaflet-Karte (Straße/Satellit) mit den 6 FH-Räumen; Standort + OSRM-Fußroute mit Pfeilen; <b>RoomPanel</b>: Reservieren nach <b>Rollenregel</b> (<code>darfRaumReservieren</code>), an der <b>kostBar der Live-Speiseplan</b> (<code>MensaPanel</code>), Reservierungen mit 🗑 für Admins.</td></tr>
-    <tr><td><b>Pinwand</b></td><td><code>PinwandView</code></td><td>Posts lesen/erstellen/liken; Admin darf löschen; 🔔-Meldung bei neuen Posts (über Polling).</td></tr>
-    <tr><td><b>ÖPNV</b></td><td><code>DatenView</code></td><td>VRR-Abfahrten (Quelle sichtbar) + „Simulation starten".</td></tr>
-    <tr><td><b>Einstellungen</b></td><td><code>EinstellungenView</code></td><td>Konto (read-only), Schalter für Standort + Pinwand-Benachrichtigungen, Logout.</td></tr>
-    <tr><td><b>Login</b> (vorgeschaltet)</td><td><code>AuthView</code></td><td>Login/Registrieren (Rollen: Student/Professor – Admin nur als Demo-Konto).</td></tr>
+    <tr><th>Bereich (Tab)</th><th>Datei(en)</th><th>Was er tut</th></tr>
+    <tr><td><b>Live Campus</b></td><td><code>campus/CampusView.jsx</code> (+ <code>RoomPanel</code>, <code>ReserveForm</code>) und <code>campus/CampusKarte.jsx</code></td><td>Leaflet-Karte (Straße/Satellit) mit den 6 FH-Räumen; Standort + OSRM-Fußroute mit Pfeilen; <b>RoomPanel</b>: Reservieren nach <b>Rollenregel</b> (<code>darfRaumReservieren</code>), an der <b>kostBar der Live-Speiseplan</b> (<code>mensa/MensaPanel.jsx</code>), Reservierungen mit 🗑 für Admins.</td></tr>
+    <tr><td><b>Pinwand</b></td><td><code>pinwand/PinwandView.jsx</code></td><td>Posts lesen/erstellen/liken; Admin darf löschen; 🔔-Meldung bei neuen Posts (über Polling).</td></tr>
+    <tr><td><b>ÖPNV</b></td><td><code>transit/DatenView.jsx</code></td><td>VRR-Abfahrten (Quelle sichtbar) + „Simulation starten".</td></tr>
+    <tr><td><b>Einstellungen</b></td><td><code>einstellungen/EinstellungenView.jsx</code></td><td>Konto (read-only), Schalter für Standort + Pinwand-Benachrichtigungen, Logout.</td></tr>
+    <tr><td><b>Login</b> (vorgeschaltet)</td><td><code>auth/AuthView.jsx</code></td><td>Login/Registrieren (Rollen: Student/Professor – Admin nur als Demo-Konto).</td></tr>
   </table>
-  <h4>Die wichtigsten Funktionen in App.jsx</h4>
+  <h4>Die wichtigsten Funktionen (App.jsx + gemeinsam/)</h4>
   <table>
     <tr><th>Funktion</th><th>Was sie macht</th></tr>
-    <tr><td><code>apiJson()</code></td><td>Zentrale Fetch-Hilfe: hängt das JWT als <code>Authorization: Bearer</code> an, zeigt Backend-Klartext-Fehler.</td></tr>
+    <tr><td><code>apiJson()</code> <span class="file">gemeinsam/api.js</span></td><td>Zentrale Fetch-Hilfe: hängt das JWT als <code>Authorization: Bearer</code> an, zeigt Backend-Klartext-Fehler. Dort liegen auch die API-Adressen und die Token-Verwaltung.</td></tr>
     <tr><td><code>ladeAlles({stumm})</code></td><td>Holt parallel alle 5 Datenquellen; im stummen Modus (Polling) ohne Lade-Puls; erkennt neue Posts (🔔).</td></tr>
     <tr><td>Polling-<code>useEffect</code></td><td>Alle 8&nbsp;s automatisch nachladen – nur eingeloggt, nur bei sichtbarem Tab, kein Überholen (<code>sollAktualisieren</code>, Kapitel&nbsp;23).</td></tr>
     <tr><td><code>reservieren()</code> / <code>postErstellen()</code> / <code>postLiken()</code></td><td>Schreiben + neu laden; <code>postErstellen</code> merkt sich das Formular VOR dem <code>await</code> (der berühmte reset-Bug, Kapitel&nbsp;21).</td></tr>

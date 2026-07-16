@@ -181,14 +181,18 @@ Die sechs Bereiche entsprechen 1:1 dem Sprecherplan der Folien (praesentation/).
 Pro Bereich steht dabei, was du **live zeigen können musst** (Prüfer sagen gern
 „zeigen Sie mal") und die wahrscheinlichste Nachfrage.
 
-| # | Bereich (= Folien-Block) | Name | Musst du live zeigen können | Typische Nachfrage → Antwort steht in |
+> **Namens-VORSCHLAG (frei tauschen – beim Team-Abend bestätigen!):** abgeleitet aus
+> den GitHub-Beteiligten; wer einen Bereich lieber übernimmt, einfach umtragen.
+> Bei 5 Personen übernimmt Sprecher:in 1 zusätzlich Bereich 6 (Einstieg + Abschluss-Demo passt gut zusammen).
+
+| # | Bereich (= Folien-Block) | Name (Vorschlag) | Musst du live zeigen können | Typische Nachfrage → Antwort steht in |
 |---|--------------------------|------|------------------------------|----------------------------------------|
-| 1 | Einstieg: Projektidee, Teaser, Systemkontext | _________ | App-Rundflug in 60 s (`localhost:8090`): Karte → Raum → Pinwand | „Wer sind die Akteure?" → Folie Systemkontext |
-| 2 | Projektmanagement: Scrum, 3 Sprints, Kanban, Burndown, Abweichungen | _________ | GitHub-Projects-Board „Virtual College – Kanban" + Burndown (erklaerung.html Kap. 28.c) | „Was lesen Sie aus dem Burndown ab?" → Kap. 28.c + Abschnitt 8 |
-| 3 | Stack-Entscheidungen + DBMS-Begründung | _________ | `docker-compose.yml` öffnen und die 6 Dienste nennen | „Warum MariaDB statt H2/Postgres?" → Abschnitt 6 |
-| 4 | Architektur: Verteilungsdiagramm, Modulith, REST + MQTT, Docker, CI | _________ | Verteilungsdiagramm (Kap. 2) + einen grünen PR-Check (PR #39/#40/#41) | „Was passiert, wenn Mosquitto ausfällt?" → Kap. 7/27 |
-| 5 | OOD + die 3 Entwurfsmuster + JWT/Rollen + Compliance | _________ | `MqttDatenAdapter.java` öffnen und den Adapter am Code erklären; 403-Test nennen | „Warum kein Singleton?" → Abschnitt 4 |
-| 6 | Epics-Ergebnis, Live-Demo, DB-Nachweis, 97 Tests | _________ | Demo-Ablauf aus Abschnitt 1; `./mvnw test` grün; Adminer | „Zeigen Sie die Reservierung in der DB" → Abschnitt 3 |
+| 1 | Einstieg: Projektidee, Teaser, Systemkontext | Adam | App-Rundflug in 60 s (`localhost:8090`): Karte → Raum → Pinwand | „Wer sind die Akteure?" → Folie Systemkontext |
+| 2 | Projektmanagement: Scrum, 3 Sprints, Kanban, Burndown, Abweichungen | Selim | GitHub-Projects-Board „Virtual College – Kanban" + Burndown (erklaerung.html Kap. 28.c) | „Was lesen Sie aus dem Burndown ab?" → Kap. 28.c + Abschnitt 8 |
+| 3 | Stack-Entscheidungen + DBMS-Begründung | Mhamed | `docker-compose.yml` öffnen und die 6 Dienste nennen | „Warum MariaDB statt H2/Postgres?" → Abschnitt 6 |
+| 4 | Architektur: Verteilungsdiagramm, Modulith, REST + MQTT, Docker, CI | Sif-Eddine | Verteilungsdiagramm (Kap. 2) + einen grünen PR-Check + Swagger (`/swagger-ui.html`) | „Was passiert, wenn Mosquitto ausfällt?" → Kap. 7/27 |
+| 5 | OOD + die 3 Entwurfsmuster + JWT/Rollen + Compliance | Onur | `MqttDatenAdapter.java` öffnen und den Adapter am Code erklären; 403-Test nennen | „Warum kein Singleton?" → Abschnitt 4 |
+| 6 | Epics-Ergebnis, Live-Demo, DB-Nachweis, 97 Tests | 6. Person / sonst Adam | Demo-Ablauf aus Abschnitt 1; `./mvnw test` grün; Adminer | „Zeigen Sie die Reservierung in der DB" → Abschnitt 3 |
 
 ### Muster-Drill – Pflicht für ALLE (nicht nur für Bereich 5!)
 
@@ -279,10 +283,13 @@ Bereich 2 trägt das vor, alle kennen es.
    „offen"; unser Burndown (erklaerung.html Kap. 28.c) zeigt die Klippe ehrlich.
    → *Konsequenz: Issues werden beim Merge geschlossen, Commits nennen die
    Issue-Nummer.*
-4. **Frontend als eine Datei:** `App.jsx` (≈1160 Zeilen) widerspricht unserem
-   eigenen Backend-Prinzip „lose Kopplung, hohe Kohäsion"; die testbare Logik
-   liegt immerhin in `campusUtils`. → *Nächster Schritt: ein Schnitt pro Epic,
-   analog zum Backend.*
+4. **Frontend war lange eine einzige Datei:** `App.jsx` (≈1160 Zeilen) widersprach
+   unserem eigenen Backend-Prinzip „lose Kopplung, hohe Kohäsion".
+   → *Konsequenz (am 17.07. umgesetzt): das Frontend ist jetzt wie das Backend
+   nach Fachmodulen geschnitten (`auth/`, `campus/`, `mensa/`, `pinwand/`,
+   `transit/`, `einstellungen/`, `gemeinsam/`) – `App.jsx` hält nur noch Zustand
+   und Verdrahtung; alle 27 Tests blieben grün. Wir haben unsere eigene
+   Reflexion noch vor der Präsentation eingelöst.*
 
 **Schluss-Satz:** „Fachlich haben wir alles erreicht – gelernt haben wir am
 meisten über den *Prozess*: Kleine, geprüfte Schritte sind kein Overhead,
