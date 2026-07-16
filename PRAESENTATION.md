@@ -198,7 +198,8 @@ Pro Bereich steht dabei, was du **live zeigen können musst** (Prüfer sagen ger
 
 Praktikum 4 wörtlich: **jedes** Team-Mitglied muss für **jedes** Muster
 Name → Motivation → Umsetzung erklären können. Lernbasis: Tabelle in Abschnitt 2
-(je Muster ein Satz pro Spalte). Selbsttest zu zweit, 5 Minuten:
+(je Muster ein Satz pro Spalte) + **`docs/code-lesen.html`** (die Muster-Dateien
+Zeile für Zeile erklärt, mit Lese-Fahrplan pro Bereich). Selbsttest zu zweit, 5 Minuten:
 
 1. „Erkläre Factory Method, als wäre ich im 1. Semester." (Erzeugung, `backend_send`)
 2. „Warum heißt der `MqttDatenAdapter` Adapter und nicht einfach Parser?" (Struktur)

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual College – Pflichtlektüre: diese Dateien lesen, Zeile für Zeile erklärt</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#334155;
+    --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8;
+    --green:#4ade80; --yellow:#fbbf24; --red:#f87171; --purple:#c084fc;
+    --code:#0b1220;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; font-size:17px;}
+  .wrap{max-width:980px; margin:0 auto; padding:32px 20px 80px}
+  h1{font-size:2rem; line-height:1.2; margin:0 0 8px}
+  h2{font-size:1.5rem; margin:48px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--card2); color:var(--accent)}
+  h3{font-size:1.2rem; margin:28px 0 10px; color:var(--purple)}
+  p{margin:12px 0}
+  .lead{color:var(--muted); font-size:1.05rem}
+  .card{background:var(--card); border-radius:14px; padding:20px 24px; margin:18px 0; border:1px solid var(--card2)}
+  .analogy{background:linear-gradient(135deg,#1e293b,#243049); border-left:5px solid var(--yellow); border-radius:10px; padding:14px 20px; margin:16px 0}
+  .analogy b{color:var(--yellow)}
+  .tip{border-left:5px solid var(--green); background:#16271c; border-radius:10px; padding:14px 20px; margin:16px 0}
+  .warn{border-left:5px solid var(--red); background:#2a1717; border-radius:10px; padding:14px 20px; margin:16px 0}
+  code{background:var(--code); padding:2px 7px; border-radius:6px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:0.9em; color:#7dd3fc}
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.95rem}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--card2); vertical-align:top}
+  th{color:var(--accent)}
+  .pill{display:inline-block; padding:3px 12px; border-radius:999px; font-size:0.8rem; font-weight:600; white-space:nowrap}
+  .p1{background:#331417; color:var(--red); border:1px solid var(--red)}
+  .p2{background:#332a14; color:var(--yellow); border:1px solid var(--yellow)}
+  .p3{background:#14331f; color:var(--green); border:1px solid var(--green)}
+  .toc{background:var(--card); border-radius:14px; padding:18px 24px; margin:24px 0}
+  .toc a{color:var(--accent); text-decoration:none; display:block; padding:4px 0}
+  .toc a:hover{text-decoration:underline}
+  hr{border:none; border-top:1px solid var(--card2); margin:40px 0}
+  .small{font-size:0.9rem; color:var(--muted)}
+  .file{color:#fda4af; font-size:.85em; font-family:"SF Mono",Menlo,Consolas,monospace}
+  /* --- Zeile-für-Zeile-Ansicht --- */
+  pre.anno{background:var(--code); padding:16px 18px; border-radius:12px; overflow-x:auto;
+    border:1px solid var(--card2); font-size:0.84rem; line-height:1.5;
+    font-family:"SF Mono",Menlo,Consolas,monospace; color:#cbd5e1}
+  pre.anno i.e{display:block; color:#4ade80; font-style:normal; font-size:0.92em;
+    padding-left:2ch; margin-bottom:6px; white-space:pre-wrap}
+  pre.anno i.e::before{content:"⤷ "; color:#22c55e; font-weight:700}
+  pre.anno b.kw{color:#c084fc; font-weight:600}
+  .merk{border-left:5px solid var(--accent); background:#0b2233; border-radius:10px; padding:12px 18px; margin:14px 0}
+  .merk::before{content:"🎯 IN DREI SÄTZEN (fürs Prüfungsgespräch)"; display:block; color:var(--accent); font-weight:800; font-size:0.75rem; letter-spacing:.07em; margin-bottom:6px}
+  .frage-chip{border-left:5px solid var(--yellow); background:#241f10; border-radius:10px; padding:10px 16px; margin:12px 0; font-size:0.95rem}
+  .frage-chip::before{content:"❓ TYPISCHE PRÜFERFRAGE  "; color:var(--yellow); font-weight:800; font-size:0.75rem; letter-spacing:.05em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>📖 Pflichtlektüre – diese Dateien musst du kennen</h1>
+  <p class="lead">Diese Seite macht dich <b>sprechfähig für die Abschlusspräsentation</b> (Einzelnote!):
+  Sie sagt dir, <b>welche Dateien</b> du lesen musst (mit Reihenfolge und Zeitbudget) und erklärt die
+  Kerndateien <b>Zeile für Zeile</b>. Die grünen ⤷-Zeilen sind die Erklärung – die Code-Zeilen darüber
+  stehen exakt so im Projekt. Konzepte &amp; Diagramme: <a href="erklaerung.html" style="color:var(--accent)">erklaerung.html</a> ·
+  Präsentations-Ablauf: <code>PRAESENTATION.md</code> · Schwachstellen-Check: <a href="kritik.html" style="color:var(--red)">kritik.html</a>.</p>
+
+  <div class="analogy"><b>So liest du diese Seite:</b> Öffne die echte Datei im Editor <b>daneben</b>.
+  Lies erst den Kommentarkopf in der Datei (die Dateien sind gut kommentiert!), dann hier die
+  Zeile-für-Zeile-Erklärung. Zum Schluss den „In drei Sätzen“-Kasten laut aufsagen – das ist deine Antwort im Prüfungsgespräch.</div>
+
+  <div class="toc">
+    <strong>📑 Inhalt</strong>
+    <a href="#fahrplan">0. Der Lese-Fahrplan: was, in welcher Reihenfolge, wie lange</a>
+    <a href="#factory">1. 🏭 Factory Method (backend_send) – 5 kleine Dateien</a>
+    <a href="#adapter">2. 🔌 Adapter (backend_receive/mensa) – 2 Dateien</a>
+    <a href="#observer">3. 🔔 Observer (backend_receive/pinwand) – 3 Dateien + Verdrahtung</a>
+    <a href="#jwt">4. 🔐 JWT &amp; Rollen (backend_receive/auth) – 3 Dateien</a>
+    <a href="#frontend">5. 🖥️ Frontend-Kern: gemeinsam/api.js</a>
+    <a href="#gefuehrt">6. 🧭 Geführte Lektüre: die größeren Dateien (Block statt Zeile)</a>
+    <a href="#selbsttest">7. ✅ Selbsttest: bist du bereit?</a>
+  </div>
+
+  <!-- ================================================================ -->
+  <h2 id="fahrplan">0. Der Lese-Fahrplan</h2>
+
+  <p><span class="pill p1">🔴 Pflicht für ALLE</span> = jedes Teammitglied (Praktikum 4: <i>jede:r</i> erklärt <i>jedes</i> Muster!) ·
+  <span class="pill p2">🟡 Pflicht für den Bereich</span> = wer diesen Teil präsentiert ·
+  <span class="pill p3">🟢 Bonus</span> = für Souveränität bei Nachfragen.</p>
+
+  <table>
+    <tr><th>Prio</th><th>Datei(en)</th><th>Warum</th><th>Zeit</th></tr>
+    <tr><td><span class="pill p1">🔴 alle</span></td><td><span class="file">send/simulation/</span>: Fremddatensatz, DatenGenerator, SpeiseplanGenerator, SpeiseplanDaten, SimulationService</td><td><b>Factory Method</b> komplett – Abschnitt 1</td><td>25 min</td></tr>
+    <tr><td><span class="pill p1">🔴 alle</span></td><td><span class="file">receive/mensa/</span>: SpeiseplanQuelle, MqttDatenAdapter</td><td><b>Adapter</b> komplett – Abschnitt 2</td><td>15 min</td></tr>
+    <tr><td><span class="pill p1">🔴 alle</span></td><td><span class="file">receive/pinwand/</span>: Beobachter, Pinwand, BenachrichtigungsSpeicher (+ PinwandService-Konstruktor)</td><td><b>Observer</b> komplett, läuft LIVE (🔔) – Abschnitt 3</td><td>20 min</td></tr>
+    <tr><td><span class="pill p2">🟡 Bereich 5</span></td><td><span class="file">receive/auth/</span>: JwtDienst, JwtAuthFilter, SecurityConfig</td><td><b>JWT + Rollen</b> – häufigste Sicherheitsfragen – Abschnitt 4</td><td>25 min</td></tr>
+    <tr><td><span class="pill p2">🟡 Bereich 1+6</span></td><td><span class="file">frontend/src/gemeinsam/api.js</span></td><td>Wie das Frontend mit Token spricht – Abschnitt 5</td><td>10 min</td></tr>
+    <tr><td><span class="pill p2">🟡 Bereich 4</span></td><td><span class="file">send/…/MqttSender.java</span> + <span class="file">receive/…/MqttEmpfaenger.java</span> + <span class="file">docker-compose.yml</span></td><td>Die asynchrone Kette + Betrieb – Abschnitt 6</td><td>25 min</td></tr>
+    <tr><td><span class="pill p2">🟡 Bereich 6</span></td><td><span class="file">receive/campus/CampusService.java</span> (Rollenregel) + <span class="file">receive/pinwand/PinwandService.java</span></td><td>Fachlogik der Demo-Momente – Abschnitt 6</td><td>20 min</td></tr>
+    <tr><td><span class="pill p3">🟢 Bonus</span></td><td><span class="file">frontend/src/App.jsx</span>, <span class="file">campusUtils.mjs</span>, <span class="file">pom.xml</span>, <span class="file">nginx.conf</span></td><td>Nachfragen souverän beantworten – Abschnitt 6</td><td>30 min</td></tr>
+  </table>
+
+  <div class="tip"><b>Gesamtbudget: ~2,5 Stunden</b> für die 🔴+🟡-Teile deines Bereichs.
+  Die drei Muster-Abschnitte (1–3) sind für <b>alle sechs</b> Pflicht – das ist exakt die
+  Praktikum-4-Anforderung, nach der jede:r zu jedem Muster Name/Motivation/Umsetzung erklären können muss.</div>
+
+  <!-- ================================================================ -->
+  <h2 id="factory">1. 🏭 Factory Method – Erzeugungsmuster (backend_send)</h2>
+
+  <p><b>Motivation in einem Satz:</b> Das Fremdsystem soll verschiedene Datenarten (Speiseplan,
+  Auslastung, Abfahrten) erzeugen, <b>ohne</b> dass der aufrufende Code eine <code>if-typ==…</code>-Kette
+  braucht – neue Datenart = neue Unterklasse, sonst ändert sich nichts (Open-Closed-Prinzip).</p>
+
+  <div class="analogy"><b>Analogie:</b> Eine Bäckerei-Kette gibt vor: „Jede Filiale kann
+  <code>backeTagesgebäck()</code>.“ <b>Was</b> gebacken wird, entscheidet die Filiale (Brötchen, Brezel, …).
+  Der Lieferwagen (SimulationService) ruft überall nur <code>backeTagesgebäck()</code> – er muss die Sorten nicht kennen.</div>
+
+  <h3>1a. <span class="file">backend_send/…/simulation/Fremddatensatz.java</span> – das PRODUKT-Interface (18 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.send.simulation;
+<i class="e">In welchem Paket (Ordner) die Klasse wohnt – Modul „simulation“ von backend_send.</i>
+public interface Fremddatensatz {
+<i class="e">Ein Interface = ein VERTRAG ohne eigenen Code: Wer „Fremddatensatz“ sein will, MUSS die Methoden darunter anbieten. Im Muster ist das die Rolle „Product“.</i>
+    String alsJson();
+<i class="e">Die eine Pflicht-Methode: „Beschreibe dich selbst als JSON-Text.“ Nur so kann der Datensatz später als Text über MQTT verschickt werden. Kein Methodenrumpf – den liefern die Produkt-Klassen.</i>
+}
+<i class="e">Ende des Interfaces. Merke: klein, aber der Schlüssel zur Entkopplung – alle reden nur über diesen Vertrag.</i></pre>
+
+  <h3>1b. <span class="file">…/DatenGenerator.java</span> – die abstrakte FABRIK (23 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.send.simulation;
+<i class="e">Gleiches Paket wie das Produkt – das Muster wohnt komplett im Modul „simulation“.</i>
+public abstract class DatenGenerator {
+<i class="e">„abstract“ = von dieser Klasse kann man KEIN Objekt bauen (new DatenGenerator() gibt Compilerfehler). Sie ist nur die gemeinsame Schablone der konkreten Fabriken. Im Muster: „Creator“.</i>
+    public abstract Fremddatensatz erzeugeDaten();
+<i class="e">DIE FABRIKMETHODE – das Herz des Musters. Rückgabetyp ist das Produkt-INTERFACE (nicht eine konkrete Klasse!). Jede Unterklasse entscheidet selbst, welches konkrete Produkt sie baut. „abstract“ auch hier: kein Rumpf, Pflicht zum Überschreiben.</i>
+}
+<i class="e">Das war die ganze Fabrik-Basisklasse. Prüfer-Vokabeln: DatenGenerator = Creator, erzeugeDaten() = Factory Method, Fremddatensatz = Product.</i></pre>
+
+  <h3>1c. <span class="file">…/SpeiseplanGenerator.java</span> – eine KONKRETE Fabrik (24 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.send.simulation;
+<i class="e">Wieder Modul „simulation“.</i>
+import swt2.virtualcollege.send.mensa.Mensa;
+<i class="e">Holt die Fachklasse „Mensa“ aus dem Nachbar-Modul – dort liegt der echte Speiseplan.</i>
+public class SpeiseplanGenerator extends DatenGenerator {
+<i class="e">„extends DatenGenerator“ = erbt von der abstrakten Fabrik → MUSS erzeugeDaten() ausfüllen. Im Muster: „ConcreteCreator“. (Es gibt zwei Geschwister: AuslastungsGenerator, AbfahrtsGenerator.)</i>
+    private final Mensa mensa = new Mensa();
+<i class="e">Eigene Datenquelle dieser Fabrik: ein Mensa-Objekt. „private“ = nur diese Klasse sieht es, „final“ = wird genau einmal zugewiesen.</i>
+    @Override
+<i class="e">Sicherheits-Aufkleber: „Ich überschreibe hier wirklich die geerbte Methode.“ Vertippt man sich im Namen, meckert der Compiler.</i>
+    public Fremddatensatz erzeugeDaten() {
+<i class="e">Die ausgefüllte Fabrikmethode. Beachte den Rückgabetyp: wieder nur das Interface.</i>
+        return new SpeiseplanDaten(mensa.getSpeiseplan());
+<i class="e">Der einzige Ort im Programm, der weiß, DASS es SpeiseplanDaten gibt: echten Speiseplan holen, ins Produkt einpacken, zurückgeben. Genau diese Kapselung ist der Sinn der Fabrik.</i>
+    }
+}
+<i class="e">Fertig – eine konkrete Fabrik ist nur „welches Produkt baue ich und woraus“.</i></pre>
+
+  <h3>1d. <span class="file">…/SpeiseplanDaten.java</span> – ein KONKRETES Produkt (43 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.send.simulation;
+import swt2.virtualcollege.send.mensa.Gericht;
+import swt2.virtualcollege.send.mensa.Speiseplan;
+<i class="e">Paket + zwei Fach-Imports: Gericht (Name+Preis) und Speiseplan (Liste von Gerichten).</i>
+public class SpeiseplanDaten implements Fremddatensatz {
+<i class="e">„implements Fremddatensatz“ = diese Klasse erfüllt den Produkt-Vertrag → muss alsJson() liefern. Im Muster: „ConcreteProduct“.</i>
+    private final Speiseplan speiseplan;
+<i class="e">Das eingepackte Fachobjekt – das Produkt ist nur eine „Versandverpackung“ um den Speiseplan.</i>
+    public SpeiseplanDaten(Speiseplan speiseplan) {
+        this.speiseplan = speiseplan;
+    }
+<i class="e">Konstruktor: Der Speiseplan wird beim Bauen hineingereicht und gemerkt. „this.“ unterscheidet Feld und Parameter (gleicher Name).</i>
+    @Override
+    public String alsJson() {
+<i class="e">Pflicht aus dem Interface: Selbstbeschreibung als JSON-Text.</i>
+        StringBuilder sb = new StringBuilder();
+<i class="e">StringBuilder = effizientes „Text-Zusammenkleben“ (schneller als viele +-Verkettungen in einer Schleife).</i>
+        sb.append("{\"typ\":\"speiseplan\",\"gerichte\":[");
+<i class="e">JSON-Anfang von Hand: das Feld „typ“ sagt dem Empfänger später, WAS für eine Nachricht das ist (der MqttEmpfaenger schaut genau darauf!). \" ist ein maskiertes Anführungszeichen im Java-Text.</i>
+        for (int i = 0; i &lt; speiseplan.gerichte().size(); i++) {
+<i class="e">Klassische Zählschleife über alle Gerichte (Index i von 0 bis Listenlänge−1).</i>
+            Gericht g = speiseplan.gerichte().get(i);
+<i class="e">Das i-te Gericht aus der Liste holen.</i>
+            if (i &gt; 0) {
+                sb.append(",");
+            }
+<i class="e">JSON-Feinheit: VOR jedem Element außer dem ersten ein Komma – so entsteht [a,b,c] ohne Komma-Fehler am Ende.</i>
+            sb.append("{\"name\":\"").append(g.name())
+              .append("\",\"preis\":").append(g.preis()).append("}");
+<i class="e">Ein Mini-JSON-Objekt pro Gericht anhängen: {"name":"…","preis":3.5}. g.name()/g.preis() sind die Record-Zugriffe des Gerichts.</i>
+        }
+        sb.append("]}");
+<i class="e">Liste und Objekt schließen → fertiges JSON.</i>
+        return sb.toString();
+<i class="e">Aus dem Builder den endgültigen String machen und zurückgeben.</i>
+    }
+}
+<i class="e">Warum JSON „von Hand“? Didaktisch gewollt: Man SIEHT das Format, das über den Broker geht. (Die Gegenseite liest es dann bequem mit der Bibliothek Jackson – siehe Adapter.)</i></pre>
+
+  <h3>1e. <span class="file">…/SimulationService.java</span> – der Klient der Fabriken (75 Zeilen)</h3>
+  <pre class="anno">@Service
+<i class="e">Spring-Aufkleber: „Verwalte diese Klasse als Baustein (Bean).“ Dadurch kann Spring sie dem SimulationController per Dependency Injection hineinreichen.</i>
+public class SimulationService {
+    private static final Logger log = LoggerFactory.getLogger(SimulationService.class);
+<i class="e">Logger = Konsolen-Protokoll. „static final“ = einer für die ganze Klasse, unveränderlich.</i>
+    private final List&lt;DatenGenerator&gt; generatoren = List.of(
+            new SpeiseplanGenerator(),
+            new AuslastungsGenerator(),
+            new AbfahrtsGenerator()
+    );
+<i class="e">DIE Muster-Pointe: eine Liste vom Typ der ABSTRAKTEN Fabrik. Neue Datenart = hier EINE Zeile ergänzen, sonst ändert sich nirgendwo etwas (Open-Closed-Prinzip). List.of(…) = unveränderliche Liste.</i>
+    private final List&lt;String&gt; zuletztVeroeffentlicht = new ArrayList&lt;&gt;();
+<i class="e">Merkliste der zuletzt gesendeten JSON-Texte – praktisch für Anzeige im Controller und für Tests.</i>
+    private final MqttSender mqttSender;
+    public SimulationService(MqttSender mqttSender) {
+        this.mqttSender = mqttSender;
+    }
+<i class="e">Konstruktor-Injektion: Spring reicht den fertig konfigurierten MqttSender herein. Der Service baut ihn NICHT selbst (kein new) – das ist Dependency Injection, unser wichtigstes „Bonus-Muster“.</i>
+    public void starteSimulation() {
+        zuletztVeroeffentlicht.clear();
+<i class="e">Alte Merkliste leeren – jeder Simulationslauf beginnt frisch.</i>
+        for (DatenGenerator generator : generatoren) {
+<i class="e">for-each über die Fabriken. Der Typ ist die Abstraktion – hier steht KEIN if typ==…!</i>
+            Fremddatensatz datensatz = generator.erzeugeDaten();
+<i class="e">Polymorphie: Zur Laufzeit läuft je nach Objekt der Code von SpeiseplanGenerator, AuslastungsGenerator ODER AbfahrtsGenerator. Der Aufrufer merkt davon nichts.</i>
+            veroeffentliche(datensatz);
+<i class="e">Jedes erzeugte Produkt sofort veröffentlichen (nächste Methode).</i>
+        }
+    }
+    public void veroeffentliche(Fremddatensatz datensatz) {
+        String json = datensatz.alsJson();
+<i class="e">Wieder nur der Vertrag: alsJson() – egal welches Produkt.</i>
+        zuletztVeroeffentlicht.add(json);
+        mqttSender.publish(json);
+<i class="e">Der echte Versand: Der MqttSender schickt den Text an den Mosquitto-Broker (Topic „virtualcollege/data“). Asynchron: Wer es empfängt, weiß dieser Code nicht – und muss es nicht wissen.</i>
+        log.info("[Simulation] Datensatz per MQTT veroeffentlicht: {}", json);
+<i class="e">Protokoll-Zeile ({} wird durch json ersetzt) – die siehst du beim Demo-Lauf in der Konsole.</i>
+    }
+    public List&lt;String&gt; getZuletztVeroeffentlicht() {
+        return zuletztVeroeffentlicht;
+    }
+<i class="e">Getter für den Controller (GET-Endpunkt kann zeigen, was zuletzt rausging).</i>
+}</pre>
+
+  <div class="merk">Wir nutzen <b>Factory Method</b>, weil unser Fremdsystem <b>drei Datenarten</b> erzeugt
+  und wir neue Arten <b>ohne Änderung am bestehenden Code</b> ergänzen wollen. Die abstrakte Fabrik
+  <code>DatenGenerator</code> gibt die Fabrikmethode <code>erzeugeDaten()</code> vor; drei konkrete Fabriken
+  bauen je ihr Produkt (<code>Fremddatensatz</code>-Implementierungen). Der <code>SimulationService</code>
+  ruft nur die Abstraktion in einer Schleife auf – keine <code>if</code>-Kette, Open-Closed-Prinzip erfüllt.</div>
+
+  <div class="frage-chip">„Warum keine simple <code>if(typ==…)</code>-Methode?“ → Weil jede neue Datenart dann
+  ALLE Stellen ändert, die den Typ unterscheiden. Mit der Fabrik ist die Änderung <b>eine neue Klasse + eine Listenzeile</b> – nichts Bestehendes wird angefasst (weniger Regressionsrisiko, getestet bleibt getestet).</div>
+
+  <!-- ================================================================ -->
+  <h2 id="adapter">2. 🔌 Adapter – Strukturmuster (backend_receive/mensa)</h2>
+
+  <p><b>Motivation in einem Satz:</b> Über MQTT kommt <b>roher JSON-Text</b> an – unsere App will aber mit
+  sauberen <code>Speiseplan</code>/<code>Gericht</code>-Objekten arbeiten. Der Adapter übersetzt das eine ins andere,
+  ohne dass die App das Rohformat kennen muss.</p>
+
+  <div class="analogy"><b>Analogie:</b> Reisestecker. Dein Laptop (App) will eine deutsche Steckdose
+  (<code>SpeiseplanQuelle</code>); die Wand bietet eine britische (rohe MQTT-Nachricht). Der Adapter macht
+  aus dem einen das andere – Laptop und Wand bleiben unverändert.</div>
+
+  <h3>2a. <span class="file">receive/…/mensa/SpeiseplanQuelle.java</span> – das TARGET-Interface (13 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.receive.mensa;
+<i class="e">Modul „mensa“ im Haupt-Backend.</i>
+public interface SpeiseplanQuelle {
+<i class="e">Die Wunsch-Schnittstelle unserer App („Target“): „Gib mir einen Speiseplan.“ Woher – egal.</i>
+    Speiseplan holeSpeiseplan();
+<i class="e">Eine Methode, ein Versprechen: ein fertiges, sauberes Speiseplan-Objekt. Dadurch könnte die Quelle morgen eine Datenbank oder Testdaten sein – die App merkt nichts.</i>
+}</pre>
+
+  <h3>2b. <span class="file">…/MqttDatenAdapter.java</span> – der ADAPTER (62 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.receive.mensa;
+import java.util.ArrayList;
+import java.util.List;
+<i class="e">Standard-Listen für das Sammeln der Gerichte.</i>
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+<i class="e">Jackson = die JSON-Bibliothek (steckt schon in spring-boot-starter-web). Spring Boot 4 nutzt Jackson 3, daher das neue Paket „tools.jackson“. JsonNode = ein Knoten im JSON-Baum, JsonMapper = der Einleser.</i>
+public class MqttDatenAdapter implements SpeiseplanQuelle {
+<i class="e">DER Adapter: erfüllt das Target-Interface („ich BIN eine SpeiseplanQuelle“) und übersetzt innen den Adaptee. Objekt-Adapter per Komposition – kein Erben nötig.</i>
+    private final MqttRohNachricht roh;
+<i class="e">Der ADAPTEE: die unpassende, rohe MQTT-Nachricht (ein kleines record mit dem JSON-Text als payloadJson()).</i>
+    private static final JsonMapper MAPPER = JsonMapper.builder().build();
+<i class="e">Ein wiederverwendbarer JSON-Einleser für alle Adapter-Objekte („static“ = klassenweit, spart Aufbaukosten).</i>
+    public MqttDatenAdapter(MqttRohNachricht roh) {
+        this.roh = roh;
+    }
+<i class="e">Konstruktor: Die zu übersetzende Nachricht wird eingepackt. Pro Nachricht ein Adapter.</i>
+    @Override
+    public Speiseplan holeSpeiseplan() {
+<i class="e">Die versprochene Target-Methode – hier passiert die Übersetzung.</i>
+        List&lt;Gericht&gt; gerichte = new ArrayList&lt;&gt;();
+<i class="e">Leere Sammel-Liste für die übersetzten Gerichte.</i>
+        try {
+<i class="e">try/catch, weil fremder Text IMMER kaputt sein kann – Übersetzen ist riskant.</i>
+            JsonNode wurzel = MAPPER.readTree(roh.payloadJson());
+<i class="e">Den rohen JSON-Text in einen durchsuchbaren Baum verwandeln (die Wurzel = das äußere {}-Objekt).</i>
+            JsonNode liste = wurzel.get("gerichte");
+<i class="e">Den Ast „gerichte“ (das JSON-Array) herausgreifen – genau das Feld, das SpeiseplanDaten drüben aufgebaut hat!</i>
+            if (liste != null) {
+<i class="e">Schutz: Fehlt das Feld (andere Nachrichtenart?), einfach leer bleiben statt abstürzen.</i>
+                for (int i = 0; i &lt; liste.size(); i++) {
+                    JsonNode g = liste.get(i);
+<i class="e">Über alle Array-Einträge laufen, den i-ten Gericht-Knoten holen.</i>
+                    gerichte.add(new Gericht(
+                            g.get("name").asString(),
+                            g.get("preis").asDouble()
+                    ));
+<i class="e">Kern der Übersetzung: aus JSON-Feldern ein ECHTES Gericht-Objekt bauen (Text → String, Zahl → double) und einsammeln.</i>
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Konnte MQTT-Speiseplan nicht lesen: "
+                    + roh.payloadJson(), e);
+<i class="e">Wenn die Nachricht kaputt ist: verständlich scheitern – mit dem Originaltext in der Fehlermeldung (Gold wert beim Debuggen) und der Ursache e angehängt.</i>
+        }
+        return new Speiseplan(gerichte);
+<i class="e">Das saubere Zielobjekt zurückgeben. Ab hier arbeitet die App nur noch mit Speiseplan/Gericht – vom Rohtext weiß sie nichts.</i>
+    }
+}</pre>
+
+  <div class="merk">Wir nutzen <b>Adapter</b>, weil die MQTT-Nachricht ein <b>Fremdformat</b> ist
+  (roher JSON-Text), unsere App aber <code>Speiseplan</code>-Objekte erwartet. <code>MqttDatenAdapter</code>
+  erfüllt das Wunsch-Interface <code>SpeiseplanQuelle</code> (Target) und übersetzt innen die
+  <code>MqttRohNachricht</code> (Adaptee) mit Jackson. Tauscht man die Quelle aus, bleibt die App unverändert –
+  nur ein neuer Adapter entsteht.</div>
+
+  <div class="frage-chip">„Warum heißt das Adapter und nicht einfach Parser?“ → Ein Parser liest nur Text ein.
+  Das Muster besteht darin, dass die Klasse dabei <b>ein vorhandenes Interface erfüllt</b>
+  (<code>SpeiseplanQuelle</code>), sodass <b>inkompatible Schnittstellen zusammenpassen</b>, ohne eine der
+  beiden Seiten zu ändern – das Parsen ist nur das Mittel der Übersetzung.</div>
+
+  <!-- ================================================================ -->
+  <h2 id="observer">3. 🔔 Observer – Verhaltensmuster (backend_receive/pinwand) – läuft LIVE!</h2>
+
+  <p><b>Motivation in einem Satz:</b> Bei einem neuen Pinwand-Post sollen <b>alle Interessierten
+  automatisch</b> informiert werden – ohne dass die Pinwand ihre Empfänger einzeln kennt.
+  Bei uns nicht nur gezeichnet, sondern <b>im Live-System</b>: die 🔔-Meldung im Frontend kommt aus genau diesem Code.</p>
+
+  <h3>3a. <span class="file">receive/…/pinwand/Beobachter.java</span> – das Beobachter-Interface (14 Zeilen)</h3>
+  <pre class="anno">package swt2.virtualcollege.receive.pinwand;
+public interface Beobachter {
+<i class="e">Der Abonnenten-Vertrag („Observer“): Wer benachrichtigt werden will, verspricht genau eine Fähigkeit …</i>
+    void aktualisiere(Benachrichtigung b);
+<i class="e">… nämlich aktualisiere(): Das Subjekt ruft diese Methode und übergibt die Nachricht (Push-Prinzip). Die Pinwand kennt dadurch nur „etwas Benachrichtigbares“ – nicht WER dahintersteckt (lose Kopplung!).</i>
+}</pre>
+
+  <h3>3b. <span class="file">…/Pinwand.java</span> – das SUBJEKT (54 Zeilen)</h3>
+  <pre class="anno">public class Pinwand {
+<i class="e">Das „Subject“ des Musters: verwaltet Abonnenten und löst Benachrichtigungen aus. Bewusst eine reine Java-Klasse (kein Spring) – Muster-Logik pur.</i>
+    private final List&lt;Beobachter&gt; abonnenten = new ArrayList&lt;&gt;();
+<i class="e">Die Abonnenten-Liste. Wichtig: Der Listentyp ist das INTERFACE – die Pinwand ist blind dafür, welche konkreten Klassen zuhören.</i>
+    private final List&lt;Post&gt; posts = new ArrayList&lt;&gt;();
+<i class="e">Daneben die eigentlichen Beiträge (Fachdaten des Subjekts).</i>
+    public void abonniere(Beobachter b) {
+        abonnenten.add(b);
+    }
+<i class="e">Anmelden (subscribe/attach): Beobachter in die Liste aufnehmen.</i>
+    public void meldeAb(Beobachter b) {
+        abonnenten.remove(b);
+    }
+<i class="e">Abmelden (detach) – laut Vorlesung wichtig gegen den „Lapsed Listener“ (vergessene Zuhörer = Speicherleck + Geister-Benachrichtigungen).</i>
+    public void benachrichtige(Benachrichtigung b) {
+        for (Beobachter beobachter : abonnenten) {
+            beobachter.aktualisiere(b);
+        }
+    }
+<i class="e">notify(): Schleife über ALLE Abonnenten, jeder bekommt aktualisiere(). Die Pinwand entscheidet WANN, die Beobachter entscheiden, WAS sie mit der Info tun.</i>
+    public void neuerPost(Post post) {
+        posts.add(post);
+        benachrichtige(new Benachrichtigung("Neuer Pinwand-Post: " + post.titel()));
+    }
+<i class="e">Der Auslöse-Moment: Post speichern UND sofort alle informieren – Zustandsänderung und Benachrichtigung gehören im Muster zusammen.</i>
+    public List&lt;Post&gt; getPosts() {
+        return posts;
+    }
+<i class="e">Lesezugriff auf die Beiträge für den Service.</i>
+}</pre>
+
+  <h3>3c. <span class="file">…/BenachrichtigungsSpeicher.java</span> – ein KONKRETER Beobachter, LIVE (49 Zeilen)</h3>
+  <pre class="anno">@Component
+<i class="e">Spring-Aufkleber: Diese Klasse wird als Baustein verwaltet und kann injiziert werden – so kommt der Beobachter in den PinwandService.</i>
+public class BenachrichtigungsSpeicher implements Beobachter {
+<i class="e">„implements Beobachter“ = erfüllt den Abonnenten-Vertrag → ConcreteObserver.</i>
+    static final int MAX_EINTRAEGE = 20;
+<i class="e">Obergrenze: nur die letzten 20 Meldungen behalten, sonst wächst der Speicher endlos.</i>
+    public record Eintrag(String text, Instant zeitpunkt) {
+    }
+<i class="e">Ein record = kompakte, unveränderliche Datenklasse: Meldungstext + Zeitstempel. Java erzeugt Konstruktor/Zugriffe automatisch.</i>
+    private final Deque&lt;Eintrag&gt; eintraege = new ArrayDeque&lt;&gt;();
+<i class="e">Deque = Liste mit schnellem Einfügen VORN – so stehen die neuesten Meldungen immer am Anfang.</i>
+    @Override
+    public synchronized void aktualisiere(Benachrichtigung b) {
+<i class="e">DER Muster-Aufruf: Das ruft die Pinwand bei jedem neuen Post. „synchronized“ = nur ein Thread gleichzeitig hinein (MQTT-Thread und Web-Threads könnten sonst kollidieren).</i>
+        eintraege.addFirst(new Eintrag(b.text(), Instant.now()));
+<i class="e">Neue Meldung mit JETZT-Zeitstempel vorn einfügen.</i>
+        while (eintraege.size() &gt; MAX_EINTRAEGE) {
+            eintraege.removeLast();
+        }
+<i class="e">Überzählige (älteste) hinten entfernen → rollierender Puffer.</i>
+    }
+    public synchronized List&lt;Eintrag&gt; alle() {
+        return new ArrayList&lt;&gt;(eintraege);
+    }
+<i class="e">Kopie(!) der Liste herausgeben – Aufrufer können unsere interne Struktur nicht kaputt machen. Diese Methode bedient GET /api/pinwand/benachrichtigungen – daraus macht das Frontend die 🔔-Meldung.</i>
+}</pre>
+
+  <h3>3d. Die Verdrahtung – Ausschnitt aus <span class="file">…/PinwandService.java</span></h3>
+  <pre class="anno">    private final Pinwand pinwand = new Pinwand();
+<i class="e">Der Service besitzt das Subjekt.</i>
+    public PinwandService(PinwandPostRepository repository,
+                          BenachrichtigungsSpeicher benachrichtigungen) {
+<i class="e">Spring injiziert den Beobachter (er ist ja @Component) zusammen mit dem DB-Zugang.</i>
+        this.repository = repository;
+        this.benachrichtigungen = benachrichtigungen;
+        pinwand.abonniere(benachrichtigungen);
+<i class="e">DIE eine Zeile, die das Muster „scharf schaltet“: Beobachter beim Subjekt anmelden. Nur registrierte Beobachter werden informiert – exakt das Akzeptanzkriterium von US 4.3.</i>
+    }</pre>
+
+  <div class="merk">Wir nutzen <b>Observer</b>, damit bei einem neuen Post <b>alle registrierten
+  Abonnenten automatisch</b> informiert werden, ohne dass die <code>Pinwand</code> (Subjekt) ihre Empfänger kennt.
+  <code>Beobachter</code> ist der Vertrag, <code>BenachrichtigungsSpeicher</code> ein konkreter Beobachter, der die
+  Meldungen puffert – abrufbar über <code>GET /api/pinwand/benachrichtigungen</code>, sichtbar als 🔔 im Frontend.
+  Das Muster läuft also <b>live</b>, nicht nur im Diagramm.</div>
+
+  <div class="frage-chip">„Wo ist der Unterschied zu MQTT publish/subscribe?“ → Gleiches Prinzip, andere Ebene:
+  Observer entkoppelt <b>Objekte innerhalb eines Programms</b> (direkte Methodenaufrufe), Publish/Subscribe
+  entkoppelt <b>ganze Systeme über einen Broker</b> (Netzwerk, Topics, zeitversetzt). MQTT ist sozusagen der
+  „große Bruder“ unseres Observers – beide leben bei uns nachweisbar.</div>
+
+  <!-- ================================================================ -->
+  <h2 id="jwt">4. 🔐 JWT &amp; Rollen (backend_receive/auth) – die Sicherheitsfragen</h2>
+
+  <p><b>Der Ablauf in einem Satz:</b> Login prüft das Passwort (PBKDF2-Hash) und stellt einen
+  <b>signierten Ausweis</b> (JWT) aus → jede Anfrage bringt ihn als <code>Authorization: Bearer</code>-Header mit →
+  ein Filter prüft ihn → die SecurityConfig entscheidet anhand der Rolle, was erlaubt ist.</p>
+
+  <h3>4a. <span class="file">receive/…/auth/JwtDienst.java</span> – Ausweis-Drucker und -Prüfer (72 Zeilen)</h3>
+  <pre class="anno">@Component
+public class JwtDienst {
+<i class="e">Spring-Baustein, der überall injiziert werden kann (AuthService, JwtAuthFilter).</i>
+    private final SecretKey schluessel;
+    private final long gueltigkeitMs;
+<i class="e">Der GEHEIME Signatur-Schlüssel + die Token-Lebensdauer in Millisekunden.</i>
+    public JwtDienst(
+            @Value("${app.jwt.secret}") String secret,
+            @Value("${app.jwt.expiration-minutes:1440}") long minuten) {
+<i class="e">@Value liest Werte aus application.properties: das Geheimnis und die Gültigkeit (Standard 1440 min = 24 h, „:1440“ ist der Default).</i>
+        this.schluessel = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+<i class="e">Aus dem Geheimtext einen HMAC-SHA256-Schlüssel bauen. HS256 verlangt mind. 256 Bit (32 Zeichen) – deshalb ist das Secret lang.</i>
+        this.gueltigkeitMs = minuten * 60_000L;
+<i class="e">Minuten → Millisekunden (60_000 mit Lese-Unterstrich; L = long-Zahl).</i>
+    }
+    public String erzeuge(Benutzerkonto konto) {
+        Instant jetzt = Instant.now();
+<i class="e">Ausstellen: aktueller Zeitpunkt als Basis.</i>
+        return Jwts.builder()
+                .subject(konto.getEmail())
+<i class="e">„subject“ = wem gehört der Ausweis (die E-Mail als eindeutige Identität).</i>
+                .claim("name", konto.getName())
+                .claim("rolle", konto.getRolle())
+<i class="e">Eigene Felder („Claims“): Name und – entscheidend – die ROLLE. Sie steht IM signierten Token, kann also nicht heimlich auf „Admin“ geändert werden.</i>
+                .id(UUID.randomUUID().toString())
+<i class="e">„jti“ = eindeutige Token-Nummer. Braucht die Logout-Sperrliste, um genau dieses Token zu sperren.</i>
+                .issuedAt(Date.from(jetzt))
+                .expiration(Date.from(jetzt.plusMillis(gueltigkeitMs)))
+<i class="e">Ausgestellt-am + Läuft-ab (jetzt + 24 h). Abgelaufene Tokens fallen bei der Prüfung automatisch durch.</i>
+                .signWith(schluessel)
+                .compact();
+<i class="e">Signieren + zum kompakten String „Header.Payload.Signatur“ zusammenbauen. Ohne unseren Schlüssel kann niemand eine gültige Signatur erzeugen → fälschungssicher.</i>
+    }
+    public Claims pruefe(String token) {
+        return Jwts.parser()
+                .verifyWith(schluessel)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+<i class="e">Prüfen: Parser mit UNSEREM Schlüssel → Signatur und Ablauf werden kontrolliert; bei Fälschung/Ablauf fliegt eine JwtException. Sonst kommt der Inhalt (Claims) zurück – dem darf man jetzt glauben.</i>
+    }
+}</pre>
+
+  <h3>4b. <span class="file">…/JwtAuthFilter.java</span> – der Türsteher pro Anfrage (84 Zeilen)</h3>
+  <pre class="anno">@Component
+public class JwtAuthFilter extends OncePerRequestFilter {
+<i class="e">OncePerRequestFilter = Spring garantiert: läuft bei JEDER HTTP-Anfrage genau EINMAL, noch vor den Controllern.</i>
+    private final JwtDienst jwt;
+    private final TokenSperrliste sperrliste;
+<i class="e">Werkzeuge: der Prüfer von eben + die Logout-Sperrliste (Denylist gesperrter jti-Nummern).</i>
+    @Override
+    protected void doFilterInternal(HttpServletRequest anfrage,
+                                    HttpServletResponse antwort,
+                                    FilterChain kette) throws ServletException, IOException {
+<i class="e">Die Filter-Methode: bekommt Anfrage, Antwort und die „Kette“ der weiteren Verarbeitung.</i>
+        String token = leseToken(anfrage);
+<i class="e">Schritt 1: Token aus dem Authorization-Header ziehen (Hilfsmethode unten).</i>
+        if (token != null &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == null) {
+<i class="e">Nur wenn ein Token da ist UND noch niemand angemeldet wurde (doppelte Arbeit vermeiden).</i>
+            try {
+                Claims inhalt = jwt.pruefe(token);
+<i class="e">Schritt 2: Signatur + Ablauf prüfen – hier entscheidet sich echt/gefälscht.</i>
+                if (!sperrliste.istGesperrt(inhalt.getId())) {
+                    setzeAngemeldet(inhalt);
+                }
+<i class="e">Schritt 3: Steht die jti auf der Logout-Sperrliste? Wenn nein → Nutzer als angemeldet eintragen.</i>
+            } catch (JwtException | IllegalArgumentException ungueltig) {
+                SecurityContextHolder.clearContext();
+<i class="e">Gefälscht/abgelaufen? KEIN Fehler nach außen – die Anfrage bleibt einfach anonym. Ob anonym reicht, entscheidet gleich die SecurityConfig (meist: 401).</i>
+            }
+        }
+        kette.doFilter(anfrage, antwort);
+<i class="e">Immer weiterreichen – der Filter blockiert selbst nie, er stellt nur fest, WER da ist.</i>
+    }
+    private String leseToken(HttpServletRequest anfrage) {
+        String header = anfrage.getHeader("Authorization");
+        if (header != null &amp;&amp; header.startsWith("Bearer ")) {
+            return header.substring(7).trim();
+        }
+        return null;
+    }
+<i class="e">Header „Authorization: Bearer &lt;token&gt;“ lesen; substring(7) schneidet das Wort „Bearer “ ab. Fehlt der Header → null (anonym).</i>
+    private void setzeAngemeldet(Claims inhalt) {
+        String rolle = inhalt.get("rolle", String.class);
+<i class="e">Die Rolle aus dem GEPRÜFTEN Token lesen – nie aus dem Request-Body (der wäre fälschbar!).</i>
+        AngemeldeterNutzer nutzer = new AngemeldeterNutzer(
+                inhalt.getSubject(),
+                inhalt.get("name", String.class),
+                rolle);
+<i class="e">Unser Principal-Objekt: E-Mail, Name, Rolle – Controller können es sich injizieren lassen („wer ruft hier an?“).</i>
+        var berechtigungen = List.of(
+                new SimpleGrantedAuthority("ROLE_" + (rolle == null ? "STUDENT" : rolle.toUpperCase())));
+<i class="e">Aus „Admin“ wird die Spring-Berechtigung „ROLE_ADMIN“ (Fallback STUDENT). Genau darauf prüft später hasRole("ADMIN").</i>
+        var auth = new UsernamePasswordAuthenticationToken(nutzer, null, berechtigungen);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+<i class="e">Den fertigen „Ausweis für Spring“ in den Sicherheitskontext dieser Anfrage legen – ab jetzt gilt der Nutzer als angemeldet.</i>
+    }
+}</pre>
+
+  <h3>4c. <span class="file">…/auth/SecurityConfig.java</span> – die Hausordnung (85 Zeilen)</h3>
+  <pre class="anno">@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+<i class="e">@Configuration = liefert Spring-Bausteine; @EnableWebSecurity = wir übernehmen die Sicherheitsregeln selbst.</i>
+    @Bean
+    public SecurityFilterChain sicherheitsKette(HttpSecurity http) throws Exception {
+<i class="e">DIE zentrale Regel-Kette. Alles Folgende ist eine Kette von Einstellungen auf dem http-Objekt.</i>
+        http
+                .csrf(csrf -&gt; csrf.disable())
+<i class="e">CSRF-Schutz aus: Der schützt Formular-Logins mit Cookies. Wir haben eine Token-API ohne Cookies – da ist CSRF nicht das Angriffsmodell. (Gute Prüfungsantwort!)</i>
+                .sessionManagement(s -&gt; s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+<i class="e">STATELESS: keine Server-Sitzung – jede Anfrage weist sich selbst per JWT aus. Skaliert besser, übersteht Neustarts.</i>
+                .authorizeHttpRequests(regeln -&gt; regeln
+<i class="e">Jetzt die „Wer darf wohin“-Tabelle – Reihenfolge zählt (erste passende Regel gewinnt):</i>
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registrieren").permitAll()
+<i class="e">Öffentlich: Login + Registrieren (logisch – vorher hat ja niemand ein Token).</i>
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+<i class="e">Öffentlich: die API-Doku-Seiten (Swagger) – sie BESCHREIBEN die API nur; Ausprobieren geschützter Endpunkte braucht trotzdem ein Token.</i>
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+<i class="e">OPTIONS-Vorabfragen (CORS-Preflight des Browsers) nie blockieren, sonst scheitern legitime Aufrufe schon vor dem Start.</i>
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+<i class="e">DIE Rollenregel: LÖSCHEN darf nur ROLE_ADMIN – serverseitig erzwungen (das UI versteckt Knöpfe nur; verlassen darf man sich nur auf DIESE Zeile). Bewiesen im RechteIntegrationTest: Student → 403.</i>
+                        .anyRequest().authenticated())
+<i class="e">Alles andere: nur mit gültigem Login (sonst 401).</i>
+                .exceptionHandling(f -&gt; f
+                        .authenticationEntryPoint(authEinstieg)
+                        .accessDeniedHandler(zugriffVerweigert))
+<i class="e">Eigene Fehler-Handler: saubere deutsche JSON-Meldungen statt leerer 401/403-Seiten.</i>
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+<i class="e">Unseren Türsteher VOR Springs Standard-Login-Filter einhängen – so ist der Nutzer schon bekannt, wenn die Regeln oben geprüft werden.</i>
+                .httpBasic(b -&gt; b.disable())
+                .formLogin(fl -&gt; fl.disable());
+<i class="e">Browser-Popup-Login und Formular-Login abschalten – es gibt nur unseren JWT-Weg.</i>
+        return http.build();
+    }
+    @Bean
+    public PasswordEncoder passwortEncoder() {
+        return new PbkdfPasswortEncoder();
+    }
+<i class="e">Passwort-Hashing: unser PBKDF2+Salt-Encoder wird als Springs PasswordEncoder registriert. Passwörter liegen NIE im Klartext in der DB.</i>
+}</pre>
+
+  <div class="merk">Login liefert ein <b>signiertes JWT</b> (Rolle im Token, 24 h gültig, jti für die
+  Logout-Sperrliste). Der <code>JwtAuthFilter</code> prüft es bei <b>jeder</b> Anfrage und macht aus der Rolle
+  eine Berechtigung; die <code>SecurityConfig</code> erzwingt die Regeln <b>serverseitig</b> –
+  öffentlich sind nur Login/Registrieren + Swagger-Doku, DELETE nur für Admin (403-Test beweist es).
+  Passwörter: PBKDF2 + Salt, nie Klartext.</div>
+
+  <div class="frage-chip">„Was passiert, wenn ich das Token manipuliere?“ → Die Signatur passt nicht mehr →
+  <code>JwtException</code> im Filter → Anfrage bleibt anonym → SecurityConfig antwortet 401. Genau das prüft
+  der <code>JwtDienstTest</code> mit einem verfälschten Token.</div>
+
+  <!-- ================================================================ -->
+  <h2 id="frontend">5. 🖥️ Frontend-Kern: <span class="file">frontend/src/gemeinsam/api.js</span> (59 Zeilen)</h2>
+
+  <p>Die eine Datei, durch die <b>jede</b> Frontend-Anfrage läuft – wer sie versteht, kann jede
+  „Wie redet das Frontend mit dem Backend?“-Frage beantworten.</p>
+
+  <pre class="anno">export const API = {
+  campus: "/api/campus/karte",
+  …
+  authLogin: "/api/auth/login",
+};
+<i class="e">Alle Backend-Adressen an EINER Stelle, als relative Pfade – Nginx (nginx.conf) leitet sie im Docker-Netz an das richtige Backend weiter. „export“ = andere Dateien dürfen das importieren.</i>
+export function gespeichertesToken() {
+  try { return localStorage.getItem("vc_token"); } catch { return null; }
+}
+<i class="e">Das JWT wird im localStorage des Browsers aufbewahrt (überlebt einen Reload). try/catch, falls der Browser Speichern verbietet (privater Modus).</i>
+export function merkeKonto(data) {
+  try {
+    localStorage.setItem("vc_token", data.token);
+    localStorage.setItem("vc_konto", JSON.stringify(data));
+  } catch { /* … */ }
+}
+<i class="e">Nach Login/Registrieren: Token + Kontodaten (Name, Rolle) merken. JSON.stringify, weil localStorage nur Text speichert.</i>
+export function vergissKonto() {
+  try { localStorage.removeItem("vc_token"); localStorage.removeItem("vc_konto"); } catch { /* egal */ }
+}
+<i class="e">Logout im Browser: beides löschen.</i>
+export async function apiJson(url, options = {}) {
+<i class="e">DER zentrale Helfer: Jeder API-Aufruf der ganzen App geht hier durch. async = liefert ein Promise, man kann „await“ davor schreiben.</i>
+  const token = gespeichertesToken();
+  const headers = { ...(options.headers || {}) };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+<i class="e">Automatik Nr. 1: Wenn ein Token existiert, als „Authorization: Bearer …“-Header anhängen – KEIN Aufrufer muss selbst ans Token denken. (…-Spread kopiert evtl. vorhandene Header.)</i>
+  const response = await fetch(url, { ...options, headers });
+<i class="e">Der eigentliche HTTP-Aufruf mit dem eingebauten fetch des Browsers.</i>
+  if (!response.ok) {
+    let meldung = `${response.status} ${response.statusText}`;
+    try {
+      const body = await response.json();
+      if (body &amp;&amp; body.message) meldung = body.message;
+    } catch { /* … */ }
+    throw new Error(meldung);
+  }
+<i class="e">Automatik Nr. 2: Bei Fehlern (401, 403, 409 …) die deutsche Klartext-Meldung des Backends auslesen und als Fehler werfen – die Views zeigen sie in der Statuszeile.</i>
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+<i class="e">Antwort als Text lesen und nur parsen, wenn etwas da ist – manche Endpunkte (Logout) antworten bewusst leer.</i>
+}</pre>
+
+  <div class="merk">Das Frontend spricht über <b>eine</b> zentrale Funktion (<code>apiJson</code>) mit den
+  Backends: Sie hängt automatisch das JWT an, übersetzt Backend-Fehler in lesbare Meldungen und
+  parst die JSON-Antwort. Die Adressen sind relative Pfade – <b>Nginx</b> routet sie zum richtigen Backend.
+  Token + Konto liegen im <code>localStorage</code>, damit ein Reload nicht ausloggt.</div>
+
+  <!-- ================================================================ -->
+  <h2 id="gefuehrt">6. 🧭 Geführte Lektüre – die größeren Dateien (Block für Block)</h2>
+
+  <p>Diese Dateien sind zu lang für Zeile-für-Zeile, aber im Projekt <b>sehr gut kommentiert</b> –
+  hier steht, worauf du beim Lesen achten musst:</p>
+
+  <table>
+    <tr><th>Datei</th><th>Beim Lesen darauf achten</th></tr>
+    <tr><td><span class="file">send/…/MqttSender.java</span> (112 Z.)</td><td>Verbindet sich beim Start mit dem Broker (URL kommt aus <code>application.properties</code> bzw. der Umgebungsvariable in Docker), veröffentlicht auf dem Topic <code>virtualcollege/data</code>; bei fehlender Verbindung wird die Nachricht verworfen und geloggt (bewusste Entscheidung – Simulation kann man neu starten).</td></tr>
+    <tr><td><span class="file">receive/…/MqttEmpfaenger.java</span> (137 Z.)</td><td>Abonniert dasselbe Topic (subscribe), mit <b>Wiederverbindungs-Schleife</b> („Broker noch nicht erreichbar … neuer Versuch in 3s“ – siehst du beim Start!). Schaut ins Feld <code>typ</code> der Nachricht und verteilt: <code>speiseplan</code> → Adapter → Speicher/DB, <code>abfahrt</code> → AbfahrtsSpeicher. Hier treffen sich MQTT und Adapter-Muster.</td></tr>
+    <tr><td><span class="file">receive/…/pinwand/PinwandService.java</span> (131 Z.)</td><td>Konstruktor = Observer-Verdrahtung (Abschnitt 3d). Danach: Demo-Posts beim ersten Start (<code>@PostConstruct</code>, nur wenn DB leer), Posts/Likes über das Repository speichern, bei neuem Post <code>pinwand.neuerPost(…)</code> → löst die 🔔 aus.</td></tr>
+    <tr><td><span class="file">receive/…/campus/CampusService.java</span> (307 Z.)</td><td>Oben: die <b>6 echten FH-Räume</b> mit OSM-Koordinaten (Emil-Figge-Str. 40/42/44); das Flag „reservierbar“ + Raumtyp steuern die <b>Rollenregel</b> (Hörsaal nur Professor/Admin – der Server prüft, nicht das UI). Unten: Reservierungen anlegen/lesen/löschen mit Konfliktprüfung.</td></tr>
+    <tr><td><span class="file">receive/…/auth/AuthService.java</span> (130 Z.)</td><td>Registrieren (E-Mail unique, Passwort → PBKDF2-Hash), Login (Hash-Vergleich → JWT ausstellen), die <b>drei Demo-Konten</b> beim Start, Logout → <code>TokenSperrliste</code>.</td></tr>
+    <tr><td><span class="file">frontend/src/App.jsx</span> (353 Z.)</td><td>Nur Zustand + Handler: <code>ladeAlles()</code> holt parallel 5 Datenquellen; Polling-<code>useEffect</code> alle 8 s (nur eingeloggt + sichtbarer Tab); <code>postErstellen()</code> mit dem berühmten reset-Bug-Fix (Formular-Referenz VOR dem await sichern).</td></tr>
+    <tr><td><span class="file">frontend/src/campusUtils.mjs</span> (104 Z.)</td><td>Die reinen, getesteten Funktionen: <code>darfRaumReservieren</code> (Spiegel der Server-Rollenregel), <code>sollAktualisieren</code> (Polling-Torwächter), <code>neuerPostHinweis</code> (🔔-Logik), <code>richtungsWinkel</code> (Routen-Pfeile). Zu jeder gehört ein Test in <code>campusUtils.test.mjs</code>.</td></tr>
+    <tr><td><span class="file">docker-compose.yml</span></td><td>Im Projekt bereits Zeile für Zeile kommentiert! Achte auf: 6 Dienste, <code>ports</code> („Türen nach außen“), <code>environment</code> (H2→MariaDB-Umschaltung NUR über Variablen), <code>depends_on … service_healthy</code> (Backend wartet auf die DB).</td></tr>
+    <tr><td><span class="file">pom.xml</span> (Chef + 2 Module)</td><td>Ebenfalls voll kommentiert; die Zeile-für-Zeile-Erklärung steht schon in <a href="erklaerung.html#pom" style="color:var(--accent)">erklaerung.html Kapitel 5</a>.</td></tr>
+  </table>
+
+  <!-- ================================================================ -->
+  <h2 id="selbsttest">7. ✅ Selbsttest: bist du bereit?</h2>
+
+  <div class="card">
+    <p style="margin-top:0">Du bist bereit, wenn du <b>ohne diese Seite</b> kannst:</p>
+    <ol>
+      <li>Zu <b>jedem der drei Muster</b> in je drei Sätzen: Name → Motivation → Umsetzung (die „In drei Sätzen“-Kästen).</li>
+      <li>Im Editor <b>zeigen</b>: die Fabrikmethode (<code>erzeugeDaten</code>), die Übersetzungsstelle im Adapter (<code>holeSpeiseplan</code>), die Abonnieren-Zeile (<code>pinwand.abonniere(…)</code>).</li>
+      <li>Den Weg einer Simulation aufsagen: Controller → <code>SimulationService</code> → 3 Fabriken → JSON → <code>MqttSender.publish</code> → Broker → <code>MqttEmpfaenger</code> → <code>typ</code>-Weiche → Adapter → Datenbank → Frontend-Polling.</li>
+      <li>Erklären, warum die Rolle <b>im Token</b> steht und DELETE trotzdem am <b>Server</b> geprüft wird.</li>
+      <li>Die Bonus-Frage kontern: „Welche Muster nutzt ihr noch?“ → Dependency Injection, Repository, MVC, Front Controller, Publish/Subscribe.</li>
+    </ol>
+    <p class="small" style="margin-bottom:0">Übungsformat: zu zweit, 15 Minuten, gegenseitig die
+    <a href="kritik.html#fragen" style="color:var(--red)">Prof-Fragen aus kritik.html</a> stellen – Antworten laut aussprechen, nicht nur denken.</p>
+  </div>
+
+  <hr>
+  <p class="small">Teil der Projekt-Doku: <a href="erklaerung.html" style="color:var(--accent)">erklaerung.html</a>
+  (Konzepte, Diagramme, Code-Rundgang Kap. 30–36) · <b>code-lesen.html</b> (diese Seite – Pflichtlektüre Zeile für Zeile) ·
+  <a href="kritik.html" style="color:var(--red)">kritik.html</a> (Generalprobe) · <code>PRAESENTATION.md</code> (Ablauf &amp; Rollen).
+  Stand: 17.07.2026, passend zum Code auf <code>main</code> (inkl. Frontend-Fachmodule und Swagger).</p>
+
+</div>
+</body>
+</html>
