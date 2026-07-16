@@ -135,6 +135,11 @@ curl -s http://localhost:8090/api/transit/abfahrten   -H "Authorization: Bearer 
 ./mvnw test && (cd frontend && npm test)
 ```
 
+**API-Doku live zeigen (OpenAPI/Swagger, seit 17.07.):**
+`http://localhost:8090/swagger-ui.html` öffnen → über **Authorize** den Token
+aus Schritt 1 eintragen → beliebigen geschützten Endpunkt direkt ausführen.
+(Direktzugriff ohne Nginx: `localhost:8083` für receive, `localhost:8084` für send.)
+
 ### Datenbank zeigen (der „Beweis")
 
 **Am einfachsten – Adminer im Browser:** `http://localhost:8091` öffnen, einloggen

@@ -50,6 +50,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(regeln -> regeln
                         // Anmelden und Registrieren muessen ohne Token erreichbar sein.
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registrieren").permitAll()
+                        // Die Schnittstellen-Doku (OpenAPI/Swagger) ist oeffentlich lesbar:
+                        // sie beschreibt die API nur, ausprobieren geht weiterhin nur mit Token.
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // CORS-Vorabfragen (OPTIONS) nie blockieren.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // LOESCHEN (verwalten) darf nur der Admin. hasRole("ADMIN")

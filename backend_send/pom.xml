@@ -49,6 +49,18 @@
         </dependency>
 
         <!--
+          Bibliothek 1b: springdoc-openapi = automatische Schnittstellen-Doku.
+          Erzeugt aus den REST-Controllern die OpenAPI-Beschreibung
+          (/v3/api-docs) und die klickbare Oberflaeche (/swagger-ui.html).
+          Version noetig, weil Spring Boot springdoc nicht vorgibt.
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <!--
           Bibliothek 2 + 3: Grundlage fuer die Anbindung an den
           MQTT-Broker (Mosquitto). Dieses Backend VERSENDET spaeter
           ueber MQTT seine Daten.
