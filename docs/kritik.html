@@ -98,12 +98,12 @@
     <a href="#ampel">1. Die Ampel-Übersicht: alle Kritikpunkte auf einen Blick</a>
     <a href="#k1">2. ✅ K1 – Endstand auf <code>main</code>? War der kritischste Verdacht – ist behoben (PR #39)</a>
     <a href="#k2">3. 🔴 K2 – Die geforderte Projektdoku fehlt (kostet direkt auf die 30 %)</a>
-    <a href="#k3">4. 🔴 K3 – Die Git-Historie erzählt keine agile Geschichte</a>
-    <a href="#k4">5. 🔴 K4 – Einzelbeiträge sind nicht erkennbar (Gefahr für die Einzelnote)</a>
-    <a href="#k5">6. 🟡 K5 – Burndown-Chart: gefordert in Praktikum 1, nicht auffindbar</a>
+    <a href="#k3">4. 🟡 K3 – Die Git-Historie erzählt keine agile Geschichte (entschärft: Reflexion + neuer Prozess)</a>
+    <a href="#k4">5. 🟡 K4 – Einzelbeiträge sind nicht erkennbar (vorbereitet: Bereiche + Drill, Namen offen)</a>
+    <a href="#k5">6. ✅ K5 – Burndown-Chart: fehlte – ist behoben (Kap. 28.c + Board bereinigt)</a>
     <a href="#k6">7. 🟡 K6 – API-Doku: „ausführlich dokumentieren“ ≠ curl-Beispiele</a>
     <a href="#k7">8. 🟡 K7 – Frontend: eine 1163-Zeilen-Gott-Komponente</a>
-    <a href="#k8">9. 🟡 K8 – Entwurfsmuster: exakt das Minimum, OOA-Herleitung nicht belegbar</a>
+    <a href="#k8">9. 🟡 K8 – Entwurfsmuster: exakt das Minimum (OOA inzwischen gefunden: canbanboard3.pdf)</a>
     <a href="#k9">10. 🟡 K9 – Tests: 97 Stück, aber alle am Ende „nachgereicht“</a>
     <a href="#k10">11. 🟡 K10 – Viel Doku, aber nicht die geforderte Doku</a>
     <a href="#gut">12. 🟢 Was die Profs loben würden (nicht vergessen!)</a>
@@ -122,9 +122,9 @@
     <tr><th>#</th><th>Kritikpunkt</th><th>Phase (Gewicht)</th><th>Schwere</th><th>Noch zu retten?</th></tr>
     <tr><td><a href="#k1" style="color:var(--accent)">K1</a></td><td>Endstand lag scheinbar un-gemergt auf einem Feature-Branch – auf GitHub war <b>PR&nbsp;#39 bereits gemergt</b> (nur der lokale Klon war veraltet)</td><td>Pipeline / PM (30 %)</td><td><span class="pill done">✅ behoben</span></td><td>Erledigt am 15.07. – Checks grün</td></tr>
     <tr><td><a href="#k2" style="color:var(--accent)">K2</a></td><td>Rollenverteilung + 3-Sprint-Planung + Abweichungen nicht dokumentiert</td><td>PM (30 %)</td><td><span class="pill open">🔴 kritisch</span></td><td>Ja – 1 Team-Abend</td></tr>
-    <tr><td><a href="#k3" style="color:var(--accent)">K3</a></td><td>Git-Historie: Mega-Commit mit „allen 8 Epics“, Commits ohne Issue-Bezug</td><td>PM / Pipeline (30 %)</td><td><span class="pill open">🔴 kritisch</span></td><td>Nur durch ehrliche Reflexion</td></tr>
-    <tr><td><a href="#k4" style="color:var(--accent)">K4</a></td><td>Einzelbeiträge nicht zuordenbar → Risiko bei der Einzelnote</td><td>alle</td><td><span class="pill open">🔴 kritisch</span></td><td>Ja – Rollen jetzt festlegen + üben</td></tr>
-    <tr><td><a href="#k5" style="color:var(--accent)">K5</a></td><td>Burndown-Chart fehlt (Pflicht aus Praktikum 1)</td><td>PM (30 %)</td><td><span class="pill wip">🟡 mittel</span></td><td>Ja – 1–2 Stunden</td></tr>
+    <tr><td><a href="#k3" style="color:var(--accent)">K3</a></td><td>Git-Historie: Mega-Commit mit „allen 8 Epics“, Commits ohne Issue-Bezug</td><td>PM / Pipeline (30 %)</td><td><span class="pill wip">🟡 entschärft</span></td><td>Reflexion steht (PRAESENTATION §8); Prozess seit 16.07. gelebt (PR #40/#41)</td></tr>
+    <tr><td><a href="#k4" style="color:var(--accent)">K4</a></td><td>Einzelbeiträge nicht zuordenbar → Risiko bei der Einzelnote</td><td>alle</td><td><span class="pill wip">🟡 vorbereitet</span></td><td>Bereiche + Drill stehen (PRAESENTATION §5) – Namen eintragen + üben</td></tr>
+    <tr><td><a href="#k5" style="color:var(--accent)">K5</a></td><td>Burndown-Chart fehlte; Issue-Board lief der Realität hinterher</td><td>PM (30 %)</td><td><span class="pill done">✅ behoben</span></td><td>Erledigt 16.07.: Burndown in erklaerung.html Kap. 28.c, Board bereinigt</td></tr>
     <tr><td><a href="#k6" style="color:var(--accent)">K6</a></td><td>Keine formale API-Dokumentation (kein OpenAPI/Swagger)</td><td>Anforderung / Architektur (20 %)</td><td><span class="pill wip">🟡 mittel</span></td><td>Ja – 1 Dependency</td></tr>
     <tr><td><a href="#k7" style="color:var(--accent)">K7</a></td><td>Frontend: <code>App.jsx</code> mit 1163 Zeilen widerspricht „lose Kopplung, hohe Kohäsion“</td><td>Architektur (20 %)</td><td><span class="pill wip">🟡 mittel</span></td><td>Teilweise – mind. Reflexion</td></tr>
     <tr><td><a href="#k8" style="color:var(--accent)">K8</a></td><td>Muster = exakt Minimum; OOA→OOD-Herleitung aus SWT1 nicht belegbar</td><td>Architektur (20 %)</td><td><span class="pill wip">🟡 mittel</span></td><td>Ja – Bonus-Muster benennen</td></tr>
@@ -135,10 +135,10 @@
   <div class="warn"><b>Das Wichtigste in einem Satz:</b> Implementierung und Test (50&nbsp;%) sind
   stark – aber die roten Punkte liegen alle im Bereich <b>Projektmanagement und Pipeline
   (30&nbsp;%)</b>, und genau das ist der erklärte <b>Fokus des Praktikums</b>
-  (Folie: <i>„Fokus: Architektur u. Entwicklungspipeline“</i>). Die gute Nachricht: <b>K1 hat sich
-  bei der Prüfung direkt auf GitHub bereits als gelöst erwiesen</b> (PR&nbsp;#39, Checks grün –
-  Details in <a href="#k1" style="color:var(--accent)">K1</a>), und K2, K4 und K5 sind in Summe
-  <b>an einem Team-Abend</b> behebbar.</div>
+  (Folie: <i>„Fokus: Architektur u. Entwicklungspipeline“</i>). Stand <b>16.07. abends</b>:
+  <b>K1 und K5 sind behoben</b>, K3 ist durch die vorbereitete Reflexion entschärft, K4 ist bis auf
+  die Namenszuordnung vorbereitet. Übrig für den Team-Abend: <b>K2</b> (Namen in die Rollentabelle
+  + 3-Sprint-Rückblick – Vorlagen stehen in PRAESENTATION.md §5/§8 bereit).</div>
 
   <!-- ================================================================ -->
   <h2 id="k1">2. ✅ K1 – Der Endstand und <code>main</code>: der kritischste Verdacht – behoben</h2>
@@ -235,14 +235,18 @@
           (#3–#38) zuordnen – transparent als nachgezogene Dokumentation der tatsächlichen
           Arbeit, nicht als gefälschte Vergangenheit.</li>
         </ol>
+        <p class="small" style="margin:8px 0 0"><b>Update 16.07.:</b> Die Vorarbeit ist erledigt –
+        Bereichstabelle mit Zeig-Aufgaben steht in PRAESENTATION.md §5, der Reflexions-/Abweichungstext
+        in §8, das Burndown in erklaerung.html Kap. 28.c. Für den Team-Abend bleiben: <b>Namen
+        eintragen, Sprint-Rückblick verfeinern, Milestones anlegen.</b></p>
       </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <h2 id="k3">4. 🔴 K3 – Die Git-Historie erzählt keine agile Geschichte</h2>
+  <h2 id="k3">4. 🟡 K3 – Die Git-Historie erzählt keine agile Geschichte (entschärft)</h2>
 
-  <div class="krit rot">
+  <div class="krit gelb">
     <div class="kopf">26 Commits insgesamt – und der entscheidende trägt die Botschaft „alle 8 Epics auf einmal“.</div>
     <div class="body">
 
@@ -288,13 +292,23 @@
           steht als eigener Pflichtpunkt auf der Abschluss-Folie.</li>
         </ol>
       </div>
+
+      <div class="geloest">
+        <b>Stand 16.07. – beides ist passiert:</b> (1) Der fertige <b>Reflexions-Text</b> steht in
+        <code>PRAESENTATION.md</code> Abschnitt&nbsp;8 – er benennt den Sammel-Commit, die späten
+        Tests und die Board-Klippe selbst, jeweils mit Konsequenz. (2) Der neue Prozess wird
+        <b>nachweislich gelebt</b>: Seit 16.07. läuft jede Änderung über kleine Feature-Branches
+        mit PR und grünen Checks (PR&nbsp;#40, #41 und folgende), Issues werden mit Nachweis-Kommentar
+        geschlossen. Die alte Historie bleibt sichtbar – aber sie hat jetzt ein dokumentiertes,
+        glaubwürdiges Gegenstück.
+      </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <h2 id="k4">5. 🔴 K4 – Einzelbeiträge sind nicht erkennbar</h2>
+  <h2 id="k4">5. 🟡 K4 – Einzelbeiträge sind nicht erkennbar (vorbereitet)</h2>
 
-  <div class="krit rot">
+  <div class="krit gelb">
     <div class="kopf">Es gibt eine Einzelnote – aber das Repo kann nicht belegen, wer was gebaut hat.</div>
     <div class="body">
 
@@ -330,32 +344,62 @@
           auf allen Rechnern gleich) – kleine Sache, wirkt professionell.</li>
         </ol>
       </div>
+
+      <div class="geloest">
+        <b>Stand 16.07. – vorbereitet, ein Rest bleibt Team-Sache:</b> In
+        <code>PRAESENTATION.md</code> Abschnitt&nbsp;5 stehen jetzt die <b>sechs
+        Verantwortungsbereiche</b> (deckungsgleich mit dem Sprecherplan der Folien), pro Bereich
+        mit „Musst du live zeigen können“ und der wahrscheinlichsten Prüfer-Nachfrage – plus der
+        <b>Muster-Drill für alle</b> (3 Pflicht-Muster + 5 Bonus-Muster als Selbsttest).
+        <b>Offen bleibt nur:</b> Namen in die Tabelle eintragen und den Drill wirklich üben –
+        das kann niemand für euch übernehmen.
+      </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <h2 id="k5">6. 🟡 K5 – Burndown-Chart nicht auffindbar</h2>
+  <h2 id="k5">6. ✅ K5 – Burndown-Chart fehlte – behoben</h2>
 
-  <div class="krit gelb">
-    <div class="kopf">Praktikum 1 verlangt Kanban-Board UND Burndown-Chart – wir haben nur das Board.</div>
+  <div class="krit gruen">
+    <div class="kopf">Praktikum 1 verlangt Kanban-Board UND Burndown – seit 16.07. abends gibt es beides, ehrlich beschriftet.</div>
     <div class="body">
 
       <div class="folie">Praktikumsaufgabe 1, Aufgabe 1: <i>„Legen Sie für Ihr Team ein Kanban-Board
       zur Sprintplanung <b>und ein Burndown-Chart</b> an.“</i></div>
 
-      <div class="befund">Im Repo liegen drei Kanban-Schnappschüsse
-      (<code>unterlagen/canbanboard1–3.pdf</code>) und ein Conceptboard – ein Burndown-Chart
-      (Restaufwand über Zeit, fallende Linie) ist nirgends zu finden.</div>
+      <div class="befund">
+        <b>Der ursprüngliche Befund – plus zwei Überraschungen bei genauem Hinsehen:</b>
+        <ul style="margin:6px 0">
+          <li>Ein Burndown-Chart existierte nirgends. Und: Die Dateien
+          <code>unterlagen/canbanboard1–3.pdf</code> sind entgegen ihrem Namen <b>gar keine
+          Kanban-Boards</b>, sondern Conceptboard-Exporte aus der Entwurfsphase (App-Mockups für
+          Handy/Rechner + die <b>SWT1-UML-Diagramme</b> – Letzteres ein Glücksfund für
+          <a href="#k8" style="color:var(--accent)">K8</a>).</li>
+          <li>Das echte Board (GitHub Projects) hieß <b>„untitled project“</b>, und
+          <b>18 fertige User-Story-Issues standen noch auf „offen“</b> – das Board widersprach
+          der Realität, ein Burndown daraus wäre eine flache Lüge gewesen.</li>
+        </ul>
+      </div>
+
+      <div class="geloest">
+        Am 16.07. erledigt:
+        <ol style="margin:6px 0">
+          <li>Projects-Board umbenannt in <b>„Virtual College – Kanban“</b>.</li>
+          <li><b>Board bereinigt:</b> alle 18 nachweislich fertigen Story-/Epic-Issues (+ #14)
+          mit <b>Nachweis-Kommentar</b> geschlossen (Verweis auf PR&nbsp;#39, 97 Tests und das
+          jeweilige Doku-Kapitel). Offen bleibt nur #4 („Vorlesungs-Benachrichtigungen“ –
+          Team-Entscheidung: umsetzen oder als „durch US 4.3 ersetzt“ schließen).</li>
+          <li><b>Burndown erstellt</b> (erklaerung.html <b>Kapitel 28.c</b>): drei Linien –
+          Ideallinie, rekonstruierte Implementierung (Anker: PR #17 am 17.06., Doku-Stand 30.06.,
+          PR #39 am 15.07.) und das <b>exakte</b> Issue-Board mit seiner ehrlichen Klippe am 16.07.
+          Genau diese Klippe ist die vorbereitete Antwort auf die Burndown-Frage der Prüfer.</li>
+        </ol>
+      </div>
 
       <div class="profsagt">„Das Board zeigt mir, <b>was</b> zu tun war. Das Burndown zeigt mir,
-      <b>ob Sie Ihren Fortschritt im Griff hatten</b>. Wo ist es?“</div>
-
-      <div class="fix">Aus den drei Kanban-Schnappschüssen + Issue-Daten lässt sich ein ehrliches
-      Burndown pro Sprint rekonstruieren (X-Achse: Sprintwochen, Y-Achse: offene User Stories).
-      Transparent beschriften („rekonstruiert aus Kanban-Ständen vom …“). Aufwand: 1–2 Stunden,
-      und der Pflichtpunkt aus Praktikum 1 ist abgehakt – inklusive einer ehrlichen Erkenntnis
-      fürs Reflexions-Kapitel, falls die Linie am Sprintende steil abfällt (Big-Bang statt
-      kontinuierlich – passt zu K3 und zeigt, dass ihr eure eigenen Daten lesen könnt).</div>
+      <b>ob Sie Ihren Fortschritt im Griff hatten</b>. Wo ist es?“ – Antwort jetzt: Kapitel 28.c
+      aufschlagen, Klippe zeigen, Konsequenz nennen (Issues schließen beim Merge, Issue-Nummern
+      in Commits – seit 16.07. aktiv).</div>
     </div>
   </div>
 
@@ -451,9 +495,11 @@
         <ul style="margin:6px 0">
           <li>Factory Method (Erzeugung), Adapter (Struktur), Observer (Verhalten) sind echt
           implementiert und getestet – das Soll ist erfüllt, aber es ist das <b>exakte Minimum</b>.</li>
-          <li>Die geforderte Ausgangsbasis – das SWT1-OOA-Diagramm – liegt nur als <b>defekte,
-          nicht lesbare PDF</b> vor (<code>Sonntag.pdf</code>). Die Herleitung OOA→OOD können wir
-          aktuell nicht zeigen, wenn danach gefragt wird.</li>
+          <li><s>Die geforderte Ausgangsbasis – das SWT1-OOA-Diagramm – liegt nur als defekte PDF
+          vor (<code>Sonntag.pdf</code>).</s> <b>Update 16.07.:</b> Das OOA ist doch da! Die
+          falsch benannte <code>unterlagen/canbanboard3.pdf</code> (Conceptboard-Export) enthält
+          das <b>SWT1-OOA-Klassendiagramm</b> samt Use-Case-, Sequenz- und Aktivitätsdiagrammen.
+          Die Herleitung OOA→OOD ist damit <b>vorzeigbar</b> – nur die Sonntag.pdf bleibt defekt.</li>
           <li>Zu prüfen vor der Präsentation: Sind im OOD-Diagramm wirklich <b>nur</b> die
           Muster-Klassen mit Methoden/Attributen versehen, mit korrekten Sichtbarkeiten
           (<code>+</code>/<code>-</code>/<code>#</code>), und sind die Muster <b>farblich markiert</b>?
@@ -473,9 +519,9 @@
           Gegenstück zum Observer), <b>Proxy</b> (Spring-Bean-Proxys), <b>Front Controller</b>
           (DispatcherServlet). Wer auf die Bonus-Frage flüssig antwortet, dreht K8 in einen
           Pluspunkt.</li>
-          <li>SWT1-OOA beschaffen: <code>Sonntag.pdf</code> beim Ersteller als <b>PNG-Export</b>
-          neu anfordern – oder die Herleitung als eine Folie nachzeichnen („aus OOA-Klasse X
-          wurden im OOD die Klassen Y, Z, weil …“).</li>
+          <li>Herleitung OOA→OOD vorbereiten: das OOA aus <code>unterlagen/canbanboard3.pdf</code>
+          (dort ist es enthalten – Fundstück vom 16.07.) neben das OOD legen und einen Satz üben:
+          „aus OOA-Klasse X wurden im OOD die Klassen Y, Z, weil …“.</li>
           <li>OOD-Diagramm gegen die drei Regeln aus der Folie checken (Methoden nur bei
           Muster-Klassen, Sichtbarkeiten, farbliche Markierung).</li>
         </ol>
@@ -581,10 +627,10 @@
   <table>
     <tr><th>Prio</th><th>Maßnahme</th><th>Behebt</th><th>Aufwand</th><th>Zahlt ein auf</th></tr>
     <tr><td>1</td><td>✅ <b>Erledigt (15.07.):</b> PR&nbsp;#39 mit grünen Checks nach <code>main</code> gemergt – nur noch <b>Screenshot des Checks-Laufs sichern</b> + alle Team-Klone per <code>git pull</code> aktualisieren</td><td>K1</td><td>5 min</td><td>Pipeline / 30 %</td></tr>
-    <tr><td>2</td><td>Team-Abend: Rollentabelle ausfüllen + 3-Sprint-Rückblick mit Abweichungen schreiben</td><td>K2, K4, K10</td><td>1 Abend</td><td><b>30 %</b> direkt</td></tr>
-    <tr><td>3</td><td>GitHub-Milestones „Sprint 1–3“ anlegen, Issues zuordnen; Burndown aus Kanban-PDFs rekonstruieren</td><td>K2, K5</td><td>2 h</td><td>30 %</td></tr>
-    <tr><td>4</td><td>Muster-Drill: jede Person kann alle 3 Muster (Name/Motivation/Umsetzung) + 3 Bonus-Muster nennen</td><td>K4, K8</td><td>1 h/Person</td><td>20 % + Einzelnote</td></tr>
-    <tr><td>5</td><td>Reflexions-Folie schreiben, die K3, K7 und K9 <b>proaktiv</b> benennt</td><td>K3, K7, K9</td><td>1 h</td><td>Pflichtpunkt „Reflexion“</td></tr>
+    <tr><td>2</td><td>Team-Abend: <b>Namen</b> in die fertige Bereichstabelle (PRAESENTATION §5) eintragen + 3-Sprint-Rückblick schreiben (Gerüst: Burndown Kap. 28.c + Reflexion §8)</td><td>K2, K4, K10</td><td>1 Abend</td><td><b>30 %</b> direkt</td></tr>
+    <tr><td>3</td><td>✅ <b>Burndown erledigt (16.07.)</b>: erklaerung.html Kap. 28.c; Board bereinigt + umbenannt. Rest: GitHub-Milestones „Sprint 1–3“ beim Projektdoku-Termin anlegen</td><td>K2, K5</td><td>30 min Rest</td><td>30 %</td></tr>
+    <tr><td>4</td><td>Muster-Drill <b>üben</b>: Fragen + Bonus-Muster stehen fertig in PRAESENTATION §5 – jede Person alle 3 Muster (Name/Motivation/Umsetzung)</td><td>K4, K8</td><td>1 h/Person</td><td>20 % + Einzelnote</td></tr>
+    <tr><td>5</td><td>✅ <b>Reflexions-Text erledigt (16.07.)</b>: PRAESENTATION §8 benennt K3, K7, K9 und die Board-Klippe proaktiv – nur noch als Folie übernehmen</td><td>K3, K7, K9</td><td>15 min Rest</td><td>Pflichtpunkt „Reflexion“</td></tr>
     <tr><td>6</td><td>springdoc-openapi einbauen <i>oder</i> API-Tabelle als Doku-Kapitel</td><td>K6</td><td>1–2 h</td><td>Anforderung / 20 %</td></tr>
     <tr><td>7</td><td>SWT1-OOA als PNG neu besorgen (Sonntag.pdf ist defekt); OOD gegen die 3 Diagramm-Regeln prüfen</td><td>K8</td><td>1 h</td><td>20 %</td></tr>
     <tr><td>8</td><td>Ab sofort: kleine Commits mit Issue-Nummer, alles über PRs</td><td>K3 (ab jetzt)</td><td>laufend</td><td>Glaubwürdigkeit</td></tr>
@@ -611,10 +657,11 @@
 
   <div class="qa">
     <div class="frage">Wo ist Ihr Burndown-Chart und was lesen Sie daraus ab?</div>
-    <div class="antwort"><p>Chart zeigen (nach Prio 3 existiert es) und die unbequeme Wahrheit
-    selbst aussprechen: „Die Linie fällt am Sprintende steil ab – wir haben Aufwand zu spät
-    abgebaut. Konsequenz für Sprint 3 war …“ Ein gelesenes schlechtes Burndown ist mehr wert
-    als ein schönes ungelesenes.</p></div>
+    <div class="antwort"><p>Chart zeigen (erklaerung.html <b>Kap. 28.c</b>, seit 16.07.) und die
+    unbequeme Wahrheit selbst aussprechen: „Die blaue Linie zeigt die Implementierung, die rote
+    unser Issue-Board – die rote Klippe am 16.07. heißt: Wir haben geliefert, aber das Board nicht
+    mitgepflegt. Konsequenz: Issues schließen beim Merge, Issue-Nummern in Commits – läuft seit
+    dem 16.07.“ Ein gelesenes schlechtes Burndown ist mehr wert als ein schönes ungelesenes.</p></div>
   </div>
 
   <div class="qa">

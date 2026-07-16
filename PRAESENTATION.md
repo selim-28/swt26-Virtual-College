@@ -20,10 +20,10 @@ Spalte „Stand" zeigt, was schon fertig ist und was ihr noch vorbereiten müsst
 | → Fokus **Businesslogik mit Entwurfsmustern** | 🟢 da | Factory / Adapter / Observer – Abschnitt 2 |
 | → Fokus **Kommunikation** | 🟢 da | synchron REST (HTTP) + asynchron MQTT über Mosquitto |
 | → Fokus **Persistenz** | 🟢 da | JPA → MariaDB, Tabellen live abfragbar (Abschnitt 3) |
-| **Projektdoku:** Rollen-/Aufgabenverteilung | 🔴 offen | Abschnitt 5 ausfüllen |
-| **Projektdoku:** Umsetzungsplanung über **3 Sprints** + Abweichungen | 🟡 vorbereiten | Aus eurem Kanban-Board/Burndown ableiten |
-| **Reflexion** (Architektur & Entwicklungspipeline) | 🟡 vorbereiten | Was lief gut, was würdet ihr anders machen |
-| **Jedes Teammitglied stellt seinen Verantwortungsbereich vor** | 🔴 offen | Rollen in Abschnitt 5 festlegen |
+| **Projektdoku:** Rollen-/Aufgabenverteilung | 🟡 fast fertig | Abschnitt 5: Tabelle + Zeig-Aufgaben stehen – nur **Namen eintragen** |
+| **Projektdoku:** Umsetzungsplanung über **3 Sprints** + Abweichungen | 🟡 Gerüst da | Burndown + Datenbasis: *erklaerung.html Kap. 28.c*; Abweichungen: Abschnitt 8 – beim Team-Abend verfeinern |
+| **Reflexion** (Architektur & Entwicklungspipeline) | 🟢 da | Fertiger Text in **Abschnitt 8** – nur als Folie übernehmen |
+| **Jedes Teammitglied stellt seinen Verantwortungsbereich vor** | 🟡 fast fertig | 6 Bereiche in Abschnitt 5 definiert – Namen zuordnen + Drill üben |
 
 > **Projekt-Anforderungen der Vorlesung – alle erfüllt:** ≥2 serverseitige Komponenten ✓ ·
 > ein Teil simuliert ein externes System (`backend_send`) ✓ · **synchrone** (REST) **und
@@ -38,7 +38,7 @@ Prüfung (Team- **und** Einzelnote). Drei Phasen:
 | Phase | Gewicht | Unser Stand |
 |-------|---------|-------------|
 | Architekturmodellierung (Diagramme, Muster) | **20 %** | 🟢 fertig – Verteilungsdiagramm (inkl. externe Dienste) + 2 OOD-Diagramme + Auth-Zusatzdiagramm, konsistent zum Code |
-| Projektmanagement (3-Sprint-Planung, Rollen, Abweichungen) | **30 %** | 🟡 Team-Aufgabe: Milestones/Burndown finalisieren + Abschnitt 5 ausfüllen |
+| Projektmanagement (3-Sprint-Planung, Rollen, Abweichungen) | **30 %** | 🟡 Burndown ✅ (Kap. 28.c) · Board bereinigt ✅ · Reflexion ✅ (§8) – Rest: Namen in §5, Sprint-Rückblick, Milestones |
 | Implementierung **und Test** | **50 %** | 🟢 alle 8 Epics umgesetzt; **97 automatische Tests** (60 backend_receive + 10 backend_send + 27 Frontend), alle grün |
 
 → Größter offener Punkt: **Projektdoku (30 %)** – Rollen + 3-Sprint-Rückblick.
@@ -169,17 +169,35 @@ docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
 
 ---
 
-## 5. Rollenverteilung im Team (vor der Präsentation ausfüllen)
+## 5. Rollenverteilung im Team (Namen eintragen – Rest ist vorbereitet)
 
 Pflicht laut Folie: **jedes Teammitglied stellt seinen Verantwortungsbereich vor.**
+Die sechs Bereiche entsprechen 1:1 dem Sprecherplan der Folien (praesentation/).
+Pro Bereich steht dabei, was du **live zeigen können musst** (Prüfer sagen gern
+„zeigen Sie mal") und die wahrscheinlichste Nachfrage.
 
-| Teil | Wer erklärt es |
-|------|----------------|
-| Wrapper (Teaser + Team-Folie) | _________ |
-| Technologiestack + Verteilungsdiagramm | _________ |
-| OOD-Klassendiagramme + die 3 Entwurfsmuster | _________ |
-| Kommunikation (REST + MQTT) | _________ |
-| Persistenz + Live-Demo + Datenbank-Nachweis | _________ |
+| # | Bereich (= Folien-Block) | Name | Musst du live zeigen können | Typische Nachfrage → Antwort steht in |
+|---|--------------------------|------|------------------------------|----------------------------------------|
+| 1 | Einstieg: Projektidee, Teaser, Systemkontext | _________ | App-Rundflug in 60 s (`localhost:8090`): Karte → Raum → Pinwand | „Wer sind die Akteure?" → Folie Systemkontext |
+| 2 | Projektmanagement: Scrum, 3 Sprints, Kanban, Burndown, Abweichungen | _________ | GitHub-Projects-Board „Virtual College – Kanban" + Burndown (erklaerung.html Kap. 28.c) | „Was lesen Sie aus dem Burndown ab?" → Kap. 28.c + Abschnitt 8 |
+| 3 | Stack-Entscheidungen + DBMS-Begründung | _________ | `docker-compose.yml` öffnen und die 6 Dienste nennen | „Warum MariaDB statt H2/Postgres?" → Abschnitt 6 |
+| 4 | Architektur: Verteilungsdiagramm, Modulith, REST + MQTT, Docker, CI | _________ | Verteilungsdiagramm (Kap. 2) + einen grünen PR-Check (PR #39/#40/#41) | „Was passiert, wenn Mosquitto ausfällt?" → Kap. 7/27 |
+| 5 | OOD + die 3 Entwurfsmuster + JWT/Rollen + Compliance | _________ | `MqttDatenAdapter.java` öffnen und den Adapter am Code erklären; 403-Test nennen | „Warum kein Singleton?" → Abschnitt 4 |
+| 6 | Epics-Ergebnis, Live-Demo, DB-Nachweis, 97 Tests | _________ | Demo-Ablauf aus Abschnitt 1; `./mvnw test` grün; Adminer | „Zeigen Sie die Reservierung in der DB" → Abschnitt 3 |
+
+### Muster-Drill – Pflicht für ALLE (nicht nur für Bereich 5!)
+
+Praktikum 4 wörtlich: **jedes** Team-Mitglied muss für **jedes** Muster
+Name → Motivation → Umsetzung erklären können. Lernbasis: Tabelle in Abschnitt 2
+(je Muster ein Satz pro Spalte). Selbsttest zu zweit, 5 Minuten:
+
+1. „Erkläre Factory Method, als wäre ich im 1. Semester." (Erzeugung, `backend_send`)
+2. „Warum heißt der `MqttDatenAdapter` Adapter und nicht einfach Parser?" (Struktur)
+3. „Zeig mir den Observer LIVE." (Verhalten: 2. Browserfenster, Post erstellen, 🔔)
+4. Bonus-Frage der Profs: „Welche Muster nutzt ihr **noch**, ohne sie gezeichnet zu
+   haben?" → Dependency Injection (Spring-Kern), Repository (Spring Data JPA), MVC
+   (Controller), Front Controller (DispatcherServlet), Publish/Subscribe (MQTT –
+   der „große Bruder" unseres Observers).
 
 ---
 
@@ -224,6 +242,46 @@ können. Das ist eine Engineering-Aufgabe, keine reine Rechtsfrage."*
 
 → Ausführlich mit allen Tabellen und dem 30-Sekunden-Spickzettel:
 *erklaerung.html Kapitel 29*.
+
+---
+
+## 8. Reflexion (Pflichtpunkt der Abschluss-Folie) – fertig vorbereitet 🪞
+
+Die Folie verlangt ausdrücklich **Reflexion** und **„Abweichungen von der Planung
+und warum"**. Stärkste Strategie: die eigenen Schwächen **selbst benennen, bevor
+die Prüfer sie finden** – jede mit einer konkreten Konsequenz. Sprecher:in von
+Bereich 2 trägt das vor, alle kennen es.
+
+**Was gut lief (je 1 Satz):**
+
+- **Architektur trägt:** Modulith mit Vertical Slicing – neue Epics (z. B. Auth)
+  ließen sich als eigenes Paket ergänzen, ohne Bestehendes umzubauen.
+- **Ein-Befehl-Betrieb:** `docker compose up` startet alle sechs Dienste – die
+  Demo ist reproduzierbar, kein „läuft nur auf meinem Rechner".
+- **Absicherung am Ende stark:** 97 automatische Tests inkl. Rollen-Rechten über
+  den echten HTTP-Stack und provoziertem VRR-Ausfall.
+
+**Was wir gelernt haben (ehrlich, mit Konsequenz):**
+
+1. **Zu große Commits:** Der Endstand kam in einem Sammel-Commit („alle 8 Epics")
+   – das hat uns unterwegs Code-Reviews und CI-Feedback gekostet.
+   → *Konsequenz (seit 16.07. aktiv): kleine Feature-Branches + PR mit grünen
+   Checks für jede Änderung – PR #40 und #41 sind die ersten Beispiele.*
+2. **Tests kamen zu spät:** Lange stand das Projekt bei 0 Tests; beim Auth-Umbau
+   fehlte das Sicherheitsnetz. → *Konsequenz: „Definition of Done" mit
+   Test-Pflicht pro Story – Tests entstehen mit dem Feature, nicht danach.*
+3. **Board lief der Realität hinterher:** 18 fertige Stories standen noch auf
+   „offen"; unser Burndown (erklaerung.html Kap. 28.c) zeigt die Klippe ehrlich.
+   → *Konsequenz: Issues werden beim Merge geschlossen, Commits nennen die
+   Issue-Nummer.*
+4. **Frontend als eine Datei:** `App.jsx` (≈1160 Zeilen) widerspricht unserem
+   eigenen Backend-Prinzip „lose Kopplung, hohe Kohäsion"; die testbare Logik
+   liegt immerhin in `campusUtils`. → *Nächster Schritt: ein Schnitt pro Epic,
+   analog zum Backend.*
+
+**Schluss-Satz:** „Fachlich haben wir alles erreicht – gelernt haben wir am
+meisten über den *Prozess*: Kleine, geprüfte Schritte sind kein Overhead,
+sondern das, was Teamarbeit nachweisbar macht."
 
 ---
 

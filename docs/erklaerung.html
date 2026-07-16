@@ -144,6 +144,7 @@
     <a href="#oepnv-epic">27. 🚌 EPIC 6 – Öffentlicher Nahverkehr (VRR + Offline-Fallback)</a>
     <a href="#praktika">28. 📋 Praktikums-Nachweis: jede Prof-Aufgabe → unsere Antwort + Fundort</a>
     <a href="#generalprobe">28.b 🔍 Generalprobe: Selbstkritik gegen die Folien (→ eigene Seite kritik.html)</a>
+    <a href="#burndown">28.c 📉 Kanban, Issues &amp; Burndown – ehrlich rekonstruiert</a>
     <a href="#compliance">29. ⚖️ Compliance im Software Engineering – auf unser Projekt angewendet</a>
 
     <strong style="display:block;margin-top:10px;color:var(--accent)">🔎 Block E – Der Code-Rundgang (für Einsteiger: jede Datei, jeder Fluss)</strong>
@@ -2411,6 +2412,99 @@ formEl.reset();                        // gesicherte Referenz -> kein Absturz</c
       <p><b>Und diese Doku-Änderung selbst?</b> Ging mustergültig den Weg, den Praktikum&nbsp;2
       verlangt: eigener Feature-Branch (<code>docs/generalprobe-kritik-und-pipeline-nachweis</code>)
       → Pull-Request → grüne Checks → Merge. Ab jetzt gilt das für <b>jede</b> Änderung, auch an der Doku.</p>
+    </div>
+  </div>
+
+  <h3 id="burndown">28.c 📉 Kanban, Issues &amp; Burndown – ehrlich rekonstruiert</h3>
+
+  <p>Praktikum&nbsp;1 verlangt ein <b>Kanban-Board und ein Burndown-Chart</b>. Unser echtes Board ist
+  das GitHub-Projects-Board <b>„Virtual College – Kanban“</b> mit den Issues #3–#38 als Karten
+  (die Epics und User Stories aus <code>ANFORDERUNGEN.md</code>).</p>
+
+  <div class="warn"><b>⚠️ Zwei ehrliche Befunde vom 16.07. (Generalprobe):</b>
+    <br><b>1. Falsch beschriftete PDFs:</b> Die Dateien <code>unterlagen/canbanboard1–3.pdf</code>
+    sind <b>keine</b> Kanban-Boards, sondern Conceptboard-Exporte aus der Entwurfsphase:
+    App-Mockups (Handy + Rechner) und die <b>SWT1-UML-Diagramme</b> (Use-Case-Diagramme,
+    <b>OOA-Klassendiagramm</b>, Sequenz- und Aktivitätsdiagramme). Ärgerlich beim Namen – aber ein
+    Glücksfund: Damit ist die in Praktikum&nbsp;4 geforderte <b>Ausgangsbasis OOA → OOD doch belegbar</b>
+    (die separate Sonntag.pdf ist defekt).
+    <br><b>2. Das Board lief der Realität hinterher:</b> 18 User-Story-Issues standen noch auf
+    „offen“, obwohl die Stories längst implementiert und getestet waren. Am 16.07. wurde das Board
+    bereinigt: Jedes fertige Issue wurde <b>mit Nachweis-Kommentar</b> geschlossen (Verweis auf
+    PR&nbsp;#39, Testzahl und das jeweilige Kapitel dieser Doku). Offen ist nur noch #4
+    („Vorlesungs-Benachrichtigungen“ – eine frühe Idee außerhalb der 21 User Stories; Team-Entscheidung:
+    umsetzen oder als „durch US&nbsp;4.3 ersetzt“ schließen).</div>
+
+  <p>Daraus ergibt sich dieses Burndown über den Praktikum-4-Zeitraum (Entwicklung in drei Sprints
+  ab 08.06.). Es zeigt <b>bewusst beide Wahrheiten</b> – die Implementierung und das Board:</p>
+
+  <div class="mermaid" style="font-size:0">
+    <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto" role="img" aria-label="Burndown-Chart: 21 User Stories vom 08.06. bis 26.07.">
+      <!-- Sprint-Hintergruende -->
+      <rect x="70" y="40" width="226" height="290" fill="#e0f2fe" opacity="0.35"/>
+      <rect x="296" y="40" width="233" height="290" fill="#e0f2fe" opacity="0.6"/>
+      <rect x="529" y="40" width="241" height="290" fill="#e0f2fe" opacity="0.35"/>
+      <text x="183" y="32" font-size="13" fill="#0369a1" text-anchor="middle" font-weight="700">Sprint 1</text>
+      <text x="412" y="32" font-size="13" fill="#0369a1" text-anchor="middle" font-weight="700">Sprint 2</text>
+      <text x="650" y="32" font-size="13" fill="#0369a1" text-anchor="middle" font-weight="700">Sprint 3</text>
+      <line x1="296" y1="40" x2="296" y2="330" stroke="#94a3b8" stroke-dasharray="4 4"/>
+      <line x1="529" y1="40" x2="529" y2="330" stroke="#94a3b8" stroke-dasharray="4 4"/>
+      <!-- Gitter + Y-Achse -->
+      <line x1="70" y1="50"  x2="770" y2="50"  stroke="#e2e8f0"/>
+      <line x1="70" y1="143" x2="770" y2="143" stroke="#e2e8f0"/>
+      <line x1="70" y1="237" x2="770" y2="237" stroke="#e2e8f0"/>
+      <line x1="70" y1="330" x2="770" y2="330" stroke="#64748b"/>
+      <line x1="70" y1="40"  x2="70"  y2="330" stroke="#64748b"/>
+      <text x="62" y="54"  font-size="12" fill="#334155" text-anchor="end">21</text>
+      <text x="62" y="147" font-size="12" fill="#334155" text-anchor="end">14</text>
+      <text x="62" y="241" font-size="12" fill="#334155" text-anchor="end">7</text>
+      <text x="62" y="334" font-size="12" fill="#334155" text-anchor="end">0</text>
+      <text x="24" y="190" font-size="12" fill="#334155" transform="rotate(-90 24 190)" text-anchor="middle">offene User Stories</text>
+      <!-- X-Beschriftung -->
+      <text x="70"  y="350" font-size="12" fill="#334155" text-anchor="middle">08.06.</text>
+      <text x="274" y="350" font-size="12" fill="#334155" text-anchor="middle">22.06.</text>
+      <text x="478" y="350" font-size="12" fill="#334155" text-anchor="middle">06.07.</text>
+      <text x="682" y="350" font-size="12" fill="#334155" text-anchor="middle">20.07.</text>
+      <text x="770" y="350" font-size="12" fill="#334155" text-anchor="middle">26.07.</text>
+      <!-- Ideallinie -->
+      <line x1="70" y1="50" x2="770" y2="330" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 5"/>
+      <!-- Implementierung (rekonstruiert) -->
+      <polyline points="70,50 201,103 391,223 610,330 770,330" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linejoin="round"/>
+      <circle cx="201" cy="103" r="5" fill="#0284c7"/>
+      <circle cx="391" cy="223" r="5" fill="#0284c7"/>
+      <circle cx="610" cy="330" r="5" fill="#0284c7"/>
+      <!-- Issue-Board (exakt) -->
+      <polyline points="70,50 618,50 624,90 630,330 770,330" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="624" cy="90" r="4" fill="#dc2626"/>
+      <!-- Marker-Beschriftungen -->
+      <text x="207" y="93"  font-size="11.5" fill="#0369a1">17.06. PR #17 (REST-Endpunkte)</text>
+      <text x="397" y="213" font-size="11.5" fill="#0369a1">30.06. Docker + Frontend + MQTT-Kette</text>
+      <text x="604" y="322" font-size="11.5" fill="#0369a1" text-anchor="end">15.07. PR #39 (Auth, alle Epics, 97 Tests)</text>
+      <text x="632" y="80"  font-size="11.5" fill="#b91c1c">16.07. Board bereinigt</text>
+    </svg>
+  </div>
+  <figure style="margin-top:0"><figcaption><b>Burndown, 21 User Stories, 08.06.–26.07.2026.</b>
+  Grau gestrichelt = Ideallinie · Blau = tatsächliche Implementierung (rekonstruiert) ·
+  Rot = Issue-Board (exakte GitHub-Daten).</figcaption></figure>
+
+  <div class="qa">
+    <div class="frage">Wie liest man dieses Burndown – und warum sehen die zwei Linien so unterschiedlich aus?</div>
+    <div class="antwort">
+      <p><b>Blau (Implementierung, rekonstruiert):</b> Wann waren Stories <i>wirklich</i> fertig?
+      Die Ankerpunkte sind belegbar: 17.06. PR&nbsp;#17 (fachliche REST-Endpunkte), 30.06.
+      dokumentierter Stand „Docker + Frontend&nbsp;1.0 + echte MQTT-Kette“ (Kapitel&nbsp;15–17),
+      15.07. PR&nbsp;#39 (Auth/Rollen, alle 8 Epics, 97 Tests). <span class="small">Ehrlichkeit:
+      Die Zwischenwerte zwischen den Ankern sind geschätzt; die Sprint-Fenster wurden nachträglich
+      gleichmäßig über den Praktikum-4-Zeitraum gelegt und können vom Team in der Projektdoku
+      präzisiert werden.</span></p>
+      <p><b>Rot (Issue-Board, exakt):</b> Die Karten wurden <b>nicht mitgepflegt</b> – bis 16.07.
+      stand fast alles auf „offen“, dann fiel alles an einem Tag. Diese Klippe ist keine Panne der
+      Grafik, sondern <b>der Befund selbst</b>: Wir haben implementiert, aber das Board nicht
+      nachgezogen. Konsequenz (seit 16.07. aktiv): Issues werden beim Mergen geschlossen, Commits
+      nennen die Issue-Nummer, jede Änderung läuft über kleine PRs (#40, #41 als erste Beispiele).</p>
+      <p><b>Fürs Prüfungsgespräch:</b> Genau diese Selbst-Diagnose ist die stärkste Antwort auf die
+      Frage „Wo ist Ihr Burndown und was lesen Sie daraus ab?“ – der vorbereitete Reflexions-Text
+      dazu steht in <code>PRAESENTATION.md</code> Abschnitt&nbsp;8.</p>
     </div>
   </div>
 
