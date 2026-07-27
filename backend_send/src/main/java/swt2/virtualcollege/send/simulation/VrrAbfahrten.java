@@ -18,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
-/*
- * Gateway zum oeffentlichen VRR-EFA-Abfahrtsmonitor. Diese technische
- * Integrationsklasse gehoert zum simulierten Fremdsystem (backend_send):
- * Sie holt reale Daten, die danach wie alle anderen Fremddatensaetze durch
- * Factory Method -> MQTT -> Empfaenger laufen.
+/**
+ * Gateway zum oeffentlichen VRR-EFA-Abfahrtsmonitor. Holt reale Abfahrtsdaten,
+ * die danach wie alle Fremddatensaetze ueber Factory Method und MQTT laufen.
  */
 public class VrrAbfahrten {
 
@@ -31,8 +29,8 @@ public class VrrAbfahrten {
     private static final String HALTESTELLE = "Dortmund Universität";
     private static final String STANDARD_ENDPOINT = "https://efa.vrr.de/vrr/XSLT_DM_REQUEST";
 
-    // Der EFA-Endpunkt als Feld: im Betrieb der echte VRR-Server, im Test eine
-    // absichtlich unerreichbare Adresse (so laesst sich der Fallback pruefen).
+    // Im Betrieb der echte VRR-Server, im Test eine unerreichbare Adresse,
+    // damit sich der Fallback pruefen laesst.
     private final String endpoint;
 
     private final HttpClient http = HttpClient.newBuilder()
@@ -43,7 +41,7 @@ public class VrrAbfahrten {
         this(STANDARD_ENDPOINT);
     }
 
-    // Fuer Tests (US 6.2): erlaubt, den Dienst gezielt "ausfallen" zu lassen.
+    // Nur fuer Tests: erlaubt, den Dienst gezielt ausfallen zu lassen.
     VrrAbfahrten(String endpoint) {
         this.endpoint = endpoint;
     }

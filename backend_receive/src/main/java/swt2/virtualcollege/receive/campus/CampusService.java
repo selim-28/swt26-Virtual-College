@@ -12,34 +12,19 @@ import org.springframework.web.server.ResponseStatusException;
 import swt2.virtualcollege.receive.persistenz.GespeicherteReservierung;
 import swt2.virtualcollege.receive.persistenz.ReservierungRepository;
 
-/*
- * Fachlogik fuer den Live-Campus.
- *
- * Die Raeume und Veranstaltungen sind fuer die erste Version bewusst
- * kuratiert/statisch, weil sie euer Kanban-Konzept abbilden. Die
- * Reservierungen sind dagegen echt persistent und landen in der Datenbank.
+/**
+ * Fachlogik des Campus-Moduls. Raeume und Veranstaltungen sind fest hinterlegt,
+ * die Reservierungen liegen dagegen in der Datenbank.
  */
 @Service
 public class CampusService {
 
-    // Repository = Datenbank-Zugang fuer Reservierungen.
     private final ReservierungRepository repository;
 
     /*
-     * Kuratierte Raumliste: 6 Raeume der FH DORTMUND am Campus Emil-Figge-Strasse
-     * (Quelle: fh-dortmund.de "Campus Emil-Figge-Strasse" + stwdo.de).
-     *   Haus 40 = Hoersaalgebaeude mit Mensa "kostBar" des Studierendenwerks
-     *   Haus 42 = FB Informatik (unser Hoersaal, Innovation Lab, Hardware-Labor, Seminarraum)
-     *   Haus 44 = FH-Bibliothek
-     * Der Audimax gehoert zur TU Dortmund und ist deshalb NICHT dabei.
-     *
-     * Die lat/lng sind ECHTE OpenStreetMap-Gebaeudezentren (per Overpass geholt),
-     * damit die Marker auf den richtigen Haeusern sitzen und sichtbar verteilt sind:
-     *   kostBar (Hoersaalgebaeude)   ~51.4943, 7.4207  (Nordosten)
-     *   FB Informatik  (Haus 42)     ~51.4939, 7.4203  (Mitte - die meisten Raeume)
-     *   FH-Bibliothek  (Haus 44)     ~51.4939, 7.4190  (Westen)
-     * Raeume im selben Haus liegen bewusst nah beieinander (sie SIND im selben
-     * Gebaeude) und trennen sich beim Hineinzoomen.
+     * Raeume der FH Dortmund am Campus Emil-Figge-Strasse (Haus 40, 42 und 44).
+     * Die lat/lng sind Gebaeudezentren aus OpenStreetMap, damit die Marker auf
+     * den richtigen Haeusern sitzen.
      */
     private final List<CampusController.RaumInfo> raeume = List.of(
             new CampusController.RaumInfo(
@@ -48,12 +33,12 @@ public class CampusService {
                     "Haus 42 (Informatik)",
                     "Vorlesung",
                     "belegt",
-                    false,   // Hoersaele reservieren nur Professor:innen/Admin (Rollenregel)
+                    false,   // Hoersaal: nur Professor:innen und Admin
                     250,
                     180,
                     52,
                     40,
-                    51.49398, 7.42012,   // FB Informatik, Nordteil (Hoersaal)
+                    51.49398, 7.42012,
                     List.of("Beamer", "Mikrofon", "Dozentenkamera"),
                     "Grosser Hoersaal im Informatik-Gebaeude der FH (Emil-Figge-Str. 42)."
             ),
@@ -63,12 +48,12 @@ public class CampusService {
                     "Haus 40 (Hoersaalgebaeude)",
                     "Mensa",
                     "geoeffnet",
-                    false,   // eine Mensa ist kein reservierbarer Raum
+                    false,   // offener Ort, nicht reservierbar
                     180,
                     95,
                     78,
                     28,
-                    51.49430, 7.42072,   // echtes kostBar-Gebaeude (OSM)
+                    51.49430, 7.42072,
                     List.of("Speiseplan live", "Snacks", "Mittagsmenues"),
                     "Mensa des Studierendenwerks im Hoersaalgebaeude - der Speiseplan kommt live aus den Fremddaten."
             ),
@@ -78,12 +63,12 @@ public class CampusService {
                     "Haus 42 (Informatik)",
                     "Labor",
                     "frei",
-                    true,    // Projekt-/Lernraum: fuer alle reservierbar
+                    true,
                     20,
                     4,
                     50,
                     44,
-                    51.49392, 7.42022,   // FB Informatik, Nordwestteil
+                    51.49392, 7.42022,
                     List.of("Prototyping", "3D-Drucker", "WLAN"),
                     "Kreativ- und Projektraum des FB Informatik (Haus 42)."
             ),
@@ -98,7 +83,7 @@ public class CampusService {
                     6,
                     56,
                     56,
-                    51.49380, 7.42048,   // FB Informatik, Suedostteil
+                    51.49380, 7.42048,
                     List.of("Messplaetze", "Loetstationen", "Oszilloskope"),
                     "Hardware-Praktika des FB Informatik (Haus 42)."
             ),
@@ -113,7 +98,7 @@ public class CampusService {
                     18,
                     46,
                     52,
-                    51.49386, 7.42035,   // FB Informatik, Mitte
+                    51.49386, 7.42035,
                     List.of("Whiteboard", "Beamer", "WLAN"),
                     "Uebungen und Lerngruppen des FB Informatik."
             ),
@@ -123,18 +108,17 @@ public class CampusService {
                     "Haus 44",
                     "Lernort",
                     "geoeffnet",
-                    false,   // offener Lernort: einfach hingehen, keine Reservierung
+                    false,   // offener Lernort, nicht reservierbar
                     120,
                     64,
                     32,
                     58,
-                    51.49388, 7.41895,   // echte FH-Bibliothek (EFS), OSM
+                    51.49388, 7.41895,
                     List.of("Stillarbeit", "Gruppenraeume", "Ausleihe"),
                     "Bibliothek der FH Dortmund am Standort Emil-Figge-Str. 44 - offener Lernort."
             )
     );
 
-    // Statische Veranstaltungen: sichtbar in der Karte und den Details.
     private final List<CampusController.VeranstaltungInfo> veranstaltungen = List.of(
             new CampusController.VeranstaltungInfo(
                     "swt2",
@@ -160,40 +144,29 @@ public class CampusService {
         this.repository = repository;
     }
 
-    // Alle Raeume fuer die Karte.
     public List<CampusController.RaumInfo> raeume() {
         return raeume;
     }
 
-    // Alle Veranstaltungen fuer die Karte.
     public List<CampusController.VeranstaltungInfo> veranstaltungen() {
         return veranstaltungen;
     }
 
-    // Alle gespeicherten Reservierungen.
     public List<GespeicherteReservierung> reservierungen() {
         return repository.findAllByOrderByIdDesc();
     }
 
-    /*
-     * Neue Reservierung anlegen und speichern (US 3.2).
-     *
-     * Fachliche Regeln (vorher fehlten sie - man konnte sogar die Mensa
-     * doppelt reservieren!):
-     *   1. Nur reservierbare Raeume - MIT ROLLENREGEL: Hoersaele duerfen
-     *      zusaetzlich Professor:innen und Admins reservieren; Mensa und
-     *      Bibliothek darf NIEMAND reservieren (offene Orte).
-     *   2. Das Ende muss NACH dem Beginn liegen.
-     *   3. Keine Ueberschneidung mit einer vorhandenen Reservierung des Raums.
-     * Verstoesse werden als ResponseStatusException gemeldet - die
-     * FehlerBehandlung macht daraus sauberes JSON mit Klartext-Meldung,
-     * das das Frontend direkt anzeigen kann.
+    /**
+     * Legt eine Reservierung an (US 3.2). Es gelten drei Regeln: der Raum muss
+     * fuer die Rolle reservierbar sein, das Ende muss nach dem Beginn liegen und
+     * der Zeitraum darf sich nicht mit einer vorhandenen Reservierung ueberschneiden.
+     * Verstoesse werden als ResponseStatusException gemeldet und von der
+     * FehlerBehandlung in JSON mit Klartextmeldung uebersetzt.
      */
     public GespeicherteReservierung reserviere(CampusController.NeueReservierung anfrage,
                                                String rolle) {
         CampusController.RaumInfo raum = findeRaum(anfrage.raumId());
 
-        // Regel 1 (mit Rolle): Wer darf DIESEN Raum reservieren?
         if (!darfReservieren(raum, rolle)) {
             String meldung = "Vorlesung".equals(raum.typ())
                     ? raum.name() + " ist ein Hoersaal - reservieren duerfen ihn nur "
@@ -206,7 +179,6 @@ public class CampusService {
         String von = textOderStandard(anfrage.von(), "12:00");
         String bis = textOderStandard(anfrage.bis(), "13:00");
 
-        // Regel 2: Beginn/Ende muessen echte Uhrzeiten sein, Ende nach Beginn.
         LocalTime beginn = alsUhrzeit(von);
         LocalTime ende = alsUhrzeit(bis);
         if (!ende.isAfter(beginn)) {
@@ -214,8 +186,6 @@ public class CampusService {
                     "Das Ende (" + bis + ") muss nach dem Beginn (" + von + ") liegen.");
         }
 
-        // Regel 3: Der Zeitraum darf sich nicht mit einer vorhandenen
-        // Reservierung DESSELBEN Raums ueberschneiden.
         for (GespeicherteReservierung vorhanden : repository.findAllByRaumIdOrderByIdDesc(raum.id())) {
             if (ueberschneidet(beginn, ende, vorhanden)) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -235,11 +205,9 @@ public class CampusService {
         ));
     }
 
-    /*
-     * ROLLENREGEL: Wer darf welchen Raum reservieren?
-     *   - reservierbare Raeume (Labore, Seminarraeume, PC-Pools): alle Angemeldeten
-     *   - Hoersaele (typ "Vorlesung"): nur Professor:innen und Admins
-     *   - Mensa/Bibliothek: niemand (offene Orte, keine Buchung noetig)
+    /**
+     * Rollenregel: Labore und Seminarraeume duerfen alle Angemeldeten reservieren,
+     * Hoersaele nur Professor:innen und Admins, Mensa und Bibliothek niemand.
      */
     private boolean darfReservieren(CampusController.RaumInfo raum, String rolle) {
         if (raum.reservierbar()) {
@@ -250,9 +218,9 @@ public class CampusService {
         return privilegiert && "Vorlesung".equals(raum.typ());
     }
 
-    /*
-     * Reservierung loeschen (nur Admin - das erzwingt die SecurityConfig,
-     * die DELETE /api/** ausschliesslich der Rolle ADMIN erlaubt).
+    /**
+     * Entfernt eine Reservierung. Die Beschraenkung auf die Admin-Rolle erzwingt
+     * die SecurityConfig ueber die DELETE-Regel.
      */
     public void loescheReservierung(Long id) {
         if (!repository.existsById(id)) {
@@ -262,7 +230,6 @@ public class CampusService {
         repository.deleteById(id);
     }
 
-    // Sucht einen Raum anhand seiner ID.
     private CampusController.RaumInfo findeRaum(String raumId) {
         return raeume.stream()
                 .filter(raum -> raum.id().equals(raumId))
@@ -271,7 +238,7 @@ public class CampusService {
                         "Raum nicht gefunden: " + raumId));
     }
 
-    // Wandelt "HH:mm" in eine echte Uhrzeit um; unlesbare Eingaben werden abgelehnt.
+    /** Wandelt "HH:mm" in eine Uhrzeit um; unlesbare Eingaben werden abgelehnt. */
     private LocalTime alsUhrzeit(String text) {
         try {
             return LocalTime.parse(text);
@@ -281,9 +248,9 @@ public class CampusService {
         }
     }
 
-    /*
-     * Zwei Zeitraeume ueberschneiden sich, wenn jeder VOR dem Ende des anderen
-     * beginnt. Angrenzen (13:00-14:00 nach 12:00-13:00) ist ausdruecklich ok.
+    /**
+     * Zwei Zeitraeume ueberschneiden sich, wenn jeder vor dem Ende des anderen
+     * beginnt. Direktes Angrenzen ist erlaubt.
      */
     private boolean ueberschneidet(LocalTime beginn, LocalTime ende,
                                    GespeicherteReservierung vorhanden) {
@@ -292,12 +259,12 @@ public class CampusService {
             LocalTime vorhandenEnde = LocalTime.parse(vorhanden.getBis());
             return beginn.isBefore(vorhandenEnde) && vorhandenBeginn.isBefore(ende);
         } catch (DateTimeParseException alteDaten) {
-            // Alte Eintraege mit unlesbarer Zeit blockieren neue Buchungen nicht.
+            // Altdaten mit unlesbarer Zeit blockieren keine neuen Buchungen.
             return false;
         }
     }
 
-    // Kleine Hilfsmethode fuer robuste Nutzereingaben.
+    /** Ersetzt leere Eingaben durch einen Standardwert. */
     private String textOderStandard(String wert, String standard) {
         if (wert == null || wert.isBlank()) {
             return standard;

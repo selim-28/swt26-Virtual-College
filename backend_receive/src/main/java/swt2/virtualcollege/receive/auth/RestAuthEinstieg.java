@@ -10,13 +10,9 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/*
- * AUTHENTIFIZIERUNG (PRODUKTIONS-VARIANTE) – Antwort bei FEHLENDEM Login (401).
- *
- * Spring Security bricht Anfragen ohne gueltiges Token schon VOR den Controllern
- * ab. Damit das Frontend trotzdem eine saubere deutsche JSON-Meldung sieht
- * (statt einer leeren 401-Seite), schreiben wir hier { "status": 401, ... }.
- * Das Format ist identisch zur bestehenden FehlerBehandlung.
+/**
+ * Antwort auf Anfragen ohne gueltiges Token (401). Liefert eine verstaendliche
+ * JSON-Meldung im selben Format wie die FehlerBehandlung.
  */
 @Component
 public class RestAuthEinstieg implements AuthenticationEntryPoint {

@@ -16,18 +16,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/*
- * AUTHENTIFIZIERUNG (PRODUKTIONS-VARIANTE) – der Tuersteher pro Anfrage.
- *
- * Dieser Filter laeuft bei JEDER HTTP-Anfrage EINMAL (OncePerRequestFilter) und:
- *   1. liest den Header  "Authorization: Bearer <token>",
- *   2. prueft mit dem JwtDienst Signatur + Ablauf,
- *   3. prueft die Logout-Sperrliste,
- *   4. legt bei Erfolg den angemeldeten Nutzer in den Spring-Security-Kontext.
- *
- * Ist kein/ein ungueltiges Token dabei, passiert hier NICHTS Schlimmes: Die
- * Anfrage bleibt "anonym". Ob das erlaubt ist, entscheidet danach die
- * SecurityConfig (z. B. Login/Registrieren erlaubt, alles andere gesperrt).
+/**
+ * Prueft bei jeder Anfrage das mitgeschickte JWT (Signatur, Ablauf, Sperrliste)
+ * und legt den angemeldeten Nutzer in den Sicherheitskontext. Ohne gueltiges
+ * Token bleibt die Anfrage anonym; ueber die Folgen entscheidet die SecurityConfig.
  */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -52,7 +44,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     setzeAngemeldet(inhalt);
                 }
             } catch (JwtException | IllegalArgumentException ungueltig) {
-                // Gefaelschtes/abgelaufenes Token -> Anfrage bleibt anonym.
+                // Gefaelschtes oder abgelaufenes Token: Anfrage bleibt anonym.
                 SecurityContextHolder.clearContext();
             }
         }
@@ -75,7 +67,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 inhalt.getSubject(),
                 inhalt.get("name", String.class),
                 rolle);
-        // Aus der Rolle wird eine Spring-Berechtigung, z. B. "ROLE_STUDENT".
+        // Aus der Rolle wird eine Spring-Berechtigung, etwa "ROLE_STUDENT".
         var berechtigungen = List.of(
                 new SimpleGrantedAuthority("ROLE_" + (rolle == null ? "STUDENT" : rolle.toUpperCase())));
         var auth = new UsernamePasswordAuthenticationToken(nutzer, null, berechtigungen);

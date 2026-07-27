@@ -14,23 +14,16 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
-/*
- * SCHRITT 2 (MQTT) – der SENDER in backend_send.
- *
- * Stellt mit der Paho-Bibliothek eine echte Verbindung zum Mosquitto-Broker
- * her und VEROEFFENTLICHT (publish) Nachrichten in ein Topic. Genau das ist
- * im Verteilungsdiagramm der Pfeil  "External System --MQTT publish--> Broker".
- *
- * Die Verbindungsdaten kommen aus application.properties (mqtt.broker.url,
- * mqtt.client.id, mqtt.topic). Im Docker-Setup wird mqtt.broker.url per
- * Umgebungsvariable auf tcp://mosquitto:1883 gesetzt.
+/**
+ * Publiziert Nachrichten im MQTT-Topic und bildet damit im Verteilungsdiagramm
+ * den Pfeil "External System --MQTT publish--> Broker" ab.
+ * Die Verbindungsdaten stammen aus application.properties.
  */
 @Component
 public class MqttSender {
 
     private static final Logger log = LoggerFactory.getLogger(MqttSender.class);
 
-    // @Value holt einen Wert aus der application.properties (bzw. Umgebung).
     @Value("${mqtt.broker.url}")
     private String brokerUrl;
     @Value("${mqtt.client.id}")
@@ -38,13 +31,11 @@ public class MqttSender {
     @Value("${mqtt.topic}")
     private String topic;
 
-    // Der eigentliche MQTT-Client (Verbindung zum Broker).
     private MqttClient client;
 
-    /*
-     * Wird nach dem Start automatisch aufgerufen. Wir verbinden in einem
-     * Hintergrund-Thread MIT WIEDERHOLUNG, damit der Start nicht haengt,
-     * falls der Broker noch ein paar Sekunden braucht.
+    /**
+     * Verbindet nach dem Start in einem Hintergrund-Thread mit Wiederholung,
+     * damit der Start nicht blockiert, wenn der Broker noch nicht bereit ist.
      */
     @PostConstruct
     public void starteVerbindung() {
@@ -56,11 +47,10 @@ public class MqttSender {
     private void verbindeMitWiederholung() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                // MemoryPersistence = der Client merkt sich nichts auf der Platte
-                // (gut fuer Container).
+                // MemoryPersistence: keine Zwischenspeicherung auf der Platte (Container).
                 client = new MqttClient(brokerUrl, clientId, new MemoryPersistence());
                 MqttConnectOptions opts = new MqttConnectOptions();
-                opts.setAutomaticReconnect(true);  // bei Abbruch automatisch neu verbinden
+                opts.setAutomaticReconnect(true);
                 opts.setCleanSession(true);
                 client.connect(opts);
                 log.info("[MQTT-Sender] verbunden mit {} (Topic '{}')", brokerUrl, topic);
@@ -78,10 +68,10 @@ public class MqttSender {
         }
     }
 
-    /*
-     * Veroeffentlicht einen JSON-Text im Topic. "retained = true" sorgt dafuer,
-     * dass der Broker die LETZTE Nachricht aufhebt – so bekommt auch ein
-     * Empfaenger, der sich spaeter verbindet, sofort den aktuellen Stand.
+    /**
+     * Veroeffentlicht einen JSON-Text im Topic. Die Nachricht wird "retained"
+     * gesendet, damit auch spaeter verbundene Empfaenger sofort den aktuellen
+     * Stand erhalten.
      */
     public void publish(String json) {
         try {
@@ -106,7 +96,7 @@ public class MqttSender {
                 client.disconnect();
             }
         } catch (Exception ignored) {
-            // Beim Herunterfahren ignorieren wir Fehler bewusst.
+            // Fehler beim Herunterfahren sind unerheblich.
         }
     }
 }

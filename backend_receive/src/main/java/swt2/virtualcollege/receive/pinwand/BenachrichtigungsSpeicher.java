@@ -8,18 +8,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-/*
- * Muster "Observer" – ein KONKRETER BEOBACHTER, der im LIVE-System haengt
- * (EPIC 4, US 4.3 "Ueber neue Pinwand-Beitraege benachrichtigt werden").
- *
- * Der PinwandService meldet dieses Objekt bei der Pinwand (dem Subjekt) an.
- * Bei jedem neuen Beitrag ruft die Pinwand aktualisiere() auf, und wir merken
- * uns die Benachrichtigung. Das Frontend kann sie ueber
- * GET /api/pinwand/benachrichtigungen abrufen - so ist der Observer nicht nur
- * ein Diagramm-Beispiel, sondern eine sichtbare Funktion.
- *
- * Es werden nur die letzten MAX_EINTRAEGE behalten (aeltere fliegen raus),
- * damit der Speicher nicht unbegrenzt waechst.
+/**
+ * Konkreter Beobachter (US 4.3): merkt sich die Benachrichtigungen der Pinwand,
+ * damit das Frontend sie ueber GET /api/pinwand/benachrichtigungen abrufen kann.
+ * Es werden nur die letzten MAX_EINTRAEGE gehalten.
  */
 @Component
 public class BenachrichtigungsSpeicher implements Beobachter {
@@ -30,10 +22,10 @@ public class BenachrichtigungsSpeicher implements Beobachter {
     public record Eintrag(String text, Instant zeitpunkt) {
     }
 
-    // Deque = Liste mit schnellem Einfuegen vorn; neueste zuerst.
+    // Neueste Eintraege stehen vorn.
     private final Deque<Eintrag> eintraege = new ArrayDeque<>();
 
-    /** Wird von der Pinwand (Subjekt) bei jedem neuen Post aufgerufen. */
+    /** Wird von der Pinwand bei jedem neuen Beitrag aufgerufen. */
     @Override
     public synchronized void aktualisiere(Benachrichtigung b) {
         eintraege.addFirst(new Eintrag(b.text(), Instant.now()));
@@ -42,7 +34,7 @@ public class BenachrichtigungsSpeicher implements Beobachter {
         }
     }
 
-    /** Alle gemerkten Benachrichtigungen, neueste zuerst (Kopie). */
+    /** Kopie aller gemerkten Benachrichtigungen, neueste zuerst. */
     public synchronized List<Eintrag> alle() {
         return new ArrayList<>(eintraege);
     }

@@ -1,97 +1,55 @@
 <!--
-  pom.xml von BACKEND 2 ("External System Server" = Fremdsystem
-  ÖPNV / Studierendenwerk). Aufbau identisch zu Backend 1, nur ein
-  anderer Name. Sie beschreibt Name und benoetigte Bibliotheken.
+  Modul "backend_send" - das simulierte Fremdsystem (OePNV / Studierendenwerk).
+  Erzeugt Datensaetze und veroeffentlicht sie ueber MQTT.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!-- Version des pom-Dateiformats. Bei Maven immer "4.0.0". -->
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-      "parent" verweist auf die zentrale pom.xml (eine Ebene hoeher).
-      Dadurch erbt dieses Backend alle gemeinsamen Einstellungen
-      (Java 21, Spring-Boot-Versionen usw.).
-    -->
     <parent>
-        <!-- Gruppenname des Eltern-Projekts (siehe zentrale pom.xml). -->
         <groupId>swt2.virtualcollege</groupId>
-        <!-- Name des Eltern-Projekts. -->
         <artifactId>virtual-college</artifactId>
-        <!-- Version des Eltern-Projekts (muss uebereinstimmen). -->
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <!-- Eigener Name dieses Moduls. Passt zum Ordnernamen "backend_send". -->
     <artifactId>backend_send</artifactId>
-    <!-- "jar" = aus dem Code wird ein startbares Java-Programm gebaut. -->
     <packaging>jar</packaging>
 
-    <!-- Lesbarer Anzeigename. -->
     <name>Virtual College Backend Send</name>
 
-    <!--
-      "dependencies" = Liste der fertigen Bibliotheken (Aufgabe 2).
-      Version muss nicht angegeben werden (kommt vom Eltern-Projekt).
-    -->
     <dependencies>
-        <!--
-          Bibliothek 1: macht aus dem Programm einen Web-Server und
-          stellt die REST-Schnittstellen (die Internet-Adressen) bereit.
-        -->
+        <!-- REST-Schnittstellen und eingebetteter Web-Server. -->
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
-            <!-- Name der Bibliothek: das Web-/REST-Starterpaket. -->
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--
-          Bibliothek 1b: springdoc-openapi = automatische Schnittstellen-Doku.
-          Erzeugt aus den REST-Controllern die OpenAPI-Beschreibung
-          (/v3/api-docs) und die klickbare Oberflaeche (/swagger-ui.html).
-          Version noetig, weil Spring Boot springdoc nicht vorgibt.
-        -->
+        <!-- Schnittstellendokumentation: /v3/api-docs und /swagger-ui.html. -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>3.0.1</version>
         </dependency>
 
-        <!--
-          Bibliothek 2 + 3: Grundlage fuer die Anbindung an den
-          MQTT-Broker (Mosquitto). Dieses Backend VERSENDET spaeter
-          ueber MQTT seine Daten.
-        -->
+        <!-- MQTT-Anbindung an den Broker (Mosquitto). -->
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
-            <!-- Allgemeines Integrations-Starterpaket. -->
             <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Integration. -->
             <groupId>org.springframework.integration</groupId>
-            <!-- Das spezielle Paket fuer MQTT (Mosquitto). -->
             <artifactId>spring-integration-mqtt</artifactId>
         </dependency>
-        <!--
-          Bibliothek 3b: der eigentliche MQTT-Client "Eclipse Paho".
-          DAMIT senden/empfangen wir wirklich ueber den Broker (Schritt 2).
-          Version muessen wir hier angeben, weil Spring Boot sie nicht vorgibt.
-        -->
+        <!-- MQTT-Client Eclipse Paho; Version wird von Spring Boot nicht vorgegeben. -->
         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.5</version>
         </dependency>
 
-        <!--
-          Bibliothek 4: Werkzeuge zum automatischen Testen.
-          "scope = test" = nur beim Testen noetig, nicht im fertigen Programm.
-        -->
+        <!-- Testwerkzeuge. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -99,12 +57,9 @@
         </dependency>
     </dependencies>
 
-    <!-- "build" = Einstellungen, WIE das Programm gebaut wird. -->
     <build>
         <plugins>
-            <!--
-              Dieses Plugin baut am Ende eine startbare Spring-Boot-jar-Datei.
-            -->
+            <!-- Erzeugt die ausfuehrbare Spring-Boot-jar. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

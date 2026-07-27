@@ -1,12 +1,11 @@
 // Modul "campus", Teil 1: die Karte.
-// Echte Leaflet-Karte + Offline-Ersatzkarte (Fallback nach US 2.1).
 
 import { useEffect, useRef, useState } from "react";
 import { Layers, LocateFixed, MapPin, Navigation } from "lucide-react";
 import { escapeHtml, richtungsWinkel, statusClass } from "../campusUtils.mjs";
 
-// Echte Leaflet-Karte. Sie nutzt die Geolocation des Browsers und holt eine
-// Fussroute von OSRM. Ohne CDN/Internet bleibt die lokale Fallback-Karte nutzbar.
+// Leaflet-Karte mit Browser-Standort und Fussroute von OSRM. Ohne Internet
+// bleibt die lokale Ersatzkarte bedienbar (US 2.1).
 export default function CampusMap({ campus, selectedRoom, onSelectRoom, standortTeilen }) {
   const nodeRef = useRef(null);
   const mapRef = useRef(null);
@@ -17,16 +16,15 @@ export default function CampusMap({ campus, selectedRoom, onSelectRoom, standort
   const [position, setPosition] = useState(null);
   const [routeInfo, setRouteInfo] = useState(null);
   const [routing, setRouting] = useState(false);
-  // Kartendienst-Ausfall (Kacheln laden nicht) bzw. bewusster Wechsel auf die
-  // Offline-Ersatzkarte. Beides fuehrt zur nutzbaren FallbackCampusMap.
+  // Ausgefallener Kartendienst oder bewusster Wechsel: beides fuehrt zur
+  // FallbackCampusMap.
   const [kartendienstAus, setKartendienstAus] = useState(false);
   const [manuellFallback, setManuellFallback] = useState(false);
 
   useEffect(() => {
     if (!window.L || manuellFallback || !nodeRef.current || mapRef.current) return undefined;
     const L = window.L;
-    // Startansicht: Mittelpunkt der drei FH-Gebaeude (Hoersaalgeb./Informatik/Haus 44),
-    // Zoom 17 zeigt alle drei Cluster; beim Hineinzoomen trennen sich die Raeume.
+    // Startansicht: Mittelpunkt der drei FH-Gebaeude; Zoom 17 zeigt alle drei.
     const map = L.map(nodeRef.current, { zoomControl: true }).setView([51.4939, 7.4199], 17);
     const strasse = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 20,
@@ -40,8 +38,7 @@ export default function CampusMap({ campus, selectedRoom, onSelectRoom, standort
     L.control.layers({ "Straße": strasse, "Satellit": satellit }, null, { position: "topright" }).addTo(map);
     L.control.scale({ imperial: false }).addTo(map);
 
-    // Ausfall des Kartendienstes erkennen: Laedt keine einzige Kachel, aber es
-    // haeufen sich Fehler, bieten wir die Offline-Ersatzkarte an (US 2.1).
+    // Haeufen sich Kachelfehler, bieten wir die Ersatzkarte an (US 2.1).
     let kachelFehler = 0;
     const beiKachelErfolg = () => { kachelFehler = 0; setKartendienstAus(false); };
     const beiKachelFehler = () => { kachelFehler += 1; if (kachelFehler >= 6) setKartendienstAus(true); };
@@ -178,8 +175,7 @@ export default function CampusMap({ campus, selectedRoom, onSelectRoom, standort
     mapRef.current.fitBounds(L.latLngBounds([start, ziel]).pad(0.25), { maxZoom: 18 });
   }
 
-  // Ohne Leaflet-Bibliothek (CDN blockiert) ODER bei bewusstem Wechsel zeigen
-  // wir die Offline-Ersatzkarte. Sie bleibt immer bedienbar (US 2.1).
+  // Ohne Leaflet oder nach bewusstem Wechsel uebernimmt die Ersatzkarte.
   if (!window.L || manuellFallback) {
     return (
       <FallbackCampusMap

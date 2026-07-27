@@ -1,5 +1,5 @@
-// Modul "mensa": Live-Speiseplan der Mensa kostBar direkt im Raum-Panel
-// (EPIC 5 trifft EPIC 2). Die Daten kommen ueber MQTT ins backend_receive.
+// Modul "mensa": Speiseplan der Mensa direkt im Raum-Panel.
+// Die Daten kommen ueber MQTT in backend_receive an.
 
 import { History, Soup } from "lucide-react";
 import { euro } from "../gemeinsam/format.js";

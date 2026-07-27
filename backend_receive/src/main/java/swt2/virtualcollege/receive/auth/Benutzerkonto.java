@@ -8,15 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/*
- * AUTHENTIFIZIERUNG – ein BENUTZERKONTO (= eine Tabellenzeile).
- *
- * @Entity sagt Spring/Hibernate: "fuer diese Klasse gibt es eine Tabelle".
- * Jedes Konto ist eine Zeile in der Tabelle "benutzerkonto".
- *
- * WICHTIG: Wir speichern NIE das Klartext-Passwort, sondern nur einen
- * gesalzenen Hash (siehe Klasse Passwort). Selbst wenn jemand die Datenbank
- * liest, kann er die Passwoerter nicht zurueckrechnen.
+/**
+ * Ein Benutzerkonto als Zeile der Tabelle "benutzerkonto". Gespeichert wird
+ * ausschliesslich ein gesalzener Hash, nie das Klartext-Passwort.
  */
 @Entity
 public class Benutzerkonto {
@@ -25,19 +19,19 @@ public class Benutzerkonto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // E-Mail = der Login-Name. unique = es darf sie nur EINMAL geben.
+    // Die E-Mail ist der Login-Name und darf nur einmal vorkommen.
     @Column(unique = true)
     private String email;
 
     private String name;
-    private String rolle;          // Student / Betreuer / Verwaltungsangestellter
+    private String rolle;
 
-    // Format: "salt:hash" (beides Base64). Niemals das Klartext-Passwort!
+    // Format "salt:hash", beides Base64.
     private String passwortHash;
 
     private Instant erstelltAm;
 
-    // Leerer Konstruktor (von JPA benoetigt).
+    // Von JPA benoetigt.
     protected Benutzerkonto() {
     }
 

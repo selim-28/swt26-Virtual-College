@@ -1,10 +1,8 @@
-// Modul "auth": Login- und Registrier-Seite.
-// Wird gezeigt, solange niemand eingeloggt ist (App.jsx entscheidet das).
+// Modul "auth": Login- und Registrierseite, solange niemand angemeldet ist.
 
 import { useState } from "react";
 import { LogIn, UserPlus } from "lucide-react";
 
-// Login- und Registrier-Seite (wird gezeigt, solange niemand eingeloggt ist).
 export default function AuthView({ onLogin, onRegister }) {
   const [modus, setModus] = useState("login"); // "login" oder "registrieren"
   const [fehler, setFehler] = useState("");
@@ -58,8 +56,8 @@ export default function AuthView({ onLogin, onRegister }) {
               </label>
               <label>
                 Rolle
-                {/* Admin ist bewusst NICHT waehlbar - den gibt es nur als
-                    eingerichtetes Demo-Konto (admin@fh-dortmund.de). */}
+                {/* Admin ist bewusst nicht waehlbar, sondern nur als
+                    eingerichtetes Konto vorhanden. */}
                 <select name="rolle" defaultValue="Student">
                   <option>Student</option>
                   <option>Professor</option>

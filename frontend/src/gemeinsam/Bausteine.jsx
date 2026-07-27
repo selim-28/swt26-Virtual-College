@@ -1,9 +1,9 @@
-// Gemeinsame UI-Bausteine, die mehrere Fachmodule nutzen:
-// App-Kopf, Statusleiste und kleine Anzeige-Elemente (Titel, Kennzahl, ...).
+// Gemeinsame UI-Bausteine mehrerer Fachmodule: Kopfbereich, Statusleiste und
+// kleine Anzeigeelemente.
 
 import { Bus, LogOut, MapPin, MessageSquarePlus, RefreshCcw, Settings, User } from "lucide-react";
 
-// Kopfbereich mit Navigation und eingeloggtem Nutzer.
+// Kopfbereich mit Navigation und angemeldetem Nutzer.
 export function Header({ view, onView, konto, onLogout }) {
   const tabs = [
     ["campus", "Live Campus", MapPin],
@@ -44,7 +44,7 @@ export function Header({ view, onView, konto, onLogout }) {
   );
 }
 
-// Kleine Statusleiste fuer Ladezustand und manuelles Aktualisieren.
+// Statusleiste fuer Ladezustand und manuelles Aktualisieren.
 export function StatusBar({ busy, status, onRefresh }) {
   return (
     <section className="statusbar">
@@ -56,7 +56,6 @@ export function StatusBar({ busy, status, onRefresh }) {
   );
 }
 
-// Wiederverwendbare Ueberschrift.
 export function SectionTitle({ kicker, title }) {
   return (
     <div className="section-title">
@@ -66,7 +65,6 @@ export function SectionTitle({ kicker, title }) {
   );
 }
 
-// Kleines Kennzahlen-Element.
 export function Metric({ label, value }) {
   return (
     <div className="metric-row">
@@ -76,7 +74,6 @@ export function Metric({ label, value }) {
   );
 }
 
-// Ausstattung als Tags.
 export function TagList({ items }) {
   return (
     <div className="tag-list">
@@ -85,7 +82,6 @@ export function TagList({ items }) {
   );
 }
 
-// Kleine Liste fuer Sidepanel-Inhalte.
 export function MiniList({ title, icon: Icon, items }) {
   return (
     <section className="mini-list">
@@ -95,7 +91,6 @@ export function MiniList({ title, icon: Icon, items }) {
   );
 }
 
-// Kachel fuer Live-Daten.
 export function DataPanel({ title, icon: Icon, subtitle, wide = false, children }) {
   return (
     <section className={`data-panel ${wide ? "wide" : ""}`}>
@@ -106,7 +101,6 @@ export function DataPanel({ title, icon: Icon, subtitle, wide = false, children 
   );
 }
 
-// Eine Zeile in einer Datenkachel.
 export function DataRow({ title, subtitle, value }) {
   return (
     <article className="data-row">

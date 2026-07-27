@@ -6,13 +6,9 @@ import org.slf4j.LoggerFactory;
 import swt2.virtualcollege.receive.pinwand.Benachrichtigung;
 import swt2.virtualcollege.receive.pinwand.Beobachter;
 
-/*
- * "Nutzer" (Kapitel 13). WICHTIG fuer das Observer-Muster:
- * Nutzer "implements Beobachter" – also ist jeder Nutzer ein moeglicher
- * Empfaenger von Pinwand-Benachrichtigungen.
- *
- * Im Diagramm:  Beobachter <|.. Nutzer
- *               Nutzer <|-- Student / Betreuer / Verwaltungsangestellter
+/**
+ * Basisklasse aller Nutzer. Als Beobachter kann jeder Nutzer Benachrichtigungen
+ * der Pinwand empfangen; Student, Betreuer und Verwaltungsangestellter erben davon.
  */
 public class Nutzer implements Beobachter {
 
@@ -28,9 +24,9 @@ public class Nutzer implements Beobachter {
         return name;
     }
 
-    /*
-     * Wird von der Pinwand (Subjekt) aufgerufen. In einer echten App wuerde
-     * der Nutzer hier z. B. eine Push-Nachricht aufs Handy bekommen.
+    /**
+     * Wird von der Pinwand aufgerufen. Produktiv stuende hier der Versand einer
+     * Push-Nachricht.
      */
     @Override
     public void aktualisiere(Benachrichtigung b) {

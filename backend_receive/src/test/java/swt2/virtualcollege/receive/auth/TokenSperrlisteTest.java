@@ -6,9 +6,7 @@ import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 
-/*
- * Unit-Tests fuer die Logout-Sperrliste.
- */
+/** Sperrliste der abgemeldeten Token. */
 class TokenSperrlisteTest {
 
     @Test
@@ -28,7 +26,6 @@ class TokenSperrlisteTest {
     @Test
     void abgelaufeneSperreZaehltNichtMehr() {
         TokenSperrliste liste = new TokenSperrliste();
-        // Ablauf liegt in der Vergangenheit -> Eintrag ist bedeutungslos.
         liste.sperre("jti-alt", Instant.now().minusSeconds(1));
         assertThat(liste.istGesperrt("jti-alt")).isFalse();
     }

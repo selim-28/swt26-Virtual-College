@@ -1,35 +1,14 @@
-# ============================================================
-#  docker-compose.yml  –  "Ein-Knopf-Start" fuer das ganze Projekt
-# ------------------------------------------------------------
-#  WOZU IST DIESE DATEI DA?
-#  Damit z. B. Professor:innen das Projekt mit EINEM einzigen
-#  Befehl testen koennen – OHNE Java oder Maven zu installieren.
-#  Nur Docker muss installiert sein. Im Projekt-Hauptordner:
+# Startet die komplette Anwendung mit einem Befehl:
 #
-#        docker compose up --build
+#     docker compose up --build     (stoppen: docker compose down)
 #
-#  Docker baut dann automatisch das Frontend und beide Backends,
-#  startet Mosquitto und MariaDB. Alles stoppen mit:
-#
-#        docker compose down
-#
-#  AUFBAU DIESER DATEI:
-#  Unter "services" steht je ein Block pro Container. Ein Container
-#  ist eine kleine, abgeschottete "Box", in der genau ein Programm
-#  laeuft. Jeder Block sagt, WIE der Container gebaut und gestartet
-#  wird. Zeilen mit # sind nur Kommentare (Erklaerung fuer Menschen).
-# ============================================================
+# Frontend, beide Backends, MQTT-Broker, Datenbank und Adminer.
+# Ausser Docker muss dafuer nichts installiert sein.
 
 services:
 
-  # ----------------------------------------------------------
-  # Container 0: frontend  ("Frontend Web Server")
-  #   Nginx liefert die Web-Oberflaeche aus und leitet API-Aufrufe
-  #   an die richtigen Backends weiter.
-  # ----------------------------------------------------------
+  # Nginx liefert die gebaute React-App aus und leitet /api an die Backends weiter.
   frontend:
-    # Das Frontend wird jetzt aus React/Vite gebaut und danach von Nginx
-    # ausgeliefert. So entspricht es eher einer echten 1.0-Web-App.
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
@@ -40,141 +19,86 @@ services:
       - backend_receive
       - backend_send
 
-  # ----------------------------------------------------------
-  # Container 1: backend_receive  ("Application Server")
-  #   Das Haupt-Backend, das dem Frontend die Daten liefert
-  #   (Mensa-Speiseplan, OEPNV-Abfahrten).
-  # ----------------------------------------------------------
+  # Application Server: liefert dem Frontend die Daten und persistiert sie.
   backend_receive:
-    # "build" = Docker baut das Image SELBST aus unserem Quellcode
-    #           (statt ein fertiges Image aus dem Internet zu laden).
     build:
-      # context = der Ordner, den Docker beim Bauen "sieht".
-      #           "." bedeutet: der Projekt-Hauptordner (hier).
       context: .
-      # dockerfile = der Bauplan. Wir nutzen den schon vorhandenen
-      #              Dockerfile.java (baut ein Spring-Boot-Modul).
       dockerfile: Dockerfile.java
-      # args = Werte, die wir an den Bauplan uebergeben.
-      #        MODULE sagt dem Dockerfile, WELCHES Backend gebaut wird.
       args:
         MODULE: backend_receive
-    # container_name = ein gut lesbarer Name fuer den laufenden Container.
     container_name: vc_backend_receive
-    # ports = "Tueren" nach aussen. Format:  "HOST:CONTAINER"
-    #   Links  (8083) = Port auf DEINEM Rechner (im Browser/curl erreichbar).
-    #   Rechts (8083) = Port IM Container (steht in application.properties).
     ports:
       - "8083:8083"
-    # environment = Einstellungen, die wir dem Container mitgeben.
-    #   MQTT_BROKER_URL ueberschreibt mqtt.broker.url aus application.properties.
-    #   Im Docker-Netz heisst der Broker "mosquitto" (= der Service-Name unten),
-    #   NICHT localhost. (Spring "uebersetzt" MQTT_BROKER_URL -> mqtt.broker.url.)
-    #   Die SPRING_DATASOURCE_*-Werte schalten von H2 auf die echte MariaDB um.
+    # Im Docker-Netz heisst der Broker "mosquitto", nicht localhost.
+    # Die SPRING_DATASOURCE_*-Werte schalten von H2 auf MariaDB um.
     environment:
       MQTT_BROKER_URL: tcp://mosquitto:1883
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/virtualcollege
       SPRING_DATASOURCE_USERNAME: vcuser
       SPRING_DATASOURCE_PASSWORD: vcpass
-    # depends_on = Startreihenfolge. Auf die Datenbank warten wir, bis sie
-    # WIRKLICH bereit ist ("service_healthy"), sonst scheitert der Start.
+    # Erst starten, wenn die Datenbank wirklich bereit ist.
     depends_on:
       mosquitto:
         condition: service_started
       mariadb:
         condition: service_healthy
 
-  # ----------------------------------------------------------
-  # Container 2: backend_send  ("External System Server")
-  #   Das simulierte Fremdsystem (OEPNV / Studierendenwerk).
-  # ----------------------------------------------------------
+  # Simuliertes Fremdsystem (OePNV / Studierendenwerk).
   backend_send:
     build:
       context: .
       dockerfile: Dockerfile.java
       args:
-        # Hier der einzige Unterschied zu oben: anderes Modul.
         MODULE: backend_send
     container_name: vc_backend_send
     ports:
-      # backend_send lauscht in application.properties auf Port 8084.
       - "8084:8084"
-    # Auch dieses Backend redet mit dem Broker "mosquitto" (nicht localhost).
     environment:
       MQTT_BROKER_URL: tcp://mosquitto:1883
     depends_on:
       - mosquitto
 
-  # ----------------------------------------------------------
-  # Container 3: mosquitto  (MQTT-Broker)
-  #   Wird von backend_send und backend_receive wirklich benutzt:
-  #   backend_send publisht, backend_receive subscribed.
-  # ----------------------------------------------------------
+  # MQTT-Broker: backend_send publiziert, backend_receive abonniert.
   mosquitto:
-    # image = ein FERTIGES Image aus dem Internet (kein eigener Bau noetig).
     image: eclipse-mosquitto:2
     container_name: vc_mosquitto
     ports:
-      # 1883 = Standard-Tuer (Port) von MQTT/Mosquitto.
       - "1883:1883"
-    # volumes = eine Datei von deinem Rechner IN den Container "einblenden".
-    #   Wir geben Mosquitto unsere kleine Konfigurationsdatei mit.
-    #   ":ro" am Ende heisst "read only" (der Container darf sie nur lesen).
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
 
-  # ----------------------------------------------------------
-  # Container 4: mariadb  (Datenbank)  –  SCHRITT 3
-  #   Speichert die empfangenen Daten dauerhaft. Im Verteilungs-
-  #   diagramm der "Database Server (MariaDB)".
-  # ----------------------------------------------------------
+  # Datenbank aus dem Verteilungsdiagramm. Die Zugangsdaten muessen zu den
+  # SPRING_DATASOURCE_*-Werten von backend_receive passen.
   mariadb:
     image: mariadb:11
     container_name: vc_mariadb
-    # Diese Werte richten beim ERSTEN Start automatisch die Datenbank +
-    # einen Benutzer ein. Sie muessen zu den SPRING_DATASOURCE_*-Werten
-    # bei backend_receive passen.
     environment:
       MARIADB_DATABASE: virtualcollege
       MARIADB_USER: vcuser
       MARIADB_PASSWORD: vcpass
       MARIADB_ROOT_PASSWORD: rootpass
     ports:
-      # 3306 = Standard-Tuer (Port) von MySQL/MariaDB.
       - "3306:3306"
-    # healthcheck = Docker prueft regelmaessig, ob die DB schon bereit ist.
-    # Erst dann startet backend_receive (siehe depends_on oben).
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
       retries: 20
-    # volumes = die Daten bleiben auch nach "docker compose down" erhalten.
     volumes:
       - mariadb_data:/var/lib/mysql
 
-  # ----------------------------------------------------------
-  # Container 6: adminer  (Datenbank im Browser ansehen)  –  NEU
-  #   Kleines Web-Tool, um die MariaDB-Tabellen BEQUEM im Browser
-  #   zu sehen, statt jedes Mal Konsolen-Befehle zu tippen.
-  #   Nach dem Start:  http://localhost:8091
-  #   Login:  System = MySQL, Server = mariadb,
-  #           Benutzer = vcuser, Passwort = vcpass, Datenbank = virtualcollege
-  # ----------------------------------------------------------
+  # Optional: Datenbank im Browser ansehen unter http://localhost:8091
+  # (Server: mariadb, Benutzer: vcuser, Passwort: vcpass, DB: virtualcollege).
   adminer:
-    # image = ein FERTIGES, sehr kleines Web-DB-Tool aus dem Internet.
     image: adminer:5
     container_name: vc_adminer
-    # Adminer lauscht im Container auf 8080 -> wir oeffnen es aussen als 8091.
     ports:
       - "8091:8080"
     environment:
-      # Vorbelegter Server, damit man ihn im Login nicht tippen muss.
       ADMINER_DEFAULT_SERVER: mariadb
-    # Erst wenn die Datenbank laeuft, macht Adminer Sinn.
     depends_on:
       - mariadb
 
-# "volumes" am Ende: benannter Speicherort fuer die Datenbank-Dateien.
+# Damit die Daten einen "docker compose down" ueberleben.
 volumes:
   mariadb_data:

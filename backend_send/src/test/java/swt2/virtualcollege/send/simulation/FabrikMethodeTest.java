@@ -9,22 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import tools.jackson.databind.json.JsonMapper;
 
-/*
- * EPIC 7 – Fremdsystem und asynchrone Datenuebertragung
- * US 7.1 "Fremddatensimulation starten" (Issue #32).
- *
- * Diese Tests pruefen das Muster "Factory Method" und damit das
- * Akzeptanzkriterium "Mensa-, OEPNV- und Auslastungsdaten werden erzeugt":
- * Jede konkrete Fabrik (DatenGenerator) liefert das richtige Produkt
- * (Fremddatensatz), und jedes Produkt beschreibt sich als GUELTIGES JSON mit
- * dem korrekten "typ" – genau das Format, das spaeter ueber MQTT verschickt und
- * vom Empfaenger anhand des Typs einsortiert wird (US 7.3).
+/**
+ * US 7.1 (Issue #32): Jede Fabrik liefert das passende Produkt, und jedes Produkt
+ * beschreibt sich als gueltiges JSON mit dem Typ, nach dem der Empfaenger sortiert.
  */
 class FabrikMethodeTest {
 
     private static final JsonMapper MAPPER = JsonMapper.builder().build();
 
-    // --- Mensadaten ---
     @Test
     void speiseplanGeneratorErzeugtSpeiseplanDaten() {
         Fremddatensatz produkt = new SpeiseplanGenerator().erzeugeDaten();
@@ -36,7 +28,6 @@ class FabrikMethodeTest {
         assertGueltigesJson(json);
     }
 
-    // --- Auslastungsdaten ---
     @Test
     void auslastungsGeneratorErzeugtAuslastungsDaten() {
         Fremddatensatz produkt = new AuslastungsGenerator().erzeugeDaten();
@@ -49,7 +40,7 @@ class FabrikMethodeTest {
         assertGueltigesJson(json);
     }
 
-    // --- OEPNV-Abfahrten (ohne Netz getestet: Produkt direkt gebaut) ---
+    // Das Produkt wird direkt gebaut, damit der Test ohne Netz laeuft.
     @Test
     void abfahrtsDatenBeschreibenSichAlsGueltigesJson() {
         AbfahrtsDaten produkt = new AbfahrtsDaten(List.of(
@@ -64,18 +55,15 @@ class FabrikMethodeTest {
         assertGueltigesJson(json);
     }
 
-    // Sonderzeichen (Anfuehrungszeichen) im Text duerfen das JSON nicht zerstoeren.
     @Test
     void abfahrtsDatenMaskierenAnfuehrungszeichen() {
         AbfahrtsDaten produkt = new AbfahrtsDaten(List.of(
                 new AbfahrtsDaten.Abfahrt("Bus \"X\"", "Ziel \"A\"", "09:00")
         ), "quelle mit \" Zeichen");
 
-        // Trotz Anfuehrungszeichen im Text bleibt das JSON les-/parsebar.
         assertGueltigesJson(produkt.alsJson());
     }
 
-    // Kleine Hilfe: prueft, ob ein Text wirklich gueltiges JSON ist.
     private void assertGueltigesJson(String json) {
         assertThatCode(() -> MAPPER.readTree(json))
                 .as("Produkt muss gueltiges JSON liefern: %s", json)

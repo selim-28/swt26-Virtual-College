@@ -1,241 +1,182 @@
-# Template Repository for the Software Engineering Lecture
+# Virtual College
 
-> [!IMPORTANT]
-> Replace this README with a detailed description of your project, your team, your architecture decisions, and instructions on how to run it.
+Virtual College ist unser Projekt für Softwaretechnik 2: ein digitaler 2D-Campus für die
+FH Dortmund. Studierende sollen sich auf dem Campus zurechtfinden, Räume reservieren,
+sich über eine Pinnwand austauschen und nebenbei sehen, was es in der Mensa gibt und wann
+die nächste Bahn fährt.
 
-> [!IMPORTANT]
-> If you keep your repository private, invite all team members and teaching staff.
+Uns war wichtig, dass das nicht nur eine hübsche Oberfläche ist, sondern eine echte
+verteilte Anwendung. Die Kette sieht so aus:
 
-This template is set up as a multi-module Maven repository with Spring Boot `4.0.6` on Java `21`. GitHub Actions builds the repository from the root `pom.xml`, so you do not need to edit workflow files when you rename or add Maven modules.
+```text
+Browser (React)  ->  Nginx  ->  backend_receive (Spring Boot)  ->  MariaDB
+                                        ^
+                                        | MQTT (Mosquitto)
+                                        |
+                                backend_send (simuliertes Fremdsystem)
+```
+
+`backend_receive` ist der Application Server, mit dem das Frontend spricht.
+`backend_send` spielt das Fremdsystem (ÖPNV / Studierendenwerk) und schickt seine Daten
+asynchron über MQTT — die beiden Backends kennen sich also nicht direkt, sondern nur über
+den Broker. Persistiert wird in MariaDB; ohne Docker läuft stattdessen eine H2-Datenbank
+im Arbeitsspeicher, damit man das Backend auch mal schnell allein starten kann.
+
+Umgesetzt sind alle acht Epics aus [ANFORDERUNGEN.md](ANFORDERUNGEN.md): Login und
+Registrierung, echte Campus-Karte mit Straßen- und Satellitenansicht, Browser-Standort,
+Fußweg mit Richtungspfeilen, Raumreservierung mit Rollenrechten, Pinnwand mit Likes und
+Benachrichtigungen, Mensa-Speiseplan, VRR-Abfahrten, Simulation und Datenbank-Historie.
+
+> [!NOTE]
+> Die App liegt komplett hinter einem Login. Zum Ausprobieren gibt es ein Demo-Konto:
+> `student@fh-dortmund.de` / `passwort123`. Man kann sich natürlich auch selbst
+> registrieren.
 
 ## Team
 
-Team Leader: [Name]
+Team Leader: Mahmut Selim Kilicaslan
 
-Members: [Name1], [Name2], [Name3]
+Members: Sif-Eddine Khayati, Onur Kizil, Adam Nachit, Mhamed Mokhtar
+
+Die Verantwortungsbereiche haben wir so aufgeteilt:
+
+| Bereich | Wer |
+|---------|-----|
+| Projektidee, Systemkontext, Demo | Adam Nachit |
+| Projektmanagement: Scrum, Sprints, Kanban-Board | Mahmut Selim Kilicaslan |
+| Technologie-Stack und DBMS-Entscheidung | Mhamed Mokhtar |
+| Architektur: Verteilung, REST + MQTT, Docker, CI | Sif-Eddine Khayati |
+| OOD, Entwurfsmuster, JWT/Rollen, Compliance | Onur Kizil |
 
 ## Quickstart
 
-Run all Maven modules from the repository root:
-
-```bash
-./mvnw verify
-./mvnw -pl app spring-boot:run
-```
-
-Open the starter application endpoints:
-
-```text
-http://localhost:8080/api/hello
-http://localhost:8080/actuator/health
-```
-
-Build the default container image from the repository root:
-
-```bash
-docker build -f Dockerfile.java --build-arg MODULE=app .
-```
-
-## Prerequisites
-
-- Java 21
-- No local Maven installation required because the repository includes the Maven Wrapper
-- Docker (optional, only if you build container images)
-
-## Installation and Setup
-
-1. Clone the repository.
-2. Open the repository root as a Maven project in your IDE.
-3. Use the existing issue templates to capture user stories and bug reports.
-4. Replace the sample `app` module with your own implementation.
-5. Update `groupId`, `artifactId`, package names, and configuration files to match your project.
-
-## Running the Project
-
-Run all modules and tests:
-
-```bash
-./mvnw verify
-```
-
-Run the default Spring Boot application module:
-
-```bash
-./mvnw -pl app spring-boot:run
-```
-
-Package only the default application module:
-
-```bash
-./mvnw -pl app -am package
-java -jar app/target/app-1.0.0-SNAPSHOT.jar
-```
-
-## Project Structure
-
-```text
-ProjectName/
-├── pom.xml                     # Parent and aggregator Maven project
-├── app/                        # Starter application module
-│   ├── pom.xml
-│   └── src/
-├── Dockerfile.java             # Container build for a selected Maven module
-├── .github/ISSUE_TEMPLATE/     # Planning and bug-report templates
-├── .github/PULL_REQUEST_TEMPLATE.md
-└── .github/workflows/          # CI and release automation
-```
-
-## Software Development Lifecycle
-
-Use the template as the foundation for the full project lifecycle:
-
-1. Capture work with the GitHub issue templates.
-2. Discuss scope, acceptance criteria, and responsibilities in the issue.
-3. Implement changes on a branch and keep the repository build green with `./mvnw verify`.
-4. Open a pull request using the PR template and address review feedback.
-5. Merge into `main` only after CI passes for both the Maven build and deployable container builds.
-6. Let the release workflow package and publish deployable modules that opt into container publishing.
-
-## Adding More Modules
-
-1. Create a new module directory with its own `pom.xml`.
-2. Add the module to the root `pom.xml` under `<modules>`.
-3. Run `./mvnw verify` from the repository root.
-4. If the module is a deployable service, make sure it produces a runnable Spring Boot jar.
-
-If a module should be published as a container image by `release.yaml`, add this property to that module's `pom.xml`:
-
-```xml
-<properties>
-    <container.image.enabled>true</container.image.enabled>
-</properties>
-```
-
-The release workflow discovers deployable modules from Maven metadata, so students do not need to maintain project-folder lists in GitHub Actions.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Virtual College
-
-Virtual College ist eine SWT2-Demo fuer einen digitalen 2D-Campus. Das Projekt zeigt nicht nur Oberflaeche, sondern eine echte verteilte Kette:
-
-Browser/React -> Nginx -> Spring Boot Backends -> MQTT/Mosquitto -> MariaDB.
-
-Die aktuelle Version setzt den Kanban-Entwurf als benutzbare Web-App um: Login/Registrierung, echte 2D-Campus-Karte mit Straßen-/Satellitenansicht, Browser-Standort, Fußweg mit Richtungspfeilen, Raumreservierung, Pinwand, Likes, Mensa, VRR-Abfahrten, Simulation und Datenbank-Historie.
-
-> **Anmeldung:** Die App ist hinter einem Login. Demo-Konto zum Ausprobieren:
-> `student@fh-dortmund.de` / `passwort123` (oder ein eigenes Konto registrieren).
-
-## Schnellstart mit Docker
-
+Der schnellste Weg ist Docker — damit braucht man weder Java noch Node lokal.
 Im Projekt-Hauptordner:
 
 ```bash
 docker compose up --build
 ```
 
-Danach im Browser oeffnen:
+Danach im Browser öffnen:
 
 ```text
 http://localhost:8090
 ```
 
-Docker startet diese Services:
-
-```text
-frontend         React/Vite gebaut und von Nginx ausgeliefert, Port 8090
-backend_receive Spring Boot Hauptbackend, Port 8083
-backend_send    Simuliertes Fremdsystem, Port 8084
-mosquitto       MQTT-Broker, Port 1883
-mariadb         Datenbank, Port 3306
-adminer         Datenbank im Browser ansehen (optional), Port 8091
-```
-
-Stoppen:
+Alles wieder stoppen:
 
 ```bash
 docker compose down
 ```
 
-## Wichtige Tests
+Docker startet dabei sechs Container:
 
-```bash
-# Backend: bauen + automatische Tests (u. a. 22 Auth-/Security-Tests, EPIC 1)
-./mvnw -pl backend_receive test
-
-# Backend: kompletter Build inkl. Tests
-./mvnw verify
-
-# Frontend: automatische Unit-Tests (Karten-Helfer, EPIC 2) – ohne Zusatzbibliothek
-cd frontend
-npm test          # nutzt Nodes eingebauten Runner (node --test), 12 Tests
-
-# Frontend: Produktions-Build
-npm run build
+```text
+frontend          React/Vite, gebaut und von Nginx ausgeliefert   Port 8090
+backend_receive   Spring-Boot-Hauptbackend                        Port 8083
+backend_send      simuliertes Fremdsystem                         Port 8084
+mosquitto         MQTT-Broker                                     Port 1883
+mariadb           Datenbank                                       Port 3306
+adminer           Datenbank im Browser ansehen (optional)         Port 8091
 ```
 
-End-to-End ueber das Frontend (die API-Endpunkte sind seit Spring Security + JWT
-geschuetzt – zuerst einloggen, dann das Token als `Authorization: Bearer` mitschicken):
+Wer lieber ohne Compose baut, kann ein einzelnes Backend-Image auch direkt bauen:
 
 ```bash
-# 1) Einloggen und Token merken (Demo-Konto)
+docker build -f Dockerfile.java --build-arg MODULE=backend_receive .
+```
+
+## Prerequisites
+
+- Docker und Docker Compose — reicht allein für den Quickstart
+- Java 21, falls die Backends ohne Docker laufen sollen
+- Node.js 20 oder neuer, falls am Frontend entwickelt wird
+- Maven muss **nicht** installiert werden, der Maven Wrapper (`./mvnw`) liegt im Repo
+- Für Karte, Fußweg und VRR-Abfahrten braucht die App eine Internetverbindung
+  (OpenStreetMap, Esri, OSRM, VRR-EFA). Ohne Netz greifen dokumentierte Fallbacks.
+
+## Installation and Setup
+
+1. Repository klonen.
+2. Den Projekt-Hauptordner als Maven-Projekt in der IDE öffnen — die Wurzel-`pom.xml`
+   klammert `backend_receive` und `backend_send` zusammen.
+3. Einmal `docker compose up --build` laufen lassen und prüfen, ob
+   `http://localhost:8090` erscheint.
+4. Mit dem Demo-Konto anmelden oder ein eigenes Konto registrieren.
+5. Für die Entwicklung ohne Docker: Mosquitto und (optional) MariaDB starten,
+   sonst fällt `backend_receive` auf H2 zurück und die MQTT-Verbindung schlägt fehl.
+
+> [!IMPORTANT]
+> `app.jwt.secret` in `backend_receive/src/main/resources/application.properties` hat
+> einen Standardwert, der ausdrücklich nur für die Entwicklung gedacht ist. In einem
+> echten Betrieb muss er über die Umgebungsvariable `APP_JWT_SECRET` gesetzt werden.
+
+## Running the Project
+
+### Alles zusammen
+
+```bash
+docker compose up --build
+```
+
+### Nur die Backends, ohne Docker
+
+```bash
+./mvnw -pl backend_receive spring-boot:run   # Login, Campus, Pinnwand, Mensa (8083)
+./mvnw -pl backend_send spring-boot:run      # Fremdsystem/Simulation (8084)
+```
+
+Ein MQTT-Broker muss dafür erreichbar sein, sonst funktioniert die Simulation nicht:
+
+```bash
+docker compose up mosquitto
+```
+
+### Frontend im Dev-Modus
+
+```bash
+cd frontend
+npm install
+npm run dev      # http://localhost:8090
+```
+
+Der Vite-Dev-Server übernimmt dabei die Rolle von Nginx und leitet `/api/simulation`
+an Port 8084 und alles andere unter `/api` an Port 8083 weiter.
+
+### Tests
+
+```bash
+./mvnw verify                      # kompletter Build inkl. aller Backend-Tests
+./mvnw -pl backend_receive test    # nur das Hauptbackend
+cd frontend && npm test            # Node-eigener Test-Runner, ohne Zusatzbibliothek
+```
+
+Insgesamt sichern **97 automatische Tests** das Projekt ab: 60 in `backend_receive`
+(Auth/JWT, Rollenrechte über den echten HTTP-Stack, Reservierungsregeln, Persistenz,
+Adapter, Observer), 10 in `backend_send` (Factory, MQTT-Publish, provozierter
+VRR-Ausfall) und 27 im Frontend.
+
+### Ein Durchlauf per curl
+
+Die API ist seit Spring Security + JWT geschützt — also erst einloggen, dann das Token
+als `Authorization: Bearer` mitschicken:
+
+```bash
+# 1) Einloggen und Token merken
 TOKEN=$(curl -s -X POST http://localhost:8090/api/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"student@fh-dortmund.de","passwort":"passwort123"}' \
   | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
 
-# 2) Campus-Karte lesen (mit Token)
+# 2) Campus-Karte lesen
 curl http://localhost:8090/api/campus/karte -H "Authorization: Bearer $TOKEN"
 
-# 3) Raumreservierung speichern
+# 3) Raum reservieren
 curl -X POST http://localhost:8090/api/campus/reservierungen \
   -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"raumId":"g40-labor105","reserviertVon":"Test Student","von":"12:00","bis":"13:00"}'
 
-# 4) Pinwand-Post speichern
+# 4) Pinnwand-Post anlegen
 curl -X POST http://localhost:8090/api/pinwand/posts \
   -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"autor":"Test Student","rolle":"Student","kategorie":"Lerngruppe","titel":"React-Test","inhalt":"Pinwand-Test"}'
@@ -244,21 +185,13 @@ curl -X POST http://localhost:8090/api/pinwand/posts \
 curl -X POST http://localhost:8090/api/simulation/start
 curl http://localhost:8090/api/mensa/historie -H "Authorization: Bearer $TOKEN"
 
-# 6) Danach den letzten via MQTT empfangenen VRR-Snapshot lesen
+# 6) Den zuletzt über MQTT empfangenen VRR-Snapshot lesen
 curl http://localhost:8090/api/transit/abfahrten -H "Authorization: Bearer $TOKEN"
 ```
 
-## Datenbank Anzeigen
+### In die Datenbank schauen
 
-### Einfach: im Browser mit Adminer (empfohlen)
-
-Kein Konsolen-Befehl noetig. Nach `docker compose up --build` im Browser oeffnen:
-
-```text
-http://localhost:8091
-```
-
-Login:
+Am bequemsten über Adminer unter `http://localhost:8091`:
 
 ```text
 System:    MySQL / MariaDB
@@ -268,85 +201,122 @@ Passwort:  vcpass
 Datenbank: virtualcollege
 ```
 
-Dann links auf eine Tabelle klicken (`benutzerkonto`, `gespeicherte_reservierung`,
-`gespeicherter_pinwand_post`, `gespeichertes_gericht`) und die Zeilen ansehen –
-oder oben eigene SQL-Abfragen ausfuehren.
-
-### Alternativ: ueber die Konsole
+Interessante Tabellen sind `benutzerkonto`, `gespeicherte_reservierung`,
+`gespeicherter_pinwand_post` und `gespeichertes_gericht`. Wer die Konsole bevorzugt:
 
 ```bash
-# Tabellen anzeigen
 docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege -e 'SHOW TABLES'
 
-# Reservierungen
 docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
   -e 'SELECT id, raum_name, reserviert_von, von, bis, status FROM gespeicherte_reservierung ORDER BY id DESC LIMIT 5'
-
-# Pinwand
-docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
-  -e 'SELECT id, autor, rolle, kategorie, titel, likes FROM gespeicherter_pinwand_post ORDER BY id DESC LIMIT 5'
-
-# Mensa-Historie
-docker compose exec -T mariadb mariadb -u vcuser -pvcpass virtualcollege \
-  -e 'SELECT id, name, preis, empfangen_am FROM gespeichertes_gericht ORDER BY id DESC LIMIT 5'
 ```
 
-## Projektstruktur
+## Project Structure
 
 ```text
-backend_receive/    Hauptbackend (Port 8083), Pakete:
-                      campus/      Campus-Karte, Raeume, Reservierungen (Fassade)
-                      pinwand/     Posts, Likes, Benachrichtigungen (Observer)
-                      nutzer/      Nutzer + Student/Betreuer/Verwaltung (Vererbung)
-                      auth/        Login/Registrierung, Spring Security + JWT, Passwort-Hashing (PBKDF2)
-                      mensa/       Speiseplan + MQTT-Empfang (Adapter)
-                      transit/     via MQTT empfangene VRR-Abfahrten
-                      persistenz/  JPA-Entities + Repositories (Datenbank)
-backend_send/       Simuliertes Fremdsystem (Port 8084), Paket:
-                      simulation/  DatenGenerator (Factory) + MqttSender (publish)
-frontend/           React/Vite-App plus Nginx-Proxy (Port 8090)
-mosquitto/          MQTT-Broker-Konfiguration
-docs/erklaerung.html DIE komplette Doku in EINER Datei: Konzepte, Diagramme,
-                     Praktikums-Nachweis, Compliance UND Code-Rundgang (Block E)
-PRAESENTATION.md    Spickzettel + Ablauf fuer die Abschlusspraesentation
-unterlagen/         Lernmaterial & Alt-Dateien (Folien-PDF, Kanban-PDFs, altes OOD)
-docker-compose.yml  Ein-Knopf-Start: 5 App-Container + Adminer (DB-Ansicht)
+swt26-Virtual-College/
+├── pom.xml                     # Eltern-POM, klammert beide Backend-Module
+├── backend_receive/            # Application Server (Port 8083)
+│   ├── pom.xml
+│   └── src/main/java/swt2/
+│       ├── campus/             # Karte, Räume, Reservierungen (Fassade)
+│       ├── pinwand/            # Posts, Likes, Benachrichtigungen (Observer)
+│       ├── nutzer/             # Nutzer + Student/Betreuer/Verwaltung (Vererbung)
+│       ├── auth/               # Login, Spring Security + JWT, PBKDF2-Hashing
+│       ├── mensa/              # Speiseplan + MQTT-Empfang (Adapter)
+│       ├── transit/            # per MQTT empfangene VRR-Abfahrten
+│       └── persistenz/         # JPA-Entities und Repositories
+├── backend_send/               # simuliertes Fremdsystem (Port 8084)
+│   ├── pom.xml
+│   └── src/main/java/swt2/
+│       └── simulation/         # DatenGenerator (Factory) + MqttSender
+├── frontend/                   # React/Vite-App, im Container hinter Nginx (Port 8090)
+├── mosquitto/                  # Konfiguration des MQTT-Brokers
+├── docker-compose.yml          # Ein-Knopf-Start für alle Container
+├── Dockerfile.java             # Container-Build für ein ausgewähltes Maven-Modul
+├── ANFORDERUNGEN.md            # Product Backlog: Epics, User Stories, Akzeptanzkriterien
+├── docs/                       # Projektdokumentation als HTML
+│   ├── erklaerung.html         # Hauptdoku: Konzepte, Diagramme, Compliance
+│   ├── code-lesen.html         # Kerndateien Zeile für Zeile erklärt
+│   ├── code-verstehen.html
+│   └── kritik.html
+├── unterlagen/                 # Lernmaterial und Altstände (Folien, Kanban, altes OOD)
+├── .github/ISSUE_TEMPLATE/     # Vorlagen für User Stories und Bug Reports
+├── .github/PULL_REQUEST_TEMPLATE.md
+└── .github/workflows/          # Pre-Merge-Checks und Release
 ```
 
-## Echte Karte, Navigation und Live-ÖPNV
+## Karte, Navigation und Live-ÖPNV
 
-- `CampusService` liefert reale WGS84-Koordinaten des Campus Emil-Figge-Straße 38–44.
-- Leaflet zeigt OpenStreetMap oder Esri World Imagery; die Quellenangabe bleibt sichtbar.
-- „Meine Position“ nutzt ausschließlich die Browser-Geolocation nach Zustimmung. Die Position wird nicht im Backend gespeichert.
-- „Fußweg zum Raum“ nutzt einen öffentlichen OSRM-Fußgänger-Router und zeichnet Route, Distanz, Dauer und Richtungspfeile.
-- `backend_send` fragt beim Start der Simulation den VRR-EFA-Abfahrtsmonitor für „Dortmund Universität S“ ab. Danach läuft der Datensatz über Factory → MQTT → `backend_receive` → REST. Ist VRR nicht erreichbar, erscheint ein klar gekennzeichneter Offline-Fallback.
-- Ist das Leaflet-CDN nicht erreichbar, bleibt die bisherige lokale Campus-Skizze als Fallback bedienbar.
+Ein paar Dinge, die bewusst gegen echte Dienste laufen und deshalb Erklärung verdienen:
 
-Externe Dienste benötigen Internet und sind Best-Effort-Dienste ohne Verfügbarkeitsgarantie. Für eine produktive App würden Tiles und Routing über vertraglich abgesicherte bzw. selbst betriebene Dienste laufen.
+- `CampusService` liefert die realen WGS84-Koordinaten des Campus
+  Emil-Figge-Straße 38–44.
+- Leaflet zeigt wahlweise OpenStreetMap oder Esri World Imagery; die Quellenangabe
+  bleibt sichtbar.
+- „Meine Position" nutzt ausschließlich die Browser-Geolocation und erst nach
+  Zustimmung. Die Position wird **nicht** im Backend gespeichert.
+- „Fußweg zum Raum" fragt einen öffentlichen OSRM-Fußgänger-Router an und zeichnet
+  Route, Distanz, Dauer und Richtungspfeile.
+- `backend_send` holt beim Start der Simulation den VRR-EFA-Abfahrtsmonitor für
+  „Dortmund Universität S". Der Datensatz läuft dann über Factory → MQTT →
+  `backend_receive` → REST. Ist VRR nicht erreichbar, erscheint ein klar
+  gekennzeichneter Offline-Fallback.
+- Fällt das Leaflet-CDN aus, bleibt die lokale Campus-Skizze als Fallback bedienbar.
 
-Die komplette Lern-Dokumentation steht in **einer** Datei:
+Diese externen Dienste sind Best-Effort und ohne Verfügbarkeitsgarantie. Für eine
+produktive App würden Tiles und Routing über vertraglich abgesicherte oder selbst
+betriebene Dienste laufen.
 
-- [docs/erklaerung.html](docs/erklaerung.html) — in 5 Bloecken: **A** Konzepte
-  (Verteilungsdiagramm, MQTT, REST, …) · **B** Praktikums-Stand · **C** Betrieb &
-  Umsetzung (Docker, Auth/Rollen, Karte) · **D** Nachweise (97 Tests, alle 8 EPICs,
-  Praktikums-Aufgaben 1–4, **Compliance**) · **E** Code-Rundgang fuer Einsteiger
-  (Ordnerbaum, 4 Datenfluesse, jede Klasse Paket fuer Paket, Glossar).
-  (`docs/code-verstehen.html` leitet nur noch dorthin weiter.)
+## Software Development Lifecycle
 
-> **Tests:** **97 automatische Tests** sichern das Projekt ab – 60 in
-> `backend_receive`, 10 in `backend_send` (`./mvnw test`) und 27 im Frontend
-> (`cd frontend && npm test`). Details: erklaerung.html, Kapitel 21.
+So arbeiten wir im Repository:
 
-## Praesentationsfluss
+1. Jede Aufgabe entsteht als GitHub-Issue aus den Vorlagen in `.github/ISSUE_TEMPLATE/`
+   und landet auf dem Kanban-Board „Virtual College".
+2. Umfang, Akzeptanzkriterien und Zuständigkeit klären wir im Issue, nicht im Chat.
+   Die Akzeptanzkriterien stehen zusätzlich in [ANFORDERUNGEN.md](ANFORDERUNGEN.md).
+3. Entwickelt wird auf einem Branch pro Issue. Vor dem Push muss `./mvnw verify`
+   grün sein.
+4. Pull Request mit der PR-Vorlage öffnen, Review abwarten, Feedback einarbeiten.
+5. Merge nach `main` erst, wenn die Pre-Merge-Checks durch sind — der Workflow baut
+   alle Maven-Module und zusätzlich die deploybaren Container-Images.
+6. Der Release-Workflow paketiert anschließend die Module, die sich fürs
+   Container-Publishing angemeldet haben.
 
-1. Folien: Verteilungsdiagramm und OOD kurz erklaeren.
-2. `docker compose up --build` starten.
-3. `http://localhost:8090` zeigen.
-4. Campus-Karte oeffnen und einen Raum reservieren.
-5. Pinwand-Post erstellen und liken.
-6. Live-Daten oeffnen und Simulation starten.
-7. Datenbank zeigen: entweder Adminer (`http://localhost:8091`) oder direkt per Konsole.
+Bestehende Funktionen ändern wir nicht nebenbei mit: Wenn etwas Umgebautes nicht zur
+User Story gehört, wird ein eigenes Issue daraus.
 
-Den kompakten Spickzettel mit Ablauf, Mustern und Pruefungsfragen findest du in
-[PRAESENTATION.md](PRAESENTATION.md). Die ausfuehrliche Erklaerung steht in
-[docs/erklaerung.html](docs/erklaerung.html), besonders Kapitel 15 bis 17.
+## Adding More Modules
+
+1. Neuen Modulordner mit eigener `pom.xml` anlegen.
+2. Das Modul in der Wurzel-`pom.xml` unter `<modules>` eintragen.
+3. `./mvnw verify` im Hauptordner laufen lassen.
+4. Wenn es ein deploybarer Dienst ist, muss dabei ein startfähiges Spring-Boot-Jar
+   herauskommen.
+5. Soll das Modul auch in Docker laufen, einen Service in `docker-compose.yml`
+   ergänzen — `Dockerfile.java` baut jedes Modul über `--build-arg MODULE=<name>`.
+
+Soll `release.yaml` ein Container-Image veröffentlichen, gehört diese Eigenschaft in die
+`pom.xml` des Moduls:
+
+```xml
+<properties>
+    <container.image.enabled>true</container.image.enabled>
+</properties>
+```
+
+Der Release-Workflow findet die deploybaren Module über die Maven-Metadaten, es muss
+also keine Ordnerliste in GitHub Actions gepflegt werden. Aktuell hat sich noch keines
+unserer Module dafür angemeldet — wir bauen die Images über `docker-compose.yml`.
+
+## Dokumentation
+
+Die ausführliche Projektdokumentation liegt in [docs/](docs/) und wird am besten im
+Browser geöffnet:
+
+- [docs/erklaerung.html](docs/erklaerung.html) — die Hauptdoku mit Konzepten,
+  Diagrammen, Praktikums-Nachweis und Compliance
+- [docs/code-lesen.html](docs/code-lesen.html) — die Kerndateien Zeile für Zeile
+- [docs/code-verstehen.html](docs/code-verstehen.html) — die Ideen dahinter
+- [docs/kritik.html](docs/kritik.html) — was wir selbst kritisch sehen

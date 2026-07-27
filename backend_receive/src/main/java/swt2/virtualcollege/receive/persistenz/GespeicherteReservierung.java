@@ -7,38 +7,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/*
- * Persistente Raumreservierung.
- *
- * Das macht den Live-Campus praktisch nutzbar: Ein Student kann im
- * Frontend einen Raum reservieren, und die Reservierung wird in der
- * Datenbank gespeichert. Das ist bewusst minimal, aber schon ein echter
- * End-to-End-Use-Case.
- */
+/** Persistente Raumreservierung eines Nutzers. */
 @Entity
 public class GespeicherteReservierung {
 
-    // Automatische Datenbank-ID.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Raum und Anzeigeinformationen.
     private String raumId;
     private String raumName;
 
-    // Reservierungsdaten.
     private String reserviertVon;
     private String von;
     private String bis;
     private String status;
     private Instant erstelltAm;
 
-    // Leerer Konstruktor fuer JPA.
+    // Von JPA benoetigt.
     protected GespeicherteReservierung() {
     }
 
-    // Fachlicher Konstruktor fuer neue Reservierungen.
     public GespeicherteReservierung(String raumId, String raumName, String reserviertVon,
                                     String von, String bis, String status, Instant erstelltAm) {
         this.raumId = raumId;

@@ -10,13 +10,10 @@ import org.junit.jupiter.api.Test;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 
-/*
- * Unit-Tests fuer den JwtDienst (kein Spring noetig): Erzeugen/Pruefen,
- * abgelaufene und verfaelschte Tokens.
- */
+/** Erzeugen und Pruefen von Token, inklusive abgelaufener und verfaelschter Token. */
 class JwtDienstTest {
 
-    // Fuer HS256 muss der Schluessel mindestens 32 Zeichen (256 Bit) lang sein.
+    // HS256 verlangt mindestens 32 Zeichen.
     private static final String SECRET = "test-geheimer-schluessel-mindestens-32z!";
 
     private Benutzerkonto konto() {
@@ -30,11 +27,11 @@ class JwtDienstTest {
         String token = dienst.erzeuge(konto());
         Claims inhalt = dienst.pruefe(token);
 
-        assertThat(token.split("\\.")).hasSize(3);          // Kopf.Inhalt.Signatur
+        assertThat(token.split("\\.")).hasSize(3);
         assertThat(inhalt.getSubject()).isEqualTo("a@b.de");
         assertThat(inhalt.get("name", String.class)).isEqualTo("Alice");
         assertThat(inhalt.get("rolle", String.class)).isEqualTo("Student");
-        assertThat(inhalt.getId()).isNotBlank();            // jti fuer die Sperrliste
+        assertThat(inhalt.getId()).isNotBlank();
         assertThat(inhalt.getExpiration()).isAfter(inhalt.getIssuedAt());
     }
 
@@ -50,7 +47,7 @@ class JwtDienstTest {
 
     @Test
     void abgelaufenesTokenWirdAbgelehnt() {
-        // Gueltigkeit -1 Minute -> das Token ist sofort abgelaufen.
+        // Negative Gueltigkeit: das Token ist sofort abgelaufen.
         JwtDienst dienst = new JwtDienst(SECRET, -1);
         String token = dienst.erzeuge(konto());
 
@@ -60,8 +57,8 @@ class JwtDienstTest {
     @Test
     void verfaelschtesTokenWirdAbgelehnt() {
         JwtDienst dienst = new JwtDienst(SECRET, 60);
-        String[] teile = dienst.erzeuge(konto()).split("\\.");   // Kopf.Inhalt.Signatur
-        // Erstes Zeichen des Inhalts aendern -> die Signatur passt nicht mehr.
+        String[] teile = dienst.erzeuge(konto()).split("\\.");
+        // Ein geaendertes Zeichen im Inhalt macht die Signatur ungueltig.
         char erstes = teile[1].charAt(0);
         char neu = (erstes == 'A') ? 'B' : 'A';
         String verfaelscht = teile[0] + "." + neu + teile[1].substring(1) + "." + teile[2];

@@ -10,11 +10,9 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/*
- * AUTHENTIFIZIERUNG (PRODUKTIONS-VARIANTE) – Antwort bei fehlender BERECHTIGUNG (403).
- *
- * Der Nutzer IST angemeldet, darf aber diese Funktion nicht (z. B. eine
- * rollengeschuetzte Aktion). Wir liefern eine saubere deutsche JSON-Meldung.
+/**
+ * Antwort, wenn ein angemeldeter Nutzer eine Funktion aufruft, fuer die seine
+ * Rolle nicht ausreicht (403).
  */
 @Component
 public class RestZugriffVerweigert implements AccessDeniedHandler {

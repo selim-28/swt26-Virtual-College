@@ -1,10 +1,7 @@
 // Hauptkomponente: haelt den App-Zustand, spricht ueber die gemeinsame
-// API-Schicht mit den Backends und verdrahtet die Fachmodule.
-//
-// Die Ansichten selbst liegen - wie die Backend-Pakete (Vertical Slicing) -
-// in einem Ordner pro Fachthema:
-//   auth/    campus/    mensa/    pinwand/    transit/    einstellungen/
-// Gemeinsames (API, Formatierung, UI-Bausteine) liegt in gemeinsam/.
+// API-Schicht mit den Backends und verdrahtet die Fachmodule. Die Ansichten
+// liegen wie die Backend-Pakete in je einem Ordner pro Fachthema, Gemeinsames
+// in gemeinsam/.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { API, apiJson, gespeichertesKonto, merkeKonto, vergissKonto } from "./gemeinsam/api.js";
@@ -16,22 +13,19 @@ import PinwandView from "./pinwand/PinwandView.jsx";
 import DatenView from "./transit/DatenView.jsx";
 import EinstellungenView from "./einstellungen/EinstellungenView.jsx";
 
-// Persoenliche UI-Einstellungen (gehoeren NICHT zum Konto, nur zur Anzeige).
+// Persoenliche Anzeigeeinstellungen; sie gehoeren nicht zum Benutzerkonto.
 const START_PREFS = {
   standortTeilen: true,
   benachrichtigungen: true
 };
 
-// Hauptkomponente: haelt den App-Zustand und verdrahtet alle Teilansichten.
 export default function App() {
-  // Aktiver Navigationsbereich.
   const [view, setView] = useState("campus");
 
-  // Eingeloggtes Benutzerkonto (oder null = nicht eingeloggt).
+  // null bedeutet: nicht eingeloggt.
   const [konto, setKonto] = useState(gespeichertesKonto);
-  // Persoenliche UI-Einstellungen (Standort teilen, Benachrichtigungen).
   const [prefs, setPrefs] = useState(START_PREFS);
-  // Aus Konto + Einstellungen wird das "Profil", das Reservierungen/Posts nutzen.
+  // Konto und Einstellungen zusammen ergeben das Profil der Fachansichten.
   const profil = {
     name: konto?.name ?? "",
     rolle: konto?.rolle ?? "Student",
@@ -50,31 +44,29 @@ export default function App() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [status, setStatus] = useState("Bereit");
   const [busy, setBusy] = useState(false);
-  // Merkt sich, ob GERADE eine Ladung laeuft. Als Ref (nicht State), damit der
-  // Polling-Takt immer den aktuellen Wert sieht und Ladungen sich nicht ueberholen.
+  // Als Ref statt State, damit der Polling-Takt den aktuellen Wert sieht und
+  // sich Ladungen nicht ueberholen.
   const ladeLaeuftRef = useRef(false);
 
-  // Refs fuer die Benachrichtigung ueber neue Posts (US 4.3): Der Polling-Takt
-  // laeuft in einer alten Closure - ueber die Refs sieht er trotzdem immer die
-  // AKTUELLE Post-Liste und die AKTUELLEN Einstellungen.
+  // Der Polling-Takt laeuft in einer aelteren Closure; ueber die Refs sieht er
+  // trotzdem die aktuelle Beitragsliste und die aktuellen Einstellungen.
   const postsRef = useRef([]);
   const prefsRef = useRef(prefs);
   prefsRef.current = prefs;
 
-  // Posts-Liste zentral uebernehmen (State + Ref gemeinsam pflegen).
+  // Pflegt State und Ref gemeinsam.
   function uebernimmPosts(liste) {
     postsRef.current = liste;
     setPosts(liste);
   }
 
-  // Aus der Raum-ID wird das aktuell ausgewaehlte Raumobjekt.
   const selectedRoom = useMemo(
     () => campus.raeume.find((raum) => raum.id === selectedRoomId) ?? null,
     [campus.raeume, selectedRoomId]
   );
 
-  // Beim Start: gespeichertes Token pruefen. Ist es noch gueltig, bleibt man
-  // eingeloggt; sonst wird ausgeloggt. Danach (und bei jedem Login) Daten laden.
+  // Beim Start das gespeicherte Token pruefen: gueltig heisst eingeloggt bleiben
+  // und Daten laden, sonst abmelden.
   useEffect(() => {
     if (!konto) return;
     apiJson(API.authIch)
@@ -87,14 +79,13 @@ export default function App() {
         vergissKonto();
         setKonto(null);
       });
-    // Absicht: nur einmal beim Mounten pruefen.
+    // Bewusst nur einmal beim Mounten pruefen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // POLLING (letzte Meile zu EPIC 7): MQTT bringt frische Daten nur bis ins
-  // backend_receive. Das Frontend spricht HTTP und muss aktiv nachfragen. Statt
-  // den "Aktualisieren"-Knopf manuell zu druecken, fragt die App nun selbst in
-  // festen Abstaenden nach – aber nur eingeloggt und nur bei sichtbarem Tab.
+  // Automatische Aktualisierung: MQTT liefert frische Daten nur bis ins Backend,
+  // das Frontend fragt in festen Abstaenden nach - nur angemeldet und nur bei
+  // sichtbarem Tab.
   useEffect(() => {
     if (!konto) return undefined;
     const id = window.setInterval(() => {
@@ -105,12 +96,11 @@ export default function App() {
       });
       if (darf) ladeAlles({ stumm: true });
     }, POLL_INTERVALL_MS);
-    // Aufraeumen: Timer stoppen, wenn sich das Konto aendert (z.B. Logout).
+    // Timer stoppen, wenn sich das Konto aendert, etwa beim Logout.
     return () => window.clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [konto]);
 
-  // Login: Token holen, merken, Daten laden.
   async function login(email, passwort) {
     const daten = await apiJson(API.authLogin, {
       method: "POST",
@@ -123,7 +113,7 @@ export default function App() {
     await ladeAlles();
   }
 
-  // Registrieren: legt ein Konto an und loggt direkt ein.
+  // Legt ein Konto an und meldet direkt an.
   async function registrieren({ email, name, rolle, passwort }) {
     const daten = await apiJson(API.authRegister, {
       method: "POST",
@@ -136,7 +126,7 @@ export default function App() {
     await ladeAlles();
   }
 
-  // Logout: Token am Backend ungueltig machen und lokal vergessen.
+  // Macht das Token am Backend ungueltig und vergisst es lokal.
   function logout() {
     apiJson(API.authLogout, { method: "POST" }).catch(() => {});
     vergissKonto();
@@ -145,9 +135,8 @@ export default function App() {
     setStatus("Abgemeldet");
   }
 
-  // Laedt alle Daten, die die Startseite braucht.
-  // stumm=true = automatische Aktualisierung (Polling): ohne "Lade..."-Puls und
-  // ohne Fehlermeldung, damit sie im Hintergrund nicht stoert.
+  // Laedt alle Daten der Startseite. Mit stumm=true laeuft die automatische
+  // Aktualisierung ohne Ladeanzeige und ohne Fehlermeldung.
   async function ladeAlles({ stumm = false } = {}) {
     ladeLaeuftRef.current = true;
     if (!stumm) setBusy(true);
@@ -159,9 +148,7 @@ export default function App() {
         apiJson(API.transit),
         apiJson(API.historie)
       ]);
-      // US 4.3: VOR dem Uebernehmen pruefen, ob neue Beitraege dazugekommen
-      // sind - registrierte Beobachter (Schalter "Neue Pinwand-Posts melden")
-      // bekommen dann eine 🔔-Meldung in der Statuszeile.
+      // US 4.3: vor dem Uebernehmen pruefen, ob neue Beitraege dazugekommen sind.
       const hinweis = neuerPostHinweis(
         postsRef.current, postData, prefsRef.current.benachrichtigungen);
 
@@ -174,8 +161,8 @@ export default function App() {
         ? `Automatisch aktualisiert (${new Date().toLocaleTimeString("de-DE")})`
         : "Daten geladen"));
     } catch (error) {
-      // Beim automatischen Aktualisieren NICHT mit Fehlern nerven – der naechste
-      // Takt versucht es ohnehin gleich wieder. Nur beim manuellen Laden zeigen.
+      // Beim automatischen Aktualisieren keine Fehlermeldung zeigen, der naechste
+      // Takt versucht es ohnehin erneut.
       if (!stumm) setStatus(`Fehler beim Laden: ${error.message}`);
     } finally {
       ladeLaeuftRef.current = false;
@@ -183,7 +170,7 @@ export default function App() {
     }
   }
 
-  // Startet das Fremdsystem, wartet kurz auf MQTT und aktualisiert danach alle Daten.
+  // Startet das Fremdsystem, wartet kurz auf MQTT und laedt danach neu.
   async function simulationStarten() {
     setBusy(true);
     setStatus("Simulation laeuft: Factory -> MQTT -> Adapter -> DB");
@@ -200,7 +187,6 @@ export default function App() {
     }
   }
 
-  // Speichert eine echte Raumreservierung im Backend.
   async function reservieren(event) {
     event.preventDefault();
     if (!selectedRoom) {
@@ -228,12 +214,10 @@ export default function App() {
     }
   }
 
-  // Speichert einen neuen Pinwand-Post in der Datenbank.
   async function postErstellen(event) {
     event.preventDefault();
-    // WICHTIG: das Formular-Element JETZT sichern. Nach einem "await" setzt React
-    // event.currentTarget auf null – ein spaeteres event.currentTarget.reset()
-    // wuerde sonst mit "Cannot read properties of null (reading 'reset')" abstuerzen.
+    // Das Formularelement jetzt sichern: nach einem await setzt React
+    // event.currentTarget auf null.
     const formEl = event.currentTarget;
     const form = new FormData(formEl);
     setBusy(true);
@@ -249,7 +233,7 @@ export default function App() {
           inhalt: form.get("inhalt")
         })
       });
-      formEl.reset();   // gesicherte Referenz benutzen (nicht event.currentTarget)
+      formEl.reset();
       uebernimmPosts(await apiJson(API.posts));
       setStatus("Post gespeichert und Pinwand aktualisiert");
     } catch (error) {
@@ -259,7 +243,6 @@ export default function App() {
     }
   }
 
-  // Like auf einen Post speichern und Liste neu laden.
   async function postLiken(id) {
     setBusy(true);
     try {
@@ -273,7 +256,7 @@ export default function App() {
     }
   }
 
-  // ADMIN: Pinwand-Post loeschen (das Backend erlaubt DELETE nur der Rolle Admin).
+  // Loeschen ist im Backend auf die Admin-Rolle beschraenkt.
   async function postLoeschen(id) {
     setBusy(true);
     try {
@@ -287,7 +270,6 @@ export default function App() {
     }
   }
 
-  // ADMIN: Reservierung loeschen.
   async function reservierungLoeschen(id) {
     setBusy(true);
     try {
@@ -301,10 +283,9 @@ export default function App() {
     }
   }
 
-  // Nur der Admin bekommt Verwaltungs-Funktionen (Loeschknoepfe) angezeigt.
+  // Nur der Admin sieht die Verwaltungsfunktionen.
   const istAdmin = konto?.rolle === "Admin";
 
-  // Nicht eingeloggt? Dann zeigen wir nur die Login-/Registrier-Seite.
   if (!konto) {
     return <AuthView onLogin={login} onRegister={registrieren} />;
   }

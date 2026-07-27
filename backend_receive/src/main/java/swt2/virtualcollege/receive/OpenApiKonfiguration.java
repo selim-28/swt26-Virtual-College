@@ -8,17 +8,11 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/*
- * Beschreibt die automatisch erzeugte Schnittstellen-Doku (OpenAPI/Swagger).
- *
- * springdoc liest alle REST-Controller aus und baut daraus die komplette
- * API-Uebersicht. Diese Klasse ergaenzt nur zwei Dinge:
- *   1. Titel/Beschreibung, damit die Doku nach unserem Projekt aussieht.
- *   2. Das JWT-Bearer-Schema, damit der "Authorize"-Knopf in der Oberflaeche
- *      unser Login-Token annimmt und man geschuetzte Endpunkte direkt
- *      ausprobieren kann (Token vorher ueber POST /api/auth/login holen).
- *
- * Aufrufbar unter:  /swagger-ui.html  (Oberflaeche)  und  /v3/api-docs (JSON).
+/**
+ * Ergaenzt die von springdoc erzeugte Schnittstellendokumentation um Titel,
+ * Beschreibung und das JWT-Bearer-Schema, damit geschuetzte Endpunkte direkt
+ * ueber die Oberflaeche ausprobiert werden koennen.
+ * Erreichbar unter /swagger-ui.html und /v3/api-docs.
  */
 @Configuration
 public class OpenApiKonfiguration {

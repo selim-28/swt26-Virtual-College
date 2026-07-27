@@ -14,15 +14,16 @@ import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
+/**
+ * Ausgehende MQTT-Verbindung: Kanal und Handler, ueber die dieses Backend
+ * seine Nachrichten an den Broker publiziert.
+ */
 @Configuration
 @EnableIntegration
 public class MqttSendConfig {
 
-    // WICHTIG: Punkt-Schreibweise, exakt wie in application.properties
-    // (mqtt.broker.url / mqtt.client.id). Mit Bindestrich ("mqtt.client-id")
-    // findet Spring den Wert NICHT und die Anwendung stuerzt beim Start ab -
-    // derselbe Fehler war schon einmal in MqttReceiveConfig (backend_receive)
-    // und ist dort am 03.07. behoben worden.
+    // Schluessel exakt in Punkt-Schreibweise wie in application.properties;
+    // mit Bindestrich findet Spring den Wert nicht und der Start schlaegt fehl.
     @Value("${mqtt.broker.url}")
     private String brokerUrl;
 

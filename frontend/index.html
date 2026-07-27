@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Digitaler Campus</title>
-    <!-- Leaflet zeichnet die echte 2D-Karte. Falls das CDN offline ist,
-         zeigt React automatisch weiterhin die lokale Campus-Fallbackkarte. -->
+    <!-- Leaflet zeichnet die Karte. Ist das CDN nicht erreichbar,
+         schaltet die App auf die lokale Ersatzkarte um. -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -18,10 +18,9 @@
     ></script>
   </head>
   <body>
-    <!-- React rendert die komplette Anwendung in dieses Element. -->
+    <!-- React rendert die Anwendung in dieses Element. -->
     <div id="root"></div>
 
-    <!-- Vite startet hier den React-Code. -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

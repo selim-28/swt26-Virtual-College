@@ -16,15 +16,10 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
-/*
- * SCHRITT 2 (MQTT) – der EMPFAENGER in backend_receive.
- *
- * Verbindet sich mit dem Mosquitto-Broker und ABONNIERT (subscribe) das Topic.
- * Im Verteilungsdiagramm ist das der Pfeil "Broker --MQTT subscribe--> App".
- *
- * Wenn eine Speiseplan-Nachricht ankommt, benutzt er das ADAPTER-Muster:
- * MqttRohNachricht  ->  MqttDatenAdapter  ->  sauberer Speiseplan, der dann
- * im SpeiseplanSpeicher landet.
+/**
+ * Abonniert das MQTT-Topic und bildet damit im Verteilungsdiagramm den Pfeil
+ * "Broker --MQTT subscribe--> App" ab. Eingehende Speiseplaene laufen ueber den
+ * MqttDatenAdapter, Abfahrten ueber den AbfahrtsSpeicher.
  */
 @Component
 public class MqttEmpfaenger implements MqttCallback {
@@ -38,10 +33,8 @@ public class MqttEmpfaenger implements MqttCallback {
     @Value("${mqtt.topic}")
     private String topic;
 
-    // Hierhin legen wir den empfangenen Speiseplan (gemeinsame Bean).
     private final SpeiseplanSpeicher speicher;
 
-    // Schritt 3: speichert den empfangenen Speiseplan zusaetzlich dauerhaft.
     private final swt2.virtualcollege.receive.persistenz.SpeisearchivService archiv;
     private final swt2.virtualcollege.receive.transit.AbfahrtsSpeicher abfahrtsSpeicher;
 
@@ -55,6 +48,10 @@ public class MqttEmpfaenger implements MqttCallback {
         this.abfahrtsSpeicher = abfahrtsSpeicher;
     }
 
+    /**
+     * Verbindet nach dem Start in einem Hintergrund-Thread mit Wiederholung,
+     * damit der Start nicht blockiert, wenn der Broker noch nicht bereit ist.
+     */
     @PostConstruct
     public void starteVerbindung() {
         Thread t = new Thread(this::verbindeUndAbonniere, "mqtt-empfaenger-connect");
@@ -66,12 +63,12 @@ public class MqttEmpfaenger implements MqttCallback {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 client = new MqttClient(brokerUrl, clientId, new MemoryPersistence());
-                client.setCallback(this);          // "ich" reagiere auf Nachrichten
+                client.setCallback(this);
                 MqttConnectOptions opts = new MqttConnectOptions();
                 opts.setAutomaticReconnect(true);
                 opts.setCleanSession(true);
                 client.connect(opts);
-                client.subscribe(topic);            // Topic abonnieren
+                client.subscribe(topic);
                 log.info("[MQTT-Empfaenger] verbunden mit {} und Topic '{}' abonniert",
                         brokerUrl, topic);
                 return;
@@ -88,22 +85,18 @@ public class MqttEmpfaenger implements MqttCallback {
         }
     }
 
-    /*
-     * Wird vom Paho-Client aufgerufen, sobald eine Nachricht ankommt.
-     * Speiseplan-Nachrichten laufen durch den Adapter; Abfahrts-Nachrichten
-     * werden an den fachlich getrennten AbfahrtsSpeicher delegiert.
+    /**
+     * Callback des Paho-Clients: erkennt den Nachrichtentyp und delegiert an das
+     * zustaendige Fachmodul.
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) {
         String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
         log.info("[MQTT-Empfaenger] Nachricht erhalten: {}", payload);
-        // Nachrichtentyp erkennen und an das passende Vertical Slice delegieren.
         if (payload.contains("\"typ\":\"speiseplan\"")) {
-            // ADAPTER-Muster: rohe Nachricht -> sauberer Speiseplan.
             MqttDatenAdapter adapter = new MqttDatenAdapter(new MqttRohNachricht(payload));
             Speiseplan speiseplan = adapter.holeSpeiseplan();
             speicher.speichere(speiseplan);
-            // Schritt 3: zusaetzlich dauerhaft in der Datenbank ablegen.
             archiv.speichere(speiseplan);
             log.info("[MQTT-Empfaenger] Speiseplan aktualisiert ({} Gerichte)",
                     speiseplan.gerichte().size());
@@ -113,7 +106,6 @@ public class MqttEmpfaenger implements MqttCallback {
         }
     }
 
-    // Muss vorhanden sein (Teil des MqttCallback-Vertrags), hier nichts zu tun.
     @Override
     public void connectionLost(Throwable cause) {
         log.warn("[MQTT-Empfaenger] Verbindung verloren: {}", cause == null ? "?" : cause.getMessage());
@@ -121,7 +113,7 @@ public class MqttEmpfaenger implements MqttCallback {
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
-        // Nur fuer Sender relevant – hier leer.
+        // Nur fuer Sender relevant.
     }
 
     @PreDestroy
@@ -131,7 +123,7 @@ public class MqttEmpfaenger implements MqttCallback {
                 client.disconnect();
             }
         } catch (Exception ignored) {
-            // Beim Herunterfahren bewusst ignorieren.
+            // Fehler beim Herunterfahren sind unerheblich.
         }
     }
 }

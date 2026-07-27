@@ -8,19 +8,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/*
- * AUTHENTIFIZIERUNG – die REST-Schnittstelle (die "Tuer" fuer das Frontend).
- *
- * Endpunkte (alle unter /api/auth):
- *   POST /registrieren  -> neues Konto anlegen (und direkt einloggen)
- *   POST /login         -> einloggen, JWT-Token erhalten
- *   GET  /ich           -> "wer bin ich?" (Token im Header Authorization: Bearer)
- *   POST /logout        -> aktuelles Token sperren
- *
- * PRODUKTIONS-VARIANTE: Login/Registrieren geben einen signierten JWT-Ausweis
- * zurueck. Das Frontend speichert ihn und schickt ihn bei jeder geschuetzten
- * Anfrage im Header "Authorization: Bearer <token>" mit. Ob eine Anfrage
- * durchgelassen wird, entscheidet Spring Security (siehe SecurityConfig).
+/**
+ * REST-Schnittstelle der Authentifizierung unter /api/auth:
+ * registrieren, login, ich und logout. Login und Registrierung liefern ein JWT,
+ * das das Frontend als "Authorization: Bearer &lt;token&gt;" mitschickt.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -45,10 +36,9 @@ public class AuthController {
         return antwort(sitzung);
     }
 
-    /*
-     * "Wer bin ich?" – Der JwtAuthFilter hat das Token bereits geprueft und den
-     * angemeldeten Nutzer bereitgestellt. Wir geben das mitgeschickte Token
-     * unveraendert zurueck, damit das Frontend seinen gespeicherten Ausweis behaelt.
+    /**
+     * Liefert den angemeldeten Nutzer. Der JwtAuthFilter hat das Token bereits
+     * geprueft; es wird unveraendert zurueckgegeben, damit das Frontend es behaelt.
      */
     @GetMapping("/ich")
     public NutzerAntwort ich(@AuthenticationPrincipal AngemeldeterNutzer nutzer,
@@ -60,8 +50,6 @@ public class AuthController {
     public void logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         service.abmelden(bearerToken(authHeader));
     }
-
-    // ---- Hilfsfunktionen ----
 
     private NutzerAntwort antwort(AuthService.Sitzung sitzung) {
         Benutzerkonto k = sitzung.konto();
@@ -76,15 +64,13 @@ public class AuthController {
         return null;
     }
 
-    // ---- Anfrage-/Antwort-Formate (JSON) ----
-
     public record RegistrierAnfrage(String email, String name, String rolle, String passwort) {
     }
 
     public record LoginAnfrage(String email, String passwort) {
     }
 
-    // Antwort enthaelt NIE das Passwort/den Hash – nur, was das Frontend braucht.
+    /** Antwort an das Frontend; enthaelt bewusst weder Passwort noch Hash. */
     public record NutzerAntwort(String token, String email, String name, String rolle) {
     }
 }

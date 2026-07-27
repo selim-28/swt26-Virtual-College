@@ -3,14 +3,9 @@ package swt2.virtualcollege.receive.campus;
 import swt2.virtualcollege.receive.nutzer.Nutzerverwaltung;
 import swt2.virtualcollege.receive.pinwand.Pinwand;
 
-/*
- * "DigitalerCampus" (Kapitel 13): die WURZEL/FASSADE des Systems.
- * Sie "besteht aus" den drei Subsystemen Karte, Pinwand und Nutzerverwaltung
- * und reicht Anfragen an sie weiter.
- *
- * Im Diagramm:  DigitalerCampus *-- LiveCampusKarte
- *               DigitalerCampus *-- Pinwand
- *               DigitalerCampus *-- Nutzerverwaltung
+/**
+ * Fassade des Systems: buendelt die Subsysteme Karte, Pinwand und
+ * Nutzerverwaltung hinter einem gemeinsamen Einstiegspunkt.
  */
 public class DigitalerCampus {
 

@@ -6,19 +6,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/*
- * EPIC 5 – Mensa-Informationen.
- *   US 5.1 "Aktuellen Mensa-Speiseplan anzeigen" (Issue #5)
- *
- * Der SpeiseplanSpeicher haelt den zuletzt ueber MQTT empfangenen Speiseplan
- * fuer die REST-Schnittstelle bereit. Wichtig fuer das Akzeptanzkriterium
- * "Ein Ausfall externer Daten bringt die Anwendung nicht zum Absturz":
- * Auch OHNE empfangene Daten antwortet der Speicher kontrolliert (hatDaten()
- * = false, der Controller liefert dann gekennzeichnete Demo-Daten).
+/**
+ * US 5.1 (Issue #5): Der Speicher haelt den zuletzt empfangenen Speiseplan bereit
+ * und meldet kontrolliert, wenn noch keine Daten eingegangen sind.
  */
 class SpeiseplanSpeicherTest {
 
-    // Vor dem ersten MQTT-Empfang: kontrolliert "keine Daten" melden.
     @Test
     void ohneEmpfangeneDatenMeldetErKeineDaten() {
         SpeiseplanSpeicher speicher = new SpeiseplanSpeicher();
@@ -27,8 +20,7 @@ class SpeiseplanSpeicherTest {
         assertThat(speicher.getLetzterSpeiseplan()).isNull();
     }
 
-    // US 5.1: "Neu empfangene Fremddaten werden automatisch verarbeitet" -
-    // der zuletzt empfangene Plan ersetzt den alten.
+    // US 5.1: Der zuletzt empfangene Plan ersetzt den vorherigen.
     @Test
     void neuEmpfangenerSpeiseplanErsetztDenAlten() {
         SpeiseplanSpeicher speicher = new SpeiseplanSpeicher();

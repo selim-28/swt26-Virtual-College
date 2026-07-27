@@ -3,10 +3,7 @@ package swt2.virtualcollege.receive.campus;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * "Gebaeude" (Kapitel 13): ein Gebaeude besteht aus Raeumen.
- * Im Diagramm:  Gebaeude *-- Raum
- */
+/** Ein Gebaeude und die Raeume, aus denen es besteht. */
 public class Gebaeude {
 
     private final String name;

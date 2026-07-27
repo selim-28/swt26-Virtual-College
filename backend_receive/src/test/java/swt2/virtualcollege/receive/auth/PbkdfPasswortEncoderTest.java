@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/*
- * Unit-Tests fuer die Passwort-Bruecke zu Spring Security (PBKDF2 + Salt).
- */
+/** Passwort-Hashing ueber die Spring-Security-Schnittstelle (PBKDF2 mit Salt). */
 class PbkdfPasswortEncoderTest {
 
     private final PasswordEncoder encoder = new PbkdfPasswortEncoder();
@@ -28,7 +26,7 @@ class PbkdfPasswortEncoderTest {
     void hashEnthaeltNiemalsDasKlartextPasswort() {
         String hash = encoder.encode("geheim123");
         assertThat(hash).doesNotContain("geheim123");
-        assertThat(hash).contains(":");   // Format "salt:hash"
+        assertThat(hash).contains(":");
     }
 
     @Test

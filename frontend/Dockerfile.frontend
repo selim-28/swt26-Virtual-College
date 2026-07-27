@@ -1,27 +1,21 @@
-# Bauphase: Node installiert React-Abhaengigkeiten und erzeugt statische Dateien.
+# Bauphase: Node installiert die Abhaengigkeiten und baut die React-App.
 FROM node:22-alpine AS build
 
-# Arbeitsordner im Container.
 WORKDIR /app
 
-# Erst Paketdateien kopieren, damit Docker den npm-install-Schritt cachen kann.
+# Erst die Paketdateien kopieren, damit Docker den Installationsschritt cachen kann.
 COPY package*.json ./
 
-# Abhaengigkeiten installieren.
 RUN npm install
 
-# Danach den eigentlichen Frontend-Code kopieren.
 COPY index.html ./index.html
 COPY src ./src
 
-# React/Vite baut in den Ordner /app/dist.
 RUN npm run build
 
-# Laufzeitphase: Nginx liefert die gebauten Dateien aus.
+# Laufzeitphase: Nginx liefert die gebauten Dateien aus und proxyt die Backends.
 FROM nginx:1.27-alpine
 
-# Eigene Proxy-Konfiguration fuer die Backends.
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Gebaute React-App in den Nginx-Webordner legen.
 COPY --from=build /app/dist /usr/share/nginx/html

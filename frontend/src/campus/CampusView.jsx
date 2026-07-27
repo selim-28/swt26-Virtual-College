@@ -1,5 +1,4 @@
-// Modul "campus", Teil 2: die Seite.
-// Campus-Seite mit Karte (links) und Raumdetails/Reservierung (rechts).
+// Modul "campus", Teil 2: die Seite mit Karte links und Raumdetails rechts.
 
 import { CalendarCheck, CheckCircle2, ClipboardList, Trash2 } from "lucide-react";
 import { darfRaumReservieren } from "../campusUtils.mjs";
@@ -7,7 +6,6 @@ import { Metric, MiniList, SectionTitle, TagList } from "../gemeinsam/Bausteine.
 import CampusMap from "./CampusKarte.jsx";
 import MensaPanel from "../mensa/MensaPanel.jsx";
 
-// Campus-Seite mit Karte und Raumdetails.
 export default function CampusView({ campus, selectedRoom, onSelectRoom, onReserve, profil,
                                      mensa, historie, istAdmin, onDeleteReservierung }) {
   return (
@@ -35,9 +33,8 @@ export default function CampusView({ campus, selectedRoom, onSelectRoom, onReser
   );
 }
 
-// Rechte Detailspalte fuer Raum, Veranstaltungen und Reservierungen.
-// Die Mensa (kostBar) zeigt hier direkt ihren LIVE-SPEISEPLAN aus den
-// Fremddaten (EPIC 5) - man muss dafuer nicht mehr in einen anderen Tab.
+// Detailspalte fuer Raum, Veranstaltungen und Reservierungen. Bei der Mensa
+// erscheint hier direkt der Live-Speiseplan aus den Fremddaten.
 function RoomPanel({ selectedRoom, campus, profil, onReserve,
                      mensa, historie, istAdmin, onDeleteReservierung }) {
   const reservierungen = selectedRoom
@@ -48,7 +45,7 @@ function RoomPanel({ selectedRoom, campus, profil, onReserve,
     : campus.veranstaltungen;
 
   const istMensa = selectedRoom?.typ === "Mensa";
-  // Rollenregel (Spiegel des Backends): Hoersaele nur Professor/Admin usw.
+  // Spiegelt die Rollenregel des Backends.
   const darfBuchen = darfRaumReservieren(selectedRoom, profil.rolle);
 
   return (
@@ -69,8 +66,7 @@ function RoomPanel({ selectedRoom, campus, profil, onReserve,
           {!istMensa && darfBuchen && <ReserveForm profil={profil} onReserve={onReserve} />}
 
           {!istMensa && !darfBuchen && (
-            // US 3.2 + Rollenregel: verstaendlich erklaeren, warum es hier
-            // kein Formular gibt (Backend lehnt solche Anfragen ohnehin ab).
+            // Erklaert, warum hier kein Reservierungsformular erscheint.
             <p className="muted">
               {selectedRoom.typ === "Vorlesung"
                 ? `${selectedRoom.name} ist ein Hoersaal - reservieren duerfen ihn nur Professor:innen oder die Verwaltung (Admin).`
@@ -84,7 +80,7 @@ function RoomPanel({ selectedRoom, campus, profil, onReserve,
 
       <MiniList title="Veranstaltungen" icon={CalendarCheck} items={veranstaltungen.map((v) => `${v.titel} (${v.von}-${v.bis})`)} />
 
-      {/* Reservierungen mit Details; der Admin bekommt Loeschknoepfe. */}
+      {/* Der Admin bekommt zusaetzlich Loeschknoepfe. */}
       <section className="mini-list">
         <h3><ClipboardList size={16} /> Reservierungen</h3>
         {reservierungen.length === 0 ? (
@@ -112,7 +108,6 @@ function RoomPanel({ selectedRoom, campus, profil, onReserve,
   );
 }
 
-// Formular fuer eine neue Reservierung.
 function ReserveForm({ profil, onReserve }) {
   return (
     <form className="reserve-form" onSubmit={onReserve}>

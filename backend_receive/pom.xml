@@ -1,142 +1,77 @@
 <!--
-  pom.xml von BACKEND 1 ("Application Server").
-  Diese Datei beschreibt nur DIESES eine Backend: welchen Namen es hat
-  und welche fertigen Bibliotheken (Abhaengigkeiten) es braucht.
+  Modul "backend_receive" - der Application Server. Nimmt die Anfragen des
+  Frontends entgegen, empfaengt Fremddaten ueber MQTT und persistiert sie.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!-- Version des pom-Dateiformats. Bei Maven immer "4.0.0". -->
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-      "parent" verweist auf die zentrale pom.xml (eine Ebene hoeher).
-      Dadurch erbt dieses Backend alle gemeinsamen Einstellungen
-      (Java 21, Spring-Boot-Versionen usw.).
-    -->
     <parent>
-        <!-- Gruppenname des Eltern-Projekts (siehe zentrale pom.xml). -->
         <groupId>swt2.virtualcollege</groupId>
-        <!-- Name des Eltern-Projekts. -->
         <artifactId>virtual-college</artifactId>
-        <!-- Version des Eltern-Projekts (muss uebereinstimmen). -->
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <!-- Eigener Name dieses Moduls. Passt zum Ordnernamen "backend_receive". -->
     <artifactId>backend_receive</artifactId>
-    <!-- "jar" = aus dem Code wird ein startbares Java-Programm gebaut. -->
     <packaging>jar</packaging>
 
-    <!-- Lesbarer Anzeigename. -->
     <name>Virtual College Backend Receive</name>
 
-    <!--
-      "dependencies" = Liste der fertigen Bibliotheken, die wir benutzen.
-      Das ist genau das, was Aufgabe 2 von Praktikum 3 verlangt.
-      Eine Version muessen wir NICHT angeben, weil sie vom Eltern-Projekt
-      (Spring Boot) kommt.
-    -->
     <dependencies>
-        <!--
-          Bibliothek 1: macht aus dem Programm einen Web-Server und
-          stellt die REST-Schnittstellen (die Internet-Adressen) bereit.
-        -->
+        <!-- REST-Schnittstellen und eingebetteter Web-Server. -->
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
-            <!-- Name der Bibliothek: das Web-/REST-Starterpaket. -->
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--
-          Bibliothek 2 + 3: Grundlage fuer die Anbindung an den
-          MQTT-Broker (Mosquitto). Damit koennen die Backends spaeter
-          asynchron Nachrichten austauschen.
-        -->
+        <!-- MQTT-Anbindung an den Broker (Mosquitto). -->
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Boot. -->
             <groupId>org.springframework.boot</groupId>
-            <!-- Allgemeines Integrations-Starterpaket. -->
             <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
         <dependency>
-            <!-- Gruppe/Hersteller: Spring Integration. -->
             <groupId>org.springframework.integration</groupId>
-            <!-- Das spezielle Paket fuer MQTT (Mosquitto). -->
             <artifactId>spring-integration-mqtt</artifactId>
         </dependency>
-        <!--
-          Bibliothek 3b: der eigentliche MQTT-Client "Eclipse Paho".
-          DAMIT empfangen wir wirklich Nachrichten vom Broker (Schritt 2).
-          Version muessen wir hier angeben, weil Spring Boot sie nicht vorgibt.
-        -->
+        <!-- MQTT-Client Eclipse Paho; Version wird von Spring Boot nicht vorgegeben. -->
         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.5</version>
         </dependency>
 
-        <!--
-          SCHRITT 3 (Datenbank):
-          Bibliothek 5: Spring Data JPA = bequemer Zugang zu einer Datenbank
-          (wir schreiben Java-Objekte, Spring macht daraus SQL).
-        -->
+        <!-- Persistenz. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!--
-          Bibliothek 6: H2 = eine winzige Datenbank IM Arbeitsspeicher.
-          Damit laeuft das Backend AUCH OHNE Docker/MariaDB sofort (z. B.
-          beim lokalen Start). "runtime" = wird nur beim Ausfuehren gebraucht.
-        -->
+        <!-- H2 als In-Memory-Datenbank fuer den Start ohne Docker. -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!--
-          Bibliothek 7: der Treiber fuer die echte MariaDB. Im Docker-Setup
-          schalten wir per Umgebungsvariable von H2 auf MariaDB um.
-        -->
+        <!-- MariaDB-Treiber fuer den Docker-Betrieb. -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!--
-          PRODUKTIONS-AUTHENTIFIZIERUNG (Spring Security + JWT):
-          Bibliothek 8: Spring Security = der Tuersteher fuer die REST-Endpunkte.
-          Er prueft bei jeder Anfrage, ob ein gueltiges Login-Token dabei ist,
-          und laesst nur angemeldete Nutzer an die geschuetzten Funktionen.
-        -->
+        <!-- Authentifizierung und Autorisierung der REST-Endpunkte. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!--
-          Bibliothek 8b: springdoc-openapi = automatische Schnittstellen-Doku.
-          Liest alle REST-Controller aus und erzeugt daraus eine OpenAPI-
-          Beschreibung (/v3/api-docs) plus klickbare Oberflaeche (/swagger-ui.html).
-          Damit ist die Anforderung "Kommunikationsschnittstellen ausfuehrlich
-          dokumentieren" an EINER Stelle erfuellt und live vorzeigbar.
-          Version noetig, weil Spring Boot springdoc nicht vorgibt.
-        -->
+        <!-- Schnittstellendokumentation: /v3/api-docs und /swagger-ui.html. -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>3.0.1</version>
         </dependency>
-        <!--
-          Bibliothek 9-11: JJWT = erzeugt und prueft JWT-Token ("JSON Web Token").
-          Ein JWT ist ein digital signierter Ausweis: Das Backend stellt ihn beim
-          Login aus, der Browser zeigt ihn bei jeder Anfrage vor. Weil er signiert
-          ist, kann niemand ihn faelschen (dazu braeuchte man unseren Geheimschluessel).
-          Die Version muss angegeben werden, weil Spring Boot JJWT nicht vorgibt.
-        -->
+        <!-- JJWT: Erzeugen und Pruefen der signierten Login-Token. -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -155,19 +90,12 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--
-          Bibliothek 4: Werkzeuge zum automatischen Testen des Codes.
-          "scope = test" heisst: wird nur beim Testen gebraucht,
-          nicht im fertigen Programm.
-        -->
+        <!-- Testwerkzeuge. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--
-          Test-Hilfen fuer Spring Security (z. B. angemeldeten Nutzer simulieren).
-        -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -175,13 +103,9 @@
         </dependency>
     </dependencies>
 
-    <!-- "build" = Einstellungen, WIE das Programm gebaut wird. -->
     <build>
         <plugins>
-            <!--
-              Dieses Plugin von Spring Boot baut am Ende eine startbare
-              jar-Datei, die man direkt ausfuehren kann.
-            -->
+            <!-- Erzeugt die ausfuehrbare Spring-Boot-jar. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

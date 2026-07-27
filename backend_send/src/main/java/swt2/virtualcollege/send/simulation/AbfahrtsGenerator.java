@@ -1,20 +1,13 @@
 package swt2.virtualcollege.send.simulation;
 
-/*
- * Muster "Factory Method" – eine KONKRETE FABRIK (ConcreteCreator).
- * Erzeugt AbfahrtsDaten (Beispiel-Abfahrt des OEPNV).
- *
- * Im Diagramm:  DatenGenerator <|-- AbfahrtsGenerator
- */
+/** Konkrete Fabrik: liefert die OePNV-Abfahrten des VRR als Fremddatensatz. */
 public class AbfahrtsGenerator extends DatenGenerator {
 
     private final VrrAbfahrten vrr = new VrrAbfahrten();
 
     @Override
     public Fremddatensatz erzeugeDaten() {
-        // Echte Echtzeitdaten des VRR; bei fehlendem Internet liefert der
-        // Dienst bewusst gekennzeichnete Demodaten, damit die Praesentation
-        // weiterhin funktioniert.
+        // Ohne Internet liefert der Dienst gekennzeichnete Demodaten.
         return vrr.holeAbfahrten();
     }
 }

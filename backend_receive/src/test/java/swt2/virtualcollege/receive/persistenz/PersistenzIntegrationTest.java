@@ -14,31 +14,16 @@ import jakarta.persistence.PersistenceContext;
 import swt2.virtualcollege.receive.auth.Benutzerkonto;
 import swt2.virtualcollege.receive.auth.BenutzerkontoRepository;
 
-/*
- * EPIC 8 – Betrieb und Persistenz (US 8.2 "Daten dauerhaft speichern", Issue #37)
+/**
+ * US 8.2 (Issue #37): Konten, Reservierungen, Pinwand-Beitraege und Mensadaten
+ * werden dauerhaft gespeichert.
  *
- * Diese Tests beweisen die Akzeptanzkriterien der User Story 8.2 auf der
- * Ebene der Datenbank:
- *   - Benutzerkonten werden gespeichert.
- *   - Raumreservierungen werden gespeichert.
- *   - Pinwand-Beitraege und Likes werden gespeichert.
- *   - Empfangene Mensadaten werden gespeichert.
- *   - Die Daten bleiben nach einem Neustart erhalten.
+ * Ein Neustart wird durch flush() und clear() am EntityManager nachgebildet: die
+ * Zeile steht dann in der Datenbank, der JPA-Cache ist leer. Laesst sie sich
+ * danach neu laden, ist die Persistenz belegt.
  *
- * WIE testen wir "bleibt nach Neustart erhalten", ohne wirklich neu zu starten?
- * Wir speichern eine Zeile ueber das Repository und rufen dann am EntityManager
- * flush() + clear() auf:
- *   - flush()  = schreibt die Zeile wirklich in die Datenbank.
- *   - clear()  = leert den Arbeitsspeicher (den JPA-"Cache").
- * Danach MUSS die Zeile ueber das Repository frisch aus der Datenbank geladen
- * werden koennen. Das ist technisch genau dasselbe wie ein Neustart: der
- * Speicher ist leer, nur die Datenbank haelt die Daten. Gelingt das Laden,
- * ist die Persistenz bewiesen.
- *
- * @SpringBootTest laedt den echten Spring-Kontext (wie im Betrieb), @Transactional
- * setzt jeden Test danach zurueck, damit sich die Tests nicht gegenseitig stoeren.
- * (Spring Boot 4 liefert die schlanke @DataJpaTest-Slice nicht mehr im Kern, deshalb
- *  nutzen wir – wie AuthIntegrationTest – den vollen Kontext.)
+ * Spring Boot 4 bringt keine @DataJpaTest-Slice mehr mit, deshalb laeuft der Test
+ * mit dem vollen Kontext; @Transactional setzt jeden Testfall zurueck.
  */
 @SpringBootTest
 @Transactional
@@ -59,22 +44,21 @@ class PersistenzIntegrationTest {
     @Autowired
     private PinwandPostRepository pinwandPostRepository;
 
-    // --- US 8.2: "Benutzerkonten werden gespeichert." ---
     @Test
     void benutzerkontoUeberlebtNeustart() {
         benutzerkontoRepository.save(new Benutzerkonto(
                 "max@fh-dortmund.de", "Max Mustermann", "Student",
                 "salt:hash", Instant.now()));
 
-        em.flush();   // wirklich in die DB schreiben
-        em.clear();   // Arbeitsspeicher leeren -> wie ein Neustart
+        em.flush();
+        em.clear();
 
         Benutzerkonto geladen = benutzerkontoRepository.findByEmail("max@fh-dortmund.de")
                 .orElseThrow();
         assertThat(geladen.getId()).isNotNull();
         assertThat(geladen.getName()).isEqualTo("Max Mustermann");
         assertThat(geladen.getRolle()).isEqualTo("Student");
-        // Passwort niemals im Klartext (US 1.1) – es liegt nur als Hash vor.
+        // Das Passwort liegt nur als Hash vor (US 1.1).
         assertThat(geladen.getPasswortHash()).isEqualTo("salt:hash");
     }
 
@@ -88,7 +72,6 @@ class PersistenzIntegrationTest {
         assertThat(benutzerkontoRepository.existsByEmail("unbekannt@fh-dortmund.de")).isFalse();
     }
 
-    // --- US 8.2: "Raumreservierungen werden gespeichert." ---
     @Test
     void reservierungUeberlebtNeustart() {
         reservierungRepository.save(new GespeicherteReservierung(
@@ -106,7 +89,6 @@ class PersistenzIntegrationTest {
         assertThat(r.getStatus()).isEqualTo("aktiv");
     }
 
-    // --- US 8.2: "Pinwand-Beitraege und Likes werden gespeichert." ---
     @Test
     void pinwandPostUndLikeUeberlebenNeustart() {
         GespeicherterPinwandPost gespeichert = pinwandPostRepository.save(
@@ -115,7 +97,6 @@ class PersistenzIntegrationTest {
                         "Mathe-Lerngruppe", "Wer macht mit?", Instant.now()));
         Long id = gespeichert.getId();
 
-        // Zwei Likes vergeben und speichern.
         gespeichert.like();
         gespeichert.like();
         pinwandPostRepository.save(gespeichert);
@@ -126,11 +107,9 @@ class PersistenzIntegrationTest {
         GespeicherterPinwandPost geladen = pinwandPostRepository.findById(id).orElseThrow();
         assertThat(geladen.getTitel()).isEqualTo("Mathe-Lerngruppe");
         assertThat(geladen.getAutor()).isEqualTo("Anna");
-        // Der Like-Zaehler wurde dauerhaft mitgespeichert.
         assertThat(geladen.getLikes()).isEqualTo(2);
     }
 
-    // --- US 8.2: "Empfangene Mensadaten werden gespeichert." ---
     @Test
     void mensaGerichtUeberlebtNeustart() {
         long vorher = gerichtRepository.count();
@@ -142,14 +121,11 @@ class PersistenzIntegrationTest {
 
         assertThat(gerichtRepository.count()).isEqualTo(vorher + 2);
         var historie = gerichtRepository.findAllByOrderByIdDesc();
-        // "neueste zuerst": das zuletzt gespeicherte Gericht steht oben.
         assertThat(historie.get(0).getName()).isEqualTo("Salat");
         assertThat(historie.get(0).getPreis()).isEqualTo(2.20);
     }
 
-    // --- Alle vier Datenarten liegen gleichzeitig in der Datenbank ---
-    // (US 8.3: "Benutzerkonten, Reservierungen, Pinwand-Posts und Mensadaten
-    //  sind nachvollziehbar." – hier auf DB-Ebene nachgewiesen.)
+    // US 8.3: Alle vier Datenarten liegen gleichzeitig in der Datenbank.
     @Test
     void alleVierDatenartenWerdenGespeichert() {
         long postsVorher = pinwandPostRepository.count();
@@ -167,7 +143,8 @@ class PersistenzIntegrationTest {
 
         assertThat(benutzerkontoRepository.existsByEmail("u@fh-dortmund.de")).isTrue();
         assertThat(reservierungRepository.findAllByRaumIdOrderByIdDesc("r-1")).hasSize(1);
-        // Es gab evtl. Demo-Posts beim Start – wir pruefen die relative Zunahme.
+        // Beim Start koennen Beispielbeitraege angelegt worden sein, daher die
+        // relative Zunahme pruefen.
         assertThat(pinwandPostRepository.count()).isEqualTo(postsVorher + 1);
         assertThat(gerichtRepository.findAllByOrderByIdDesc())
                 .anyMatch(g -> g.getName().equals("Pizza"));

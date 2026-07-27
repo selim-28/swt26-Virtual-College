@@ -12,17 +12,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.annotation.PostConstruct;
 
-/*
- * AUTHENTIFIZIERUNG – die Fachlogik (Registrieren, Login, Logout).
- *
- * PRODUKTIONS-VARIANTE mit Spring Security + JWT:
- *  - Passwoerter werden ueber den Spring PasswordEncoder gehasht/geprueft
- *    (intern weiterhin sicheres PBKDF2, siehe PbkdfPasswortEncoder).
- *  - Beim Login gibt es KEINEN selbst verwalteten Token mehr, sondern einen
- *    signierten JWT-Ausweis (JwtDienst). Das Backend muss sich keine Tokens
- *    mehr merken ("stateless") – es prueft nur die Signatur.
- *  - Logout sperrt das Token gezielt in der TokenSperrliste, damit es sofort
- *    ungueltig ist.
+/**
+ * Fachlogik der Authentifizierung: Registrieren, Login und Logout.
+ * Passwoerter werden ueber den PasswordEncoder (PBKDF2) geprueft, die Sitzung
+ * laeuft ueber ein signiertes JWT. Der Logout sperrt das Token in der
+ * TokenSperrliste, damit es sofort ungueltig ist.
  */
 @Service
 public class AuthService {
@@ -42,16 +36,13 @@ public class AuthService {
         this.sperrliste = sperrliste;
     }
 
-    /** Ergebnis einer Anmeldung: der JWT-Ausweis + das zugehoerige Konto. */
+    /** Ergebnis einer Anmeldung: das JWT und das zugehoerige Konto. */
     public record Sitzung(String token, Benutzerkonto konto) {
     }
 
-    /*
-     * Legt beim ersten Start DREI Demo-Konten an - eines pro Rolle, damit man
-     * in der Praesentation alle Sichten zeigen kann (Passwort jeweils: passwort123):
-     *   student@fh-dortmund.de  -> Student   (reserviert Lern-/Seminarraeume)
-     *   prof@fh-dortmund.de     -> Professor (darf zusaetzlich Hoersaele reservieren)
-     *   admin@fh-dortmund.de    -> Admin     (darf ALLES verwalten, z. B. loeschen)
+    /**
+     * Legt beim ersten Start je ein Demo-Konto pro Rolle an, damit alle Sichten
+     * vorfuehrbar sind. Passwort jeweils "passwort123".
      */
     @PostConstruct
     public void demoKontenAnlegen() {
@@ -70,7 +61,7 @@ public class AuthService {
         }
     }
 
-    /** Legt ein neues Konto an und meldet direkt an (gibt einen JWT-Ausweis zurueck). */
+    /** Legt ein neues Konto an und meldet direkt an. */
     public Sitzung registriere(String email, String name, String rolle, String passwort) {
         String e = normalisiere(email);
         if (e.isBlank() || !e.contains("@")) {
@@ -89,7 +80,7 @@ public class AuthService {
         return new Sitzung(jwt.erzeuge(konto), konto);
     }
 
-    /** Prueft die Anmeldedaten und gibt bei Erfolg einen frischen JWT-Ausweis zurueck. */
+    /** Prueft die Anmeldedaten und gibt bei Erfolg eine neue Sitzung zurueck. */
     public Sitzung login(String email, String passwort) {
         Benutzerkonto konto = repository.findByEmail(normalisiere(email))
                 .orElseThrow(this::loginFehler);
@@ -112,7 +103,7 @@ public class AuthService {
             Date ablauf = inhalt.getExpiration();
             sperrliste.sperre(inhalt.getId(), ablauf == null ? Instant.now() : ablauf.toInstant());
         } catch (JwtException | IllegalArgumentException ungueltig) {
-            // Token war ohnehin schon ungueltig -> nichts zu tun.
+            // Token war ohnehin schon ungueltig.
         }
     }
 

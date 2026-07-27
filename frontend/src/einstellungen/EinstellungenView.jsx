@@ -1,9 +1,8 @@
-// Modul "einstellungen": Konto-Anzeige (read-only) + persoenliche UI-Schalter.
+// Modul "einstellungen": Konto-Anzeige und persoenliche Anzeigeschalter.
 
 import { LogOut } from "lucide-react";
 import { SectionTitle } from "../gemeinsam/Bausteine.jsx";
 
-// Einstellungen: zeigt das eingeloggte Konto (read-only) + UI-Schalter.
 export default function EinstellungenView({ profil, prefs, onPrefs, onLogout }) {
   return (
     <section className="workspace narrow">

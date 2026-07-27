@@ -1,11 +1,8 @@
 package swt2.virtualcollege.receive.mensa;
 
-/*
- * Muster "Adapter" – das ADAPTEE (das "inkompatible" Objekt, Kapitel 13).
- *
- * So kommen die Daten ueber MQTT herein: ein roher JSON-Text. Damit kann
- * unsere App noch nichts anfangen – deshalb uebersetzt der MqttDatenAdapter
- * diesen Text in saubere Speiseplan-Objekte.
+/**
+ * Adapter-Muster: das Adaptee. Die rohe MQTT-Nachricht, so wie sie hereinkommt,
+ * bevor der MqttDatenAdapter sie in Fachobjekte uebersetzt.
  */
 public record MqttRohNachricht(String payloadJson) {
 }

@@ -1,9 +1,6 @@
 package swt2.virtualcollege.receive.campus;
 
-/*
- * "Reservierung" (Kapitel 13): eine Belegung durch eine Person.
- * "ist eine" Belegung.  Im Diagramm:  Belegung <|-- Reservierung
- */
+/** Eine Belegung durch eine einzelne Person. */
 public class Reservierung extends Belegung {
 
     private final String reserviertVon;

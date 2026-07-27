@@ -1,12 +1,9 @@
 package swt2.virtualcollege.receive.campus;
 
-/*
- * "Koordinaten" (Kapitel 13): ein Ort auf der Karte (Breite/Laenge).
- * Im Diagramm:  Raum --> Koordinaten
- */
+/** Ein Ort auf der Karte in Breite und Laenge. */
 public record Koordinaten(double breite, double laenge) {
 
-    // Sehr einfache "Luftlinie" zwischen zwei Punkten (nur zur Veranschaulichung).
+    /** Vereinfachte Luftlinie zwischen zwei Punkten. */
     public double distanzZu(Koordinaten andere) {
         double dB = this.breite - andere.breite;
         double dL = this.laenge - andere.laenge;

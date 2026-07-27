@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
-/* Hält den letzten über MQTT empfangenen ÖPNV-Snapshot im Arbeitsspeicher. */
+/** Haelt den zuletzt ueber MQTT empfangenen OePNV-Datensatz im Arbeitsspeicher. */
 @Component
 public class AbfahrtsSpeicher {
 

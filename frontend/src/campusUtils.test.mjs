@@ -1,14 +1,13 @@
 /*
- * Unit-Tests fuer die Campus-Karten-Hilfsfunktionen (EPIC 2).
- * Laeuft OHNE Zusatz-Bibliothek mit Nodes eingebautem Test-Runner:
- *   npm test        (bzw. node --test)
+ * Tests der Campus-Hilfsfunktionen. Laeuft ohne Zusatzbibliothek mit dem
+ * eingebauten Test-Runner von Node: npm test
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { escapeHtml, richtungsWinkel, statusClass, POLL_INTERVALL_MS, sollAktualisieren, darfRaumReservieren, neuerPostHinweis } from "./campusUtils.mjs";
 
-// --- escapeHtml: schuetzt Karten-Pins vor gefaehrlichem Text (US 2.1) ---
+// escapeHtml: schuetzt die Karten-Pins vor eingeschleustem Markup (US 2.1).
 
 test("escapeHtml wandelt spitze Klammern und & um", () => {
   assert.equal(escapeHtml("<b>Raum</b>"), "&lt;b&gt;Raum&lt;/b&gt;");
@@ -23,7 +22,7 @@ test("escapeHtml laesst harmlosen Text unveraendert", () => {
   assert.equal(escapeHtml("Audimax 42"), "Audimax 42");
 });
 
-// --- richtungsWinkel: dreht die Richtungspfeile der Fussroute (US 2.3) ---
+// richtungsWinkel: dreht die Richtungspfeile der Fussroute (US 2.3).
 
 const nahe = (ist, soll) => assert.ok(Math.abs(ist - soll) < 1e-6, `${ist} != ${soll}`);
 
@@ -43,7 +42,7 @@ test("richtungsWinkel: nach Sueden = 180 Grad", () => {
   nahe(Math.abs(richtungsWinkel([1, 0], [0, 0])), 180);
 });
 
-// --- statusClass: waehlt die Farbe/CSS-Klasse je Raum-Status (US 2.1) ---
+// statusClass: waehlt die CSS-Klasse je Raumstatus (US 2.1).
 
 test("statusClass erkennt freie Raeume", () => {
   assert.equal(statusClass("frei"), "is-free");
@@ -62,11 +61,10 @@ test("statusClass faellt sonst auf belegt zurueck", () => {
 });
 
 test("statusClass: 'frei' hat Vorrang vor 'bald'", () => {
-  // "bald frei" enthaelt beides -> "frei" wird zuerst geprueft.
   assert.equal(statusClass("bald frei"), "is-free");
 });
 
-// --- sollAktualisieren: steuert das automatische Nachladen (Polling / EPIC 7) ---
+// sollAktualisieren: steuert das automatische Nachladen.
 
 test("sollAktualisieren: eingeloggt, sichtbar, nichts laeuft -> ja", () => {
   assert.equal(
@@ -100,7 +98,7 @@ test("POLL_INTERVALL_MS ist ein sinnvoller, positiver Abstand", () => {
   assert.ok(POLL_INTERVALL_MS >= 1000, "mindestens 1 Sekunde, um den Server nicht zu fluten");
 });
 
-// --- darfRaumReservieren: Rollenregel der Reservierung (EPIC 3 / US 3.2) ---
+// darfRaumReservieren: Rollenregel der Reservierung (US 3.2).
 
 const labor = { typ: "Labor", reservierbar: true };
 const hoersaal = { typ: "Vorlesung", reservierbar: false };
@@ -128,7 +126,7 @@ test("darfRaumReservieren: ohne Raum keine Reservierung", () => {
   assert.equal(darfRaumReservieren(null, "Admin"), false);
 });
 
-// --- neuerPostHinweis: Benachrichtigung ueber neue Beitraege (EPIC 4 / US 4.3) ---
+// neuerPostHinweis: Benachrichtigung ueber neue Beitraege (US 4.3).
 
 const alteListe = [{ id: 1, titel: "Alt", autor: "Anna" }];
 

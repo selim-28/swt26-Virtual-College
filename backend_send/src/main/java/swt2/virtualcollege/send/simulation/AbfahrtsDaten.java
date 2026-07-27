@@ -2,19 +2,13 @@ package swt2.virtualcollege.send.simulation;
 
 import java.util.List;
 
-/*
- * Muster "Factory Method" – ein KONKRETES PRODUKT (ConcreteProduct).
- * Beschreibt mehrere OEPNV-Abfahrten plus die Datenquelle.
- *
- * NEU: Statt einer einzelnen Beispiel-Abfahrt traegt dieses Produkt jetzt
- * eine LISTE echter Abfahrten (vom VRR, siehe VrrAbfahrten) und ein
- * "quelle"-Feld, damit das Frontend zeigen kann, ob die Daten live sind.
- *
- * Im Diagramm:  Fremddatensatz <|.. AbfahrtsDaten
+/**
+ * Konkretes Produkt: eine Liste von OePNV-Abfahrten samt Angabe der Datenquelle,
+ * damit das Frontend Live- und Ersatzdaten unterscheiden kann.
  */
 public class AbfahrtsDaten implements Fremddatensatz {
 
-    // Eine einzelne Abfahrt: Linie, Ziel, Uhrzeit (HH:mm).
+    /** Eine einzelne Abfahrt: Linie, Ziel, Uhrzeit (HH:mm). */
     public record Abfahrt(String linie, String ziel, String zeit) {
     }
 
@@ -26,9 +20,12 @@ public class AbfahrtsDaten implements Fremddatensatz {
         this.quelle = quelle;
     }
 
+    /**
+     * Erzeugt das vereinbarte Nachrichtenformat:
+     * {"typ":"abfahrt","quelle":"...","abfahrten":[{"linie":"..","ziel":"..","zeit":".."}, ...]}
+     */
     @Override
     public String alsJson() {
-        // {"typ":"abfahrt","quelle":"...","abfahrten":[{"linie":"..","ziel":"..","zeit":".."}, ...]}
         StringBuilder sb = new StringBuilder();
         sb.append("{\"typ\":\"abfahrt\",\"quelle\":\"").append(esc(quelle)).append("\",\"abfahrten\":[");
         for (int i = 0; i < abfahrten.size(); i++) {
@@ -44,7 +41,7 @@ public class AbfahrtsDaten implements Fremddatensatz {
         return sb.toString();
     }
 
-    // Macht Anfuehrungszeichen/Backslashes im Text JSON-sicher.
+    /** Maskiert Anfuehrungszeichen und Backslashes fuer die JSON-Ausgabe. */
     private static String esc(String s) {
         return s == null ? "" : s.replace("\\", "\\\\").replace("\"", "\\\"");
     }

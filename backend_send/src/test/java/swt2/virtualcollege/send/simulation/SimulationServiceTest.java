@@ -7,21 +7,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/*
- * EPIC 7 – US 7.1 "Fremddatensimulation starten" (Issue #32)
- *          US 7.2 "Daten asynchron ueber MQTT uebertragen" (Issue #33)
- *
- * Der SimulationService ist der Ausloeser: Er laesst die drei Fabriken je einen
- * Fremddatensatz erzeugen und veroeffentlicht ihn ueber den MqttSender (publish).
- *
- * Damit der Test OHNE echten Broker und OHNE Netz laeuft, ersetzen wir den
- * MqttSender durch einen "erfassenden" Sender: Er merkt sich nur, was
- * veroeffentlicht wurde, statt es wirklich zu verschicken. So pruefen wir die
- * Logik des Service unabhaengig von der Infrastruktur.
+/**
+ * US 7.1 (Issue #32) und US 7.2 (Issue #33): Der SimulationService laesst alle
+ * Fabriken je einen Datensatz erzeugen und veroeffentlicht ihn.
+ * Der MqttSender ist durch ein Test-Doppel ersetzt, damit kein Broker noetig ist.
  */
 class SimulationServiceTest {
 
-    /* Test-Doppel: statt zu senden, wird die Nachricht nur gemerkt. */
+    /** Test-Doppel: merkt sich die Nachricht, statt sie zu senden. */
     private static final class ErfassenderSender extends MqttSender {
         final List<String> gesendet = new ArrayList<>();
 
@@ -31,8 +24,6 @@ class SimulationServiceTest {
         }
     }
 
-    // US 7.1: "Mensa-, OEPNV- und Auslastungsdaten werden erzeugt."
-    // US 7.2: "Das sendende Backend veroeffentlicht die Daten ueber MQTT."
     @Test
     void starteSimulationErzeugtDreiDatensaetzeUndVeroeffentlichtSie() {
         ErfassenderSender sender = new ErfassenderSender();
@@ -40,32 +31,25 @@ class SimulationServiceTest {
 
         service.starteSimulation();
 
-        // Genau drei Datenarten wurden veroeffentlicht ...
         assertThat(sender.gesendet).hasSize(3);
-        // ... und jede Art ist dabei (am "typ" im JSON erkennbar).
         assertThat(sender.gesendet).anyMatch(j -> j.contains("\"typ\":\"speiseplan\""));
         assertThat(sender.gesendet).anyMatch(j -> j.contains("\"typ\":\"auslastung\""));
         assertThat(sender.gesendet).anyMatch(j -> j.contains("\"typ\":\"abfahrt\""));
     }
 
-    // US 7.1: "Ein erneuter Start ist moeglich, ohne die Anwendung neu zu starten."
     @Test
     void erneuterStartLiefertWiederGenauDreiDatensaetze() {
         ErfassenderSender sender = new ErfassenderSender();
         SimulationService service = new SimulationService(sender);
 
         service.starteSimulation();
-        service.starteSimulation();   // zweiter Lauf
+        service.starteSimulation();
 
-        // Die "zuletzt veroeffentlicht"-Liste wird bei jedem Lauf geleert:
-        // nach dem zweiten Start sind es wieder genau drei (nicht sechs).
+        // Die Liste wird pro Lauf geleert, insgesamt gesendet wurden aber sechs.
         assertThat(service.getZuletztVeroeffentlicht()).hasSize(3);
-        // Insgesamt wurden ueber beide Laeufe sechs Nachrichten gesendet.
         assertThat(sender.gesendet).hasSize(6);
     }
 
-    // US 7.2 (Detail): veroeffentliche() sendet ueber MQTT UND merkt sich den Text
-    // (fuer die Rueckmeldung an den Nutzer, US 7.1 "verstaendliche Rueckmeldung").
     @Test
     void veroeffentlichePublishtUndMerktSichDenText() {
         ErfassenderSender sender = new ErfassenderSender();

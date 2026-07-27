@@ -14,21 +14,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-/*
- * AUTHENTIFIZIERUNG (PRODUKTIONS-VARIANTE) – erzeugt und prueft JWT-Token.
- *
- * Ein JWT ("JSON Web Token") ist ein digital SIGNIERTER Ausweis. Er besteht
- * aus drei Teilen (Header.Payload.Signatur) und enthaelt offen lesbare Daten
- * (E-Mail, Name, Rolle, Ablaufzeit) sowie eine Signatur. Die Signatur wird mit
- * unserem GEHEIMEN Schluessel erzeugt – ohne diesen Schluessel kann niemand ein
- * gueltiges Token faelschen oder den Inhalt unbemerkt aendern.
- *
- * Vorteil gegenueber der alten In-Memory-Token-Map: Das Backend muss sich keine
- * Tokens mehr merken. Es kann allein anhand der Signatur pruefen, ob ein Token
- * echt und noch gueltig ist ("stateless"). Das skaliert und uebersteht Neustarts.
- *
- * "jti" (JWT-ID) = eine eindeutige Nummer pro Token. Wir brauchen sie, damit ein
- * Token beim Logout gezielt gesperrt werden kann (siehe TokenSperrliste).
+/**
+ * Erzeugt und prueft die signierten Login-Token. Da die Gueltigkeit allein an der
+ * Signatur haengt, muss das Backend keine Sitzungen vorhalten. Die JWT-ID (jti)
+ * erlaubt es, ein einzelnes Token beim Logout gezielt zu sperren.
  */
 @Component
 public class JwtDienst {
@@ -44,14 +33,14 @@ public class JwtDienst {
         this.gueltigkeitMs = minuten * 60_000L;
     }
 
-    /** Stellt fuer ein Konto einen frischen, signierten Ausweis (JWT) aus. */
+    /** Stellt fuer ein Konto ein frisches, signiertes Token aus. */
     public String erzeuge(Benutzerkonto konto) {
         Instant jetzt = Instant.now();
         return Jwts.builder()
-                .subject(konto.getEmail())            // "wem gehoert das Token?"
+                .subject(konto.getEmail())
                 .claim("name", konto.getName())
                 .claim("rolle", konto.getRolle())
-                .id(UUID.randomUUID().toString())     // jti fuer die Logout-Sperrliste
+                .id(UUID.randomUUID().toString())     // jti fuer die Sperrliste
                 .issuedAt(Date.from(jetzt))
                 .expiration(Date.from(jetzt.plusMillis(gueltigkeitMs)))
                 .signWith(schluessel)

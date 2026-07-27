@@ -1,12 +1,10 @@
-// Modul "pinwand": Beitraege anzeigen, erstellen, liken (Observer-Muster im
-// Backend); der Admin darf zusaetzlich loeschen (verwalten).
+// Modul "pinwand": Beitraege anzeigen, erstellen und liken.
+// Der Admin kann Beitraege zusaetzlich loeschen.
 
 import { Heart, Send, Trash2 } from "lucide-react";
 import { kurzZeit } from "../gemeinsam/format.js";
 import { SectionTitle } from "../gemeinsam/Bausteine.jsx";
 
-// Pinwand-Seite mit echtem Speichern und Likes.
-// Der Admin kann Beitraege zusaetzlich LOESCHEN (verwalten).
 export default function PinwandView({ posts, onCreate, onLike, istAdmin, onDelete }) {
   return (
     <section className="page-grid pinwand-grid">

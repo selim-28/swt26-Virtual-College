@@ -3,11 +3,7 @@ package swt2.virtualcollege.receive.campus;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * "Veranstaltung" (Kapitel 13): eine Belegung durch eine Lehrveranstaltung,
- * an der sich Teilnehmer anmelden koennen. "ist eine" Belegung.
- * Im Diagramm:  Belegung <|-- Veranstaltung
- */
+/** Eine Belegung durch eine Lehrveranstaltung mit angemeldeten Teilnehmern. */
 public class Veranstaltung extends Belegung {
 
     private final String titel;

@@ -10,14 +10,9 @@ import org.springframework.stereotype.Service;
 import swt2.virtualcollege.receive.mensa.Gericht;
 import swt2.virtualcollege.receive.mensa.Speiseplan;
 
-/*
- * SCHRITT 3 (Datenbank) – der Service, der das Speichern kapselt.
- *
- * Wenn ueber MQTT ein Speiseplan ankommt, schreibt dieser Service jedes
- * Gericht als eigene Zeile in die Datenbank (mit Zeitstempel). Spaeter
- * kann man die ganze "Historie" wieder auslesen – das beweist, dass die
- * Daten DAUERHAFT gespeichert sind (im Verteilungsdiagramm: der JDBC-Pfeil
- * vom Application Server zur Datenbank).
+/**
+ * Kapselt das dauerhafte Speichern der ueber MQTT empfangenen Speiseplaene und
+ * bildet damit den JDBC-Pfeil des Verteilungsdiagramms ab.
  */
 @Service
 public class SpeisearchivService {
@@ -30,7 +25,7 @@ public class SpeisearchivService {
         this.repository = repository;
     }
 
-    // Speichert alle Gerichte eines Speiseplans in der Datenbank.
+    /** Schreibt jedes Gericht eines Speiseplans als eigene Zeile mit Zeitstempel. */
     public void speichere(Speiseplan speiseplan) {
         Instant jetzt = Instant.now();
         for (Gericht g : speiseplan.gerichte()) {
@@ -40,12 +35,12 @@ public class SpeisearchivService {
                 speiseplan.gerichte().size(), repository.count());
     }
 
-    // Liefert die gesamte Historie (neueste zuerst).
+    /** Die gesamte Historie, neueste zuerst. */
     public List<GespeichertesGericht> historie() {
         return repository.findAllByOrderByIdDesc();
     }
 
-    // Wie viele Zeilen liegen insgesamt in der Datenbank?
+    /** Anzahl aller gespeicherten Zeilen. */
     public long anzahl() {
         return repository.count();
     }

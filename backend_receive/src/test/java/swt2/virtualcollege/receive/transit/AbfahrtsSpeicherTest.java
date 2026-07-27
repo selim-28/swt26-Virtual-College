@@ -5,20 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-/*
- * EPIC 7 – US 7.3 "Empfangene Fremddaten verarbeiten und speichern" (Issue #34),
- * hier fuer die OEPNV-Abfahrten (das zweite ueber MQTT empfangene Datenformat).
- *
- * Der AbfahrtsSpeicher liest die rohe JSON-Nachricht und haelt den aktuellen
- * Abfahrts-Snapshot fuer die REST-Schnittstelle bereit. Getestet werden:
- *   - "Rohdaten werden geprueft und in interne Objekte umgewandelt."
- *   - "Ungueltige Daten fuehren nicht zum Absturz des Systems."
+/**
+ * US 7.3 (Issue #34) fuer die OePNV-Abfahrten: Rohdaten werden geprueft und in
+ * interne Objekte umgewandelt, ungueltige Daten fuehren nicht zum Absturz.
  */
 class AbfahrtsSpeicherTest {
 
-    // US 6.2 (Issue #30): VOR dem ersten MQTT-Empfang liefert der Speicher
-    // gekennzeichnete Platzhalter-Daten - die Anwendung bleibt nutzbar und
-    // sagt ehrlich, dass noch keine Live-Daten da sind.
+    // US 6.2 (Issue #30): Vor dem ersten Empfang liefert der Speicher
+    // gekennzeichnete Platzhalter statt eines Fehlers.
     @Test
     void startzustandLiefertGekennzeichneteErsatzdaten() {
         AbfahrtsSpeicher speicher = new AbfahrtsSpeicher();
@@ -26,8 +20,8 @@ class AbfahrtsSpeicherTest {
         TransitController.TransitAntwort antwort = speicher.aktuelleAbfahrten();
 
         assertThat(antwort.quelle()).contains("Warte auf VRR-Daten");
-        assertThat(antwort.abfahrten()).isNotEmpty();          // etwas Anzeigbares
-        assertThat(antwort.abfahrten().get(0).zeit()).isEqualTo("--:--"); // klar als Platzhalter erkennbar
+        assertThat(antwort.abfahrten()).isNotEmpty();
+        assertThat(antwort.abfahrten().get(0).zeit()).isEqualTo("--:--");
     }
 
     @Test
@@ -48,22 +42,19 @@ class AbfahrtsSpeicherTest {
         assertThat(antwort.abfahrten().get(0).ziel()).isEqualTo("Dortmund Hbf");
     }
 
-    // Robustheit: Kaputte Daten melden einen klaren Fehler UND lassen die zuletzt
-    // gueltigen Daten unveraendert – das System liefert weiter etwas Sinnvolles.
+    // Ungueltige Daten melden einen klaren Fehler und lassen den zuletzt
+    // gueltigen Datensatz unveraendert.
     @Test
     void ungueltigesJsonLaesstVorherigeGueltigeDatenUnveraendert() {
         AbfahrtsSpeicher speicher = new AbfahrtsSpeicher();
 
-        // Zuerst ein gueltiger Snapshot ...
         speicher.aktualisiereAusJson(
                 "{\"typ\":\"abfahrt\",\"quelle\":\"VRR EFA live\",\"abfahrten\":["
                 + "{\"linie\":\"U42\",\"ziel\":\"Hombruch\",\"zeit\":\"08:00\"}]}");
 
-        // ... dann kommt kaputter Müll herein.
         assertThatThrownBy(() -> speicher.aktualisiereAusJson("kein json"))
                 .isInstanceOf(IllegalArgumentException.class);
 
-        // Der gute Snapshot ist NICHT beschaedigt worden.
         TransitController.TransitAntwort antwort = speicher.aktuelleAbfahrten();
         assertThat(antwort.quelle()).isEqualTo("VRR EFA live");
         assertThat(antwort.abfahrten()).hasSize(1);

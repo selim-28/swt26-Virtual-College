@@ -2,16 +2,9 @@ package swt2.virtualcollege.receive.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/*
- * AUTHENTIFIZIERUNG (PRODUKTIONS-VARIANTE) – Bruecke zu Spring Security.
- *
- * Spring Security kennt keine konkrete Hash-Methode, sondern nur die Schnittstelle
- * PasswordEncoder (encode + matches). Wir binden hier unser bereits vorhandenes,
- * sicheres PBKDF2-Hashing (Klasse Passwort) an diese Schnittstelle an.
- *
- * Vorteil: Bereits gespeicherte Passwort-Hashes (Format "salt:hash") und das
- * Demo-Konto bleiben GUELTIG – wir muessen die Datenbank nicht neu befuellen.
- * (In einem Neuprojekt wuerde man hier direkt BCryptPasswordEncoder nehmen.)
+/**
+ * Bindet das PBKDF2-Hashing der Klasse Passwort an die Spring-Security-Schnittstelle
+ * PasswordEncoder an, damit bereits gespeicherte Hashes gueltig bleiben.
  */
 public class PbkdfPasswortEncoder implements PasswordEncoder {
 

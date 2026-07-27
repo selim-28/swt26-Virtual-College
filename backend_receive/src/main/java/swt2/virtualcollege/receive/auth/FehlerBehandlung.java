@@ -8,13 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-/*
- * Sorgt dafuer, dass Fehler (z. B. falsches Passwort) als sauberes JSON mit
- * KLARTEXT-Meldung beim Frontend ankommen, z. B.:
- *   { "status": 401, "message": "E-Mail oder Passwort ist falsch." }
- *
- * Ohne das wuerde das Frontend nur einen nackten "401" sehen. So kann es die
- * verstaendliche deutsche Meldung direkt anzeigen.
+/**
+ * Wandelt fachliche Fehler in JSON mit Klartextmeldung um, damit das Frontend
+ * sie direkt anzeigen kann: { "status": 401, "message": "..." }.
  */
 @RestControllerAdvice
 public class FehlerBehandlung {

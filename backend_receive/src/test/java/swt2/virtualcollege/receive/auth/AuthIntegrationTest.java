@@ -16,16 +16,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/*
- * Integrationstest fuer die komplette Authentifizierung ueber den ECHTEN
- * HTTP-Stack (echter Server auf zufaelligem Port + Spring Security +
- * JwtAuthFilter + Controller + H2-Datenbank), aufgerufen mit dem JDK-HttpClient.
- *
- * Deckt die Akzeptanzkriterien von EPIC 1 (US 1.1 - 1.3) ab:
- *  - Registrieren (Passwort gehasht, danach anmeldbar, Dubletten, kurzes Passwort)
- *  - Login (gueltig / ungueltig, Name+Rolle in der Antwort)
- *  - geschuetzte Funktionen erst nach Anmeldung
- *  - Logout macht das Token sofort ungueltig
+/**
+ * Integrationstest der Authentifizierung (US 1.1 bis 1.3) ueber den echten
+ * HTTP-Stack: Server auf zufaelligem Port, Spring Security, JwtAuthFilter,
+ * Controller und H2-Datenbank.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthIntegrationTest {
@@ -33,16 +27,14 @@ class AuthIntegrationTest {
     @LocalServerPort
     private int port;
 
-    // Spring Boot 4 stellt keinen ObjectMapper-Bean automatisch bereit,
-    // fuer das Auslesen der JSON-Antworten genuegt aber ein eigener.
+    // Spring Boot 4 stellt keinen ObjectMapper-Bean bereit; fuer das Auslesen der
+    // Antworten genuegt ein eigener.
     private final ObjectMapper om = new ObjectMapper();
 
     private final HttpClient http = HttpClient.newHttpClient();
 
     private static final String DEMO_LOGIN =
             "{\"email\":\"student@fh-dortmund.de\",\"passwort\":\"passwort123\"}";
-
-    // ---- kleine HTTP-Helfer ----
 
     private HttpResponse<String> post(String pfad, String jsonBody, String token) throws Exception {
         HttpRequest.Builder b = HttpRequest.newBuilder(URI.create("http://localhost:" + port + pfad))
@@ -73,8 +65,6 @@ class AuthIntegrationTest {
         return feld(r.body(), "token");
     }
 
-    // ---- Tests ----
-
     @Test
     void loginMitDemoKontoLiefertTokenUndRolle() throws Exception {
         HttpResponse<String> r = post("/api/auth/login", DEMO_LOGIN, null);
@@ -88,7 +78,7 @@ class AuthIntegrationTest {
     @Test
     void tokenSiehtWieEinJwtAus() throws Exception {
         String token = tokenAusLogin(DEMO_LOGIN);
-        assertThat(token.split("\\.")).hasSize(3);   // Kopf.Inhalt.Signatur
+        assertThat(token.split("\\.")).hasSize(3);
     }
 
     @Test
@@ -136,7 +126,6 @@ class AuthIntegrationTest {
         assertThat(r.statusCode()).isEqualTo(200);
         assertThat(feld(r.body(), "rolle")).isEqualTo("Betreuer");
 
-        // Mit dem Token ist man sofort angemeldet.
         String token = feld(r.body(), "token");
         HttpResponse<String> ich = get("/api/auth/ich", token);
         assertThat(ich.statusCode()).isEqualTo(200);
@@ -165,13 +154,11 @@ class AuthIntegrationTest {
     void nachLogoutIstDasTokenSofortUngueltig() throws Exception {
         String token = tokenAusLogin(DEMO_LOGIN);
 
-        // Vor dem Logout gilt das Token.
         assertThat(get("/api/auth/ich", token).statusCode()).isEqualTo(200);
 
-        // Logout.
         assertThat(post("/api/auth/logout", "", token).statusCode()).isEqualTo(200);
 
-        // Danach ist genau dieses Token gesperrt -> 401.
+        // Genau dieses Token ist danach gesperrt.
         assertThat(get("/api/auth/ich", token).statusCode()).isEqualTo(401);
     }
 }

@@ -3,10 +3,7 @@ package swt2.virtualcollege.receive.pinwand;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * "Post" (Kapitel 13): ein Beitrag an der Pinwand. Ein Post "besteht aus"
- * Kommentaren und Likes (Post *-- Kommentar, Post *-- Like).
- */
+/** Ein Beitrag an der Pinwand mit seinen Kommentaren und Likes. */
 public class Post {
 
     private final String titel;

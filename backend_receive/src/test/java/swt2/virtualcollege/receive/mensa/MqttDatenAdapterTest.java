@@ -5,20 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-/*
- * EPIC 7 – US 7.3 "Empfangene Fremddaten verarbeiten und speichern" (Issue #34).
- *
- * Der MqttDatenAdapter (Muster "Adapter") ist der Kern der Verarbeitung: Er
- * nimmt die rohe MQTT-Nachricht (JSON-Text) und uebersetzt sie in saubere
- * interne Objekte (Speiseplan/Gericht). Diese Tests decken die Akzeptanz-
- * kriterien ab:
- *   - "MQTT-Nachrichten werden als JSON empfangen."
- *   - "Rohdaten werden geprueft und in interne Objekte umgewandelt."
- *   - "Ungueltige Daten fuehren nicht zum Absturz des Systems."
+/**
+ * US 7.3 (Issue #34): Der Adapter uebersetzt die rohe MQTT-Nachricht in
+ * Speiseplan- und Gericht-Objekte und meldet ungueltige Daten verstaendlich.
  */
 class MqttDatenAdapterTest {
 
-    // Rohdaten -> interne Objekte: gueltiger Speiseplan wird korrekt uebersetzt.
     @Test
     void uebersetztGueltigenSpeiseplanInGerichte() {
         String json = "{\"typ\":\"speiseplan\",\"gerichte\":["
@@ -34,7 +26,7 @@ class MqttDatenAdapterTest {
         assertThat(plan.gerichte().get(1).name()).isEqualTo("Salat");
     }
 
-    // Fehlt die Gerichte-Liste, ist das Ergebnis ein leerer Plan (kein Absturz).
+    // Fehlt die Gerichte-Liste, entsteht ein leerer Plan statt eines Fehlers.
     @Test
     void fehlendeGerichteListeErgibtLeerenSpeiseplan() {
         String json = "{\"typ\":\"speiseplan\"}";
@@ -45,9 +37,8 @@ class MqttDatenAdapterTest {
         assertThat(plan.gerichte()).isEmpty();
     }
 
-    // Kaputter JSON-Text: verstaendlich abbrechen (klare Meldung mit der Ursache),
-    // statt falsche Daten weiterzureichen. Das System stuerzt dadurch nicht ab –
-    // der Aufrufer bekommt eine eindeutige Fehlermeldung.
+    // Kaputter JSON-Text bricht mit klarer Meldung ab, statt falsche Daten
+    // weiterzureichen.
     @Test
     void kaputterJsonWirdVerstaendlichGemeldet() {
         String kaputt = "das ist kein JSON";

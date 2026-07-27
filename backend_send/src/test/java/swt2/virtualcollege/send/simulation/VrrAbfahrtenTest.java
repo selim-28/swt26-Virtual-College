@@ -7,14 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import tools.jackson.databind.json.JsonMapper;
 
-/*
- * EPIC 6 – Oeffentlicher Nahverkehr.
- *   US 6.2 "Ersatzdaten bei Ausfall des Verkehrsdienstes" (Issue #30)
- *
- * Wir lassen den VRR-Dienst GEZIELT ausfallen, indem wir eine absichtlich
- * unerreichbare Adresse einstellen (127.0.0.1:9 - dort antwortet nichts).
- * Erwartung: KEIN Absturz, sondern Ersatzdaten, die klar als Offline-Daten
- * gekennzeichnet sind.
+/**
+ * US 6.2 (Issue #30): Faellt der VRR-Dienst aus, liefert das Backend statt eines
+ * Fehlers klar gekennzeichnete Ersatzdaten. Der Ausfall wird ueber eine
+ * unerreichbare Adresse erzwungen.
  */
 class VrrAbfahrtenTest {
 
@@ -24,12 +20,10 @@ class VrrAbfahrtenTest {
     void beiAusfallKommenGekennzeichneteErsatzdatenStattAbsturz() {
         VrrAbfahrten ausgefallen = new VrrAbfahrten("http://127.0.0.1:9/kein-dienst");
 
-        AbfahrtsDaten daten = ausgefallen.holeAbfahrten();   // darf NICHT werfen
+        AbfahrtsDaten daten = ausgefallen.holeAbfahrten();
 
         String json = daten.alsJson();
-        // Eindeutig als Offline-Daten gekennzeichnet (Akzeptanzkriterium).
         assertThat(json).contains("Offline-Fallback");
-        // Es gibt weiterhin anzeigbare Abfahrten (Linie, Ziel, Zeit).
         assertThat(json).contains("S-Bahn S1");
         assertThat(json).contains("\"typ\":\"abfahrt\"");
     }

@@ -1,8 +1,7 @@
-// Gemeinsame API-Schicht: Adressen, Token-Verwaltung und der zentrale
-// fetch-Helfer. Alle Fachmodule (campus, pinwand, ...) reden NUR hierueber
-// mit den Backends - wie im Backend gibt es eine Stelle fuer Querschnitt.
+// Gemeinsame API-Schicht: Adressen, Token-Verwaltung und fetch-Helfer.
+// Alle Fachmodule sprechen ausschliesslich hierueber mit den Backends.
 
-// Zentrale API-Adressen. Nginx leitet diese relativen Pfade an die Backends weiter.
+// Nginx leitet diese relativen Pfade an die passenden Backends weiter.
 export const API = {
   campus: "/api/campus/karte",
   reservierungen: "/api/campus/reservierungen",
@@ -11,14 +10,13 @@ export const API = {
   historie: "/api/mensa/historie",
   transit: "/api/transit/abfahrten",
   simulation: "/api/simulation/start",
-  // Authentifizierung (Registrieren / Login / "wer bin ich" / Logout).
   authRegister: "/api/auth/registrieren",
   authLogin: "/api/auth/login",
   authIch: "/api/auth/ich",
   authLogout: "/api/auth/logout"
 };
 
-// --- Token-Verwaltung im Browser (bleibt auch nach Reload erhalten) ---
+// Token-Verwaltung im Browser; bleibt auch nach einem Reload erhalten.
 export function gespeichertesToken() {
   try { return localStorage.getItem("vc_token"); } catch { return null; }
 }
@@ -29,16 +27,14 @@ export function merkeKonto(data) {
   try {
     localStorage.setItem("vc_token", data.token);
     localStorage.setItem("vc_konto", JSON.stringify(data));
-  } catch { /* localStorage nicht verfuegbar: dann eben nur fuer diese Sitzung */ }
+  } catch { /* Ohne localStorage gilt die Anmeldung nur fuer diese Sitzung. */ }
 }
 export function vergissKonto() {
   try { localStorage.removeItem("vc_token"); localStorage.removeItem("vc_konto"); } catch { /* egal */ }
 }
 
-// Kleine Helferfunktion fuer Fetch-Aufrufe: haengt automatisch das Login-Token
-// an und liest bei Fehlern die Klartext-Meldung des Backends aus.
-// Das Token ist ein JWT und wird als "Authorization: Bearer <token>"
-// gesendet (Standard fuer token-basierte APIs mit Spring Security).
+// Haengt das Login-Token als "Authorization: Bearer <token>" an und liest bei
+// Fehlern die Klartextmeldung des Backends aus.
 export async function apiJson(url, options = {}) {
   const token = gespeichertesToken();
   const headers = { ...(options.headers || {}) };
@@ -53,7 +49,7 @@ export async function apiJson(url, options = {}) {
     } catch { /* keine JSON-Fehlermeldung vorhanden */ }
     throw new Error(meldung);
   }
-  // Manche Endpunkte (z. B. Logout) antworten ohne Inhalt.
+  // Manche Endpunkte, etwa Logout, antworten ohne Inhalt.
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 }

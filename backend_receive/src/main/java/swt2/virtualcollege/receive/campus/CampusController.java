@@ -14,25 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 import swt2.virtualcollege.receive.auth.AngemeldeterNutzer;
 import swt2.virtualcollege.receive.persistenz.GespeicherteReservierung;
 
-/*
- * REST-Controller fuer den Live-Campus.
- *
- * Das Frontend bekommt hier die Karte, Raeume, Veranstaltungen und
- * Reservierungen. Dadurch wird aus dem Kanban-Screen "Live Campus" eine
- * echte Funktion: ansehen, Raum auswaehlen, reservieren, speichern.
+/**
+ * REST-Schnittstelle des Campus-Moduls: Karte mit Raeumen und Veranstaltungen
+ * sowie Anlegen und Loeschen von Reservierungen.
  */
 @RestController
 @RequestMapping("/api/campus")
 public class CampusController {
 
-    // Service enthaelt die Fachlogik und Datenbank-Zugriffe.
     private final CampusService service;
 
     public CampusController(CampusService service) {
         this.service = service;
     }
 
-    // GET /api/campus/karte: alle Daten fuer die Campus-Karte.
     @GetMapping("/karte")
     public CampusAntwort karte() {
         return new CampusAntwort(
@@ -42,12 +37,9 @@ public class CampusController {
         );
     }
 
-    /*
-     * POST /api/campus/reservierungen: Raum reservieren.
-     *
-     * WICHTIG (US 3.2 "dem angemeldeten Nutzer zugeordnet"): Name und Rolle
-     * kommen aus dem GEPRUEFTEN JWT (Authentication-Principal), nicht aus dem
-     * Request - so kann niemand im Namen anderer reservieren.
+    /**
+     * Reserviert einen Raum. Name und Rolle stammen aus dem geprueften Token und
+     * nicht aus dem Request, damit niemand im Namen anderer reserviert (US 3.2).
      */
     @PostMapping("/reservierungen")
     public ReservierungAntwort reservieren(@RequestBody NeueReservierung anfrage,
@@ -58,14 +50,13 @@ public class CampusController {
         return alsAntwort(service.reserviere(zugeordnet, nutzer.rolle()));
     }
 
-    // DELETE /api/campus/reservierungen/{id}: Reservierung entfernen.
-    // Die SecurityConfig laesst DELETE nur fuer die Rolle ADMIN durch.
+    /** Loeschen ist ueber die SecurityConfig auf die Admin-Rolle beschraenkt. */
     @DeleteMapping("/reservierungen/{id}")
     public void loeschen(@PathVariable Long id) {
         service.loescheReservierung(id);
     }
 
-    // Entity -> JSON-Antwort.
+    /** Wandelt die Entity in die JSON-Antwort um. */
     private ReservierungAntwort alsAntwort(GespeicherteReservierung reservierung) {
         return new ReservierungAntwort(
                 reservierung.getId(),
@@ -79,17 +70,16 @@ public class CampusController {
         );
     }
 
-    // Antwort fuer die gesamte Karte.
+    /** Antwort mit allen Daten der Campus-Karte. */
     public record CampusAntwort(List<RaumInfo> raeume,
                                 List<VeranstaltungInfo> veranstaltungen,
                                 List<ReservierungAntwort> reservierungen) {
     }
 
-    // Raumdaten, die das React-Frontend direkt zeichnen kann.
-    // x/y = Position auf der gemalten Fallback-Karte (in Prozent).
-    // lat/lng = echte GPS-Koordinaten fuer die Leaflet-Karte (Satellit/Strasse).
-    // reservierbar = duerfen Studierende diesen Raum buchen? (US 3.2: nur
-    // "freie Raeume" wie Labore/Seminarraeume - NICHT Mensa oder Vorlesungssaal.)
+    /**
+     * Raumdaten fuer das Frontend. x/y ist die Position auf der gezeichneten
+     * Ersatzkarte in Prozent, lat/lng die Koordinate fuer die Leaflet-Karte.
+     */
     public record RaumInfo(String id, String name, String gebaeude, String typ,
                            String status, boolean reservierbar,
                            int kapazitaet, int personen,
@@ -98,18 +88,18 @@ public class CampusController {
                            String beschreibung) {
     }
 
-    // Kleine Veranstaltungsdaten fuer Marker und Detailanzeigen.
+    /** Veranstaltungsdaten fuer Marker und Detailanzeige. */
     public record VeranstaltungInfo(String id, String titel, String raumId,
                                     String von, String bis, String dozent,
                                     String status) {
     }
 
-    // Anfrage aus dem Frontend.
+    /** Anfrage des Frontends beim Reservieren. */
     public record NeueReservierung(String raumId, String reserviertVon,
                                    String von, String bis) {
     }
 
-    // Antwort nach erfolgreicher Reservierung.
+    /** Antwort nach erfolgreicher Reservierung. */
     public record ReservierungAntwort(Long id, String raumId, String raumName,
                                       String reserviertVon, String von, String bis,
                                       String status, String erstelltAm) {

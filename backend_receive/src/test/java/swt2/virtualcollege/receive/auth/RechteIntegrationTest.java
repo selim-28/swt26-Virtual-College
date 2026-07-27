@@ -16,15 +16,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/*
- * ROLLEN & RECHTE ueber den ECHTEN HTTP-Stack (Spring Security + JWT).
- *
- * Beweist die drei Demo-Rollen:
- *   - Student:   darf Lernraeume reservieren, aber KEINE Hoersaele, NICHT loeschen.
- *   - Professor: darf zusaetzlich Hoersaele reservieren.
- *   - Admin:     darf verwalten (Reservierungen und Pinwand-Posts LOESCHEN).
- * Ausserdem: Die Zuordnung (reserviertVon/autor) kommt aus dem GEPRUEFTEN JWT,
- * nicht aus dem Request - man kann nicht unter fremdem Namen buchen/posten.
+/**
+ * Rollen und Rechte ueber den echten HTTP-Stack: Studierende reservieren
+ * Lernraeume, Professor:innen zusaetzlich Hoersaele, Loeschen bleibt der
+ * Admin-Rolle vorbehalten. Geprueft wird ausserdem, dass die Zuordnung aus dem
+ * Token stammt und nicht aus dem Request.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RechteIntegrationTest {
@@ -34,8 +30,6 @@ class RechteIntegrationTest {
 
     private final ObjectMapper om = new ObjectMapper();
     private final HttpClient http = HttpClient.newHttpClient();
-
-    // --- kleine Helfer -----------------------------------------------------
 
     private String url(String pfad) {
         return "http://localhost:" + port + pfad;
@@ -69,10 +63,7 @@ class RechteIntegrationTest {
                 .build(), BodyHandlers.ofString());
     }
 
-    // --- die eigentlichen Rechte-Tests --------------------------------------
-
-    // Professor darf den Hoersaal reservieren - und die Zuordnung kommt aus dem
-    // Token: Obwohl der Request "Boesewicht" behauptet, steht "Prof. Demo" drin.
+    // Der Request behauptet "Boesewicht", gespeichert wird der Name aus dem Token.
     @Test
     void professorDarfHoersaalReservierenZuordnungAusDemToken() throws Exception {
         String token = login("prof@fh-dortmund.de");
@@ -82,10 +73,9 @@ class RechteIntegrationTest {
         assertThat(antwort.statusCode()).isEqualTo(200);
         JsonNode json = om.readTree(antwort.body());
         assertThat(json.get("raumName").asText()).isEqualTo("Hoersaal 1");
-        assertThat(json.get("reserviertVon").asText()).isEqualTo("Prof. Demo"); // NICHT "Boesewicht"!
+        assertThat(json.get("reserviertVon").asText()).isEqualTo("Prof. Demo");
     }
 
-    // Student darf den Hoersaal NICHT reservieren (Rollenregel, 400 + Klartext).
     @Test
     void studentDarfHoersaalNichtReservieren() throws Exception {
         String token = login("student@fh-dortmund.de");
@@ -96,25 +86,22 @@ class RechteIntegrationTest {
         assertThat(antwort.body()).contains("Hoersaal");
     }
 
-    // Admin darf Reservierungen loeschen; eine zweite Loeschung meldet 404.
     @Test
     void adminDarfReservierungenLoeschen() throws Exception {
-        // Student legt eine Reservierung an ...
         String studentToken = login("student@fh-dortmund.de");
         HttpResponse<String> angelegt = reserviere(studentToken, "ef42-innovationlab", "06:00", "07:00");
         assertThat(angelegt.statusCode()).isEqualTo(200);
         long id = om.readTree(angelegt.body()).get("id").asLong();
 
-        // ... und der Admin raeumt sie weg.
         String adminToken = login("admin@fh-dortmund.de");
         assertThat(loesche(adminToken, "/api/campus/reservierungen/" + id).statusCode())
                 .isEqualTo(200);
-        // Noch einmal loeschen -> gibt es nicht mehr.
+        // Ein zweiter Loeschversuch meldet 404.
         assertThat(loesche(adminToken, "/api/campus/reservierungen/" + id).statusCode())
                 .isEqualTo(404);
     }
 
-    // Student darf NICHT loeschen: Spring Security blockt mit 403 (Zugriff verweigert).
+    // Spring Security blockt das Loeschen fuer Studierende mit 403.
     @Test
     void studentDarfNichtLoeschen() throws Exception {
         String studentToken = login("student@fh-dortmund.de");
@@ -126,7 +113,6 @@ class RechteIntegrationTest {
         assertThat(verweigert.statusCode()).isEqualTo(403);
     }
 
-    // Admin darf Pinwand-Posts loeschen; Autor/Rolle kommen beim Erstellen aus dem Token.
     @Test
     void adminDarfPinwandPostsLoeschen() throws Exception {
         String studentToken = login("student@fh-dortmund.de");
@@ -139,7 +125,7 @@ class RechteIntegrationTest {
                 .build(), BodyHandlers.ofString());
         assertThat(post.statusCode()).isEqualTo(200);
         JsonNode json = om.readTree(post.body());
-        // Autor + Rolle stammen aus dem Token, nicht aus dem Request:
+        // Autor und Rolle stammen aus dem Token, nicht aus dem Request.
         assertThat(json.get("autor").asText()).isEqualTo("Demo Student");
         assertThat(json.get("rolle").asText()).isEqualTo("Student");
 

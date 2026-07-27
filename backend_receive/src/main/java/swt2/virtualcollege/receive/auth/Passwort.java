@@ -7,33 +7,22 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-/*
- * AUTHENTIFIZIERUNG – das sichere Passwort-Hashing.
- *
- * Wir speichern Passwoerter NIE im Klartext. Stattdessen:
- *  1. wir wuerfeln ein zufaelliges "Salt" (Salz) pro Konto,
- *  2. wir rechnen das Passwort + Salt 120.000-mal durch PBKDF2 (ein
- *     absichtlich langsames Verfahren, das Knacken teuer macht),
- *  3. wir speichern nur "salt:hash" – nie das echte Passwort.
- *
- * Beim Login wird das eingegebene Passwort mit DEMSELBEN Salt erneut
- * gehasht und mit dem gespeicherten Hash verglichen.
- *
- * Wir benutzen bewusst nur die Java-Standardbibliothek (javax.crypto),
- * damit keine zusaetzliche Bibliothek noetig ist.
+/**
+ * Passwort-Hashing mit PBKDF2 und zufaelligem Salt pro Konto. Gespeichert wird
+ * nur "salt:hash"; beim Login wird mit demselben Salt neu gehasht und verglichen.
+ * Verwendet bewusst nur die Java-Standardbibliothek.
  */
 public final class Passwort {
 
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final int ITERATIONEN = 120_000;   // mehr = sicherer, aber langsamer
+    private static final int ITERATIONEN = 120_000;
     private static final int SCHLUESSEL_BITS = 256;
     private static final int SALT_BYTES = 16;
 
     private Passwort() {
-        // Hilfsklasse: keine Objekte noetig.
     }
 
-    /** Erzeugt aus einem Klartext-Passwort den Speicher-Wert "salt:hash". */
+    /** Erzeugt aus einem Klartext-Passwort den Speicherwert "salt:hash". */
     public static String hash(String klartext) {
         byte[] salt = new byte[SALT_BYTES];
         RANDOM.nextBytes(salt);
@@ -53,7 +42,7 @@ public final class Passwort {
         byte[] salt = Base64.getDecoder().decode(teile[0]);
         byte[] erwartet = Base64.getDecoder().decode(teile[1]);
         byte[] tatsaechlich = pbkdf2(klartext.toCharArray(), salt);
-        // Zeit-konstanter Vergleich (schuetzt gegen "Timing-Angriffe").
+        // Zeitkonstanter Vergleich als Schutz gegen Timing-Angriffe.
         return MessageDigest.isEqual(erwartet, tatsaechlich);
     }
 

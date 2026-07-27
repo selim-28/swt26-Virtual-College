@@ -16,16 +16,10 @@ import org.springframework.web.server.ResponseStatusException;
 import swt2.virtualcollege.receive.persistenz.GespeicherterPinwandPost;
 import swt2.virtualcollege.receive.persistenz.PinwandPostRepository;
 
-/*
- * EPIC 4 – Virtuelle Pinwand.
- *   US 4.1 "Beitraege anzeigen und erstellen" (Issue #8)
- *   US 4.2 "Beitrag liken" (Issue #25)
- *   US 4.3 "Ueber neue Beitraege benachrichtigt werden" (Issue #26)
- *
- * Die Datenbank wird durch ein Mockito-Mock ersetzt; der
- * BenachrichtigungsSpeicher ist ECHT, damit wir das Observer-Muster im
- * Live-Pfad nachweisen koennen: neuer Post -> Subjekt (Pinwand) ->
- * registrierter Beobachter erhaelt die Benachrichtigung.
+/**
+ * US 4.1 (Issue #8), US 4.2 (Issue #25) und US 4.3 (Issue #26). Das Repository ist
+ * gemockt, der BenachrichtigungsSpeicher dagegen echt, damit sich der Observer im
+ * Live-Pfad nachweisen laesst.
  */
 class PinwandServiceTest {
 
@@ -33,7 +27,7 @@ class PinwandServiceTest {
     private final BenachrichtigungsSpeicher benachrichtigungen = new BenachrichtigungsSpeicher();
     private final PinwandService service = new PinwandService(repository, benachrichtigungen);
 
-    // --- US 4.1 + 4.3: Erstellen speichert UND benachrichtigt automatisch. ---
+    // US 4.1 und 4.3: Erstellen speichert und benachrichtigt.
     @Test
     void erstellePostSpeichertUndBenachrichtigtBeobachter() {
         when(repository.save(any(GespeicherterPinwandPost.class)))
@@ -42,13 +36,10 @@ class PinwandServiceTest {
         GespeicherterPinwandPost post = service.erstellePost(new PinwandController.NeuerPost(
                 "Demo Student", "Student", "Campus", "ILIAS heute langsam", "Bitte Geduld."));
 
-        // US 4.1: gespeichert mit allen Feldern.
         assertThat(post.getAutor()).isEqualTo("Demo Student");
         assertThat(post.getTitel()).isEqualTo("ILIAS heute langsam");
         verify(repository).save(any(GespeicherterPinwandPost.class));
 
-        // US 4.3: der registrierte Beobachter wurde AUTOMATISCH informiert,
-        // und die Benachrichtigung enthaelt Informationen zum Beitrag.
         assertThat(benachrichtigungen.alle()).hasSize(1);
         String text = benachrichtigungen.alle().get(0).text();
         assertThat(text).contains("ILIAS heute langsam");
@@ -56,10 +47,9 @@ class PinwandServiceTest {
         assertThat(text).contains("Campus");
     }
 
-    // --- US 4.3: NUR registrierte Beobachter werden informiert. ---
+    // US 4.3: Nur registrierte Beobachter werden informiert.
     @Test
     void nurRegistrierteBeobachterWerdenInformiert() {
-        // Zwei Test-Beobachter am Domaenen-Subjekt: erst ist nur EINER abonniert.
         final int[] zaehlerErster = {0};
         final int[] zaehlerZweiter = {0};
         Beobachter erster = b -> zaehlerErster[0]++;
@@ -69,23 +59,22 @@ class PinwandServiceTest {
         pinwand.abonniere(erster);
         pinwand.neuerPost(new Post("Testtitel", "Inhalt"));
 
-        assertThat(zaehlerErster[0]).isEqualTo(1);   // registriert -> informiert
-        assertThat(zaehlerZweiter[0]).isZero();      // (noch) nicht registriert -> nichts
+        assertThat(zaehlerErster[0]).isEqualTo(1);
+        assertThat(zaehlerZweiter[0]).isZero();
 
-        // Sobald der Zweite abonniert, bekommt auch er Benachrichtigungen.
         pinwand.abonniere(zweiter);
         pinwand.neuerPost(new Post("Zweiter Beitrag", "Inhalt"));
         assertThat(zaehlerErster[0]).isEqualTo(2);
         assertThat(zaehlerZweiter[0]).isEqualTo(1);
 
-        // Abmelden beendet die Benachrichtigungen ("Lapsed Listener" vermeiden).
+        // Abmelden beendet die Benachrichtigungen.
         pinwand.meldeAb(erster);
         pinwand.neuerPost(new Post("Dritter Beitrag", "Inhalt"));
-        assertThat(zaehlerErster[0]).isEqualTo(2);   // unveraendert
+        assertThat(zaehlerErster[0]).isEqualTo(2);
         assertThat(zaehlerZweiter[0]).isEqualTo(2);
     }
 
-    // --- US 4.3: Der Speicher behaelt nur die letzten Eintraege (kein Leck). ---
+    // US 4.3: Der Speicher behaelt nur die juengsten Eintraege.
     @Test
     void benachrichtigungsSpeicherBehaeltNurDieLetztenEintraege() {
         for (int i = 1; i <= BenachrichtigungsSpeicher.MAX_EINTRAEGE + 5; i++) {
@@ -93,11 +82,10 @@ class PinwandServiceTest {
         }
 
         assertThat(benachrichtigungen.alle()).hasSize(BenachrichtigungsSpeicher.MAX_EINTRAEGE);
-        // Neueste zuerst; die aeltesten 5 sind rausgefallen.
         assertThat(benachrichtigungen.alle().get(0).text()).endsWith("Meldung 25");
     }
 
-    // --- US 4.2: Like erhoeht den Zaehler und speichert dauerhaft. ---
+    // US 4.2: Like erhoeht den Zaehler und wird gespeichert.
     @Test
     void likeErhoehtZaehlerUndSpeichert() {
         GespeicherterPinwandPost post = new GespeicherterPinwandPost(
@@ -109,10 +97,10 @@ class PinwandServiceTest {
         GespeicherterPinwandPost ergebnis = service.like(1L);
 
         assertThat(ergebnis.getLikes()).isEqualTo(1);
-        verify(repository).save(post);   // Aenderung wird dauerhaft gespeichert
+        verify(repository).save(post);
     }
 
-    // --- US 4.1: leere Pflichtfelder bekommen robuste Standardwerte. ---
+    // US 4.1: Leere Pflichtfelder bekommen Standardwerte.
     @Test
     void leereFelderBekommenStandardwerte() {
         when(repository.save(any(GespeicherterPinwandPost.class)))
@@ -126,7 +114,7 @@ class PinwandServiceTest {
         assertThat(post.getTitel()).isEqualTo("Neuer Beitrag");
     }
 
-    // --- Admin-Verwaltung: Loeschen entfernt Posts, unbekannte IDs -> 404. ---
+    // Loeschen entfernt Beitraege; unbekannte IDs melden 404.
     @Test
     void loeschenEntferntPostsUndMeldetUnbekannteIds() {
         when(repository.existsById(3L)).thenReturn(true);

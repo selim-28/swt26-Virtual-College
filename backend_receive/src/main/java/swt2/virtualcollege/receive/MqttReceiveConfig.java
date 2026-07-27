@@ -14,14 +14,16 @@ import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannel
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 
+/**
+ * Eingehende MQTT-Verbindung: Kanal und Adapter, ueber die dieses Backend das
+ * Topic abonniert.
+ */
 @Configuration
 @EnableIntegration
 public class MqttReceiveConfig {
 
-    // Namen MUESSEN zu den Schluesseln in application.properties passen
-    // (mqtt.broker.url / mqtt.client.id / mqtt.topic). Im Docker-Betrieb
-    // ueberschreibt die Umgebungsvariable MQTT_BROKER_URL den Wert mqtt.broker.url
-    // (Spring uebersetzt MQTT_BROKER_URL automatisch nach mqtt.broker.url).
+    // Schluessel exakt in Punkt-Schreibweise wie in application.properties;
+    // im Docker-Betrieb ueberschreibt MQTT_BROKER_URL den Wert.
     @Value("${mqtt.broker.url}")
     private String brokerUrl;
 
