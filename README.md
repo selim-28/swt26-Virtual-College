@@ -235,12 +235,6 @@ swt26-Virtual-College/
 ├── docker-compose.yml          # Ein-Knopf-Start für alle Container
 ├── Dockerfile.java             # Container-Build für ein ausgewähltes Maven-Modul
 ├── ANFORDERUNGEN.md            # Product Backlog: Epics, User Stories, Akzeptanzkriterien
-├── docs/                       # Projektdokumentation als HTML
-│   ├── erklaerung.html         # Hauptdoku: Konzepte, Diagramme, Compliance
-│   ├── code-lesen.html         # Kerndateien Zeile für Zeile erklärt
-│   ├── code-verstehen.html
-│   └── kritik.html
-├── unterlagen/                 # Lernmaterial und Altstände (Folien, Kanban, altes OOD)
 ├── .github/ISSUE_TEMPLATE/     # Vorlagen für User Stories und Bug Reports
 ├── .github/PULL_REQUEST_TEMPLATE.md
 └── .github/workflows/          # Pre-Merge-Checks und Release
@@ -310,13 +304,3 @@ Der Release-Workflow findet die deploybaren Module über die Maven-Metadaten, es
 also keine Ordnerliste in GitHub Actions gepflegt werden. Aktuell hat sich noch keines
 unserer Module dafür angemeldet — wir bauen die Images über `docker-compose.yml`.
 
-## Dokumentation
-
-Die ausführliche Projektdokumentation liegt in [docs/](docs/) und wird am besten im
-Browser geöffnet:
-
-- [docs/erklaerung.html](docs/erklaerung.html) — die Hauptdoku mit Konzepten,
-  Diagrammen, Praktikums-Nachweis und Compliance
-- [docs/code-lesen.html](docs/code-lesen.html) — die Kerndateien Zeile für Zeile
-- [docs/code-verstehen.html](docs/code-verstehen.html) — die Ideen dahinter
-- [docs/kritik.html](docs/kritik.html) — was wir selbst kritisch sehen
