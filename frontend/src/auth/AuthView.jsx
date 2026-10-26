@@ -67,7 +67,7 @@ export default function AuthView({ onLogin, onRegister }) {
           )}
           <label>
             E-Mail
-            <input name="email" type="email" placeholder="name@fh-dortmund.de" required />
+            <input name="email" type="email" placeholder="name@example.invalid" required />
           </label>
           <label>
             Passwort
@@ -82,7 +82,7 @@ export default function AuthView({ onLogin, onRegister }) {
           </button>
         </form>
 
-        <p className="muted small-hint">Demo-Konto zum Ausprobieren: <b>student@fh-dortmund.de</b> / <b>passwort123</b></p>
+        <p className="muted small-hint">Demo-Konto zum Ausprobieren: <b>student@example.invalid</b> / <b>passwort123</b></p>
       </section>
     </div>
   );

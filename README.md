@@ -29,8 +29,14 @@ Benachrichtigungen, Mensa-Speiseplan, VRR-Abfahrten, Simulation und Datenbank-Hi
 
 > [!NOTE]
 > Die App liegt komplett hinter einem Login. Zum Ausprobieren gibt es ein Demo-Konto:
-> `student@fh-dortmund.de` / `passwort123`. Man kann sich natürlich auch selbst
+> `student@example.invalid` / `passwort123`. Man kann sich natürlich auch selbst
 > registrieren.
+
+Die Adressen unter `example.invalid` sind fiktive Demo- und Testdaten. Die
+Anwendung ist ein lokales Studienprojekt. Demo-Passwörter und der Entwicklungswert
+für die JWT-Signatur sind keine Zugangsdaten zu Hochschul- oder Produktivsystemen.
+Für eine öffentlich erreichbare Installation müssen Demo-Konten, Rollenvergabe und
+Zugriffsschutz gesondert abgesichert werden.
 
 ## Team
 
@@ -165,7 +171,7 @@ als `Authorization: Bearer` mitschicken:
 # 1) Einloggen und Token merken
 TOKEN=$(curl -s -X POST http://localhost:8090/api/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"email":"student@fh-dortmund.de","passwort":"passwort123"}' \
+  -d '{"email":"student@example.invalid","passwort":"passwort123"}' \
   | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
 
 # 2) Campus-Karte lesen
@@ -304,3 +310,14 @@ Der Release-Workflow findet die deploybaren Module über die Maven-Metadaten, es
 also keine Ordnerliste in GitHub Actions gepflegt werden. Aktuell hat sich noch keines
 unserer Module dafür angemeldet — wir bauen die Images über `docker-compose.yml`.
 
+
+## Quellcode für das Portfolio
+
+Das gemeinsame Arbeitsrepository enthält ältere Lehrunterlagen, Projektarchive und
+persönliche E-Mail-Adressen in Commit-Metadaten. Eine Änderung an der aktuellen
+Dateiversion entfernt diese Informationen nicht aus der Git-Historie.
+
+Für ein öffentliches Portfolio wird deshalb nur ein geprüfter Quellstand ohne
+`.git`-Verzeichnis, alte Commits, Datenbankinhalte oder lokale Konfigurationen
+übernommen. Das private Arbeitsrepository bleibt getrennt. Die Teamzuordnung oben
+bleibt erhalten; die Freigabe des gemeinsamen Codes wird mit dem Team abgestimmt.

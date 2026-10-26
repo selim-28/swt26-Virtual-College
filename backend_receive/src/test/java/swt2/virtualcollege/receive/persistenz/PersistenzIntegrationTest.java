@@ -47,13 +47,13 @@ class PersistenzIntegrationTest {
     @Test
     void benutzerkontoUeberlebtNeustart() {
         benutzerkontoRepository.save(new Benutzerkonto(
-                "max@fh-dortmund.de", "Max Mustermann", "Student",
+                "max@example.invalid", "Max Mustermann", "Student",
                 "salt:hash", Instant.now()));
 
         em.flush();
         em.clear();
 
-        Benutzerkonto geladen = benutzerkontoRepository.findByEmail("max@fh-dortmund.de")
+        Benutzerkonto geladen = benutzerkontoRepository.findByEmail("max@example.invalid")
                 .orElseThrow();
         assertThat(geladen.getId()).isNotNull();
         assertThat(geladen.getName()).isEqualTo("Max Mustermann");
@@ -65,17 +65,17 @@ class PersistenzIntegrationTest {
     @Test
     void emailIstEindeutig() {
         benutzerkontoRepository.save(new Benutzerkonto(
-                "einmalig@fh-dortmund.de", "Erste", "Student", "salt:hash", Instant.now()));
+                "einmalig@example.invalid", "Erste", "Student", "salt:hash", Instant.now()));
         em.flush();
 
-        assertThat(benutzerkontoRepository.existsByEmail("einmalig@fh-dortmund.de")).isTrue();
-        assertThat(benutzerkontoRepository.existsByEmail("unbekannt@fh-dortmund.de")).isFalse();
+        assertThat(benutzerkontoRepository.existsByEmail("einmalig@example.invalid")).isTrue();
+        assertThat(benutzerkontoRepository.existsByEmail("unbekannt@example.invalid")).isFalse();
     }
 
     @Test
     void reservierungUeberlebtNeustart() {
         reservierungRepository.save(new GespeicherteReservierung(
-                "raum-101", "Hoersaal 101", "max@fh-dortmund.de",
+                "raum-101", "Hoersaal 101", "max@example.invalid",
                 "2026-07-08T10:00", "2026-07-08T12:00", "aktiv", Instant.now()));
 
         em.flush();
@@ -85,7 +85,7 @@ class PersistenzIntegrationTest {
         assertThat(alle).hasSize(1);
         GespeicherteReservierung r = alle.get(0);
         assertThat(r.getRaumName()).isEqualTo("Hoersaal 101");
-        assertThat(r.getReserviertVon()).isEqualTo("max@fh-dortmund.de");
+        assertThat(r.getReserviertVon()).isEqualTo("max@example.invalid");
         assertThat(r.getStatus()).isEqualTo("aktiv");
     }
 
@@ -131,9 +131,9 @@ class PersistenzIntegrationTest {
         long postsVorher = pinwandPostRepository.count();
 
         benutzerkontoRepository.save(new Benutzerkonto(
-                "u@fh-dortmund.de", "U", "Student", "salt:hash", Instant.now()));
+                "u@example.invalid", "U", "Student", "salt:hash", Instant.now()));
         reservierungRepository.save(new GespeicherteReservierung(
-                "r-1", "Raum 1", "u@fh-dortmund.de", "10:00", "11:00", "aktiv", Instant.now()));
+                "r-1", "Raum 1", "u@example.invalid", "10:00", "11:00", "aktiv", Instant.now()));
         pinwandPostRepository.save(new GespeicherterPinwandPost(
                 "U", "Student", "Info", "Titel", "Inhalt", Instant.now()));
         gerichtRepository.save(new GespeichertesGericht("Pizza", 4.00, Instant.now()));
@@ -141,7 +141,7 @@ class PersistenzIntegrationTest {
         em.flush();
         em.clear();
 
-        assertThat(benutzerkontoRepository.existsByEmail("u@fh-dortmund.de")).isTrue();
+        assertThat(benutzerkontoRepository.existsByEmail("u@example.invalid")).isTrue();
         assertThat(reservierungRepository.findAllByRaumIdOrderByIdDesc("r-1")).hasSize(1);
         // Beim Start koennen Beispielbeitraege angelegt worden sein, daher die
         // relative Zunahme pruefen.

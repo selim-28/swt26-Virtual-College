@@ -125,8 +125,22 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Projekt-spezifisch ###
-# Grosse Referenz-/Lerndateien nur lokal halten (Repo schlank), aber
-# Praktikums-Abgaben (Kanban-Boards, OOD-Diagramm) BLEIBEN im Repo.
-unterlagen/SWT2ALLIN7.pdf
-unterlagen/Sonntag.pdf
+### Private lokale Dateien ###
+# Zugangsdaten und lokale Datenbankinhalte bleiben ausserhalb von Git.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+*.mv.db
+*.trace.db
+# Lehrmaterial, Abgaben und persoenliche Notizen nicht ins Portfolio kopieren.
+/unterlagen/
+/private/
+/local/

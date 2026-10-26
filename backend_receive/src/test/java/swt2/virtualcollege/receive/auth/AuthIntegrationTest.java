@@ -34,7 +34,7 @@ class AuthIntegrationTest {
     private final HttpClient http = HttpClient.newHttpClient();
 
     private static final String DEMO_LOGIN =
-            "{\"email\":\"student@fh-dortmund.de\",\"passwort\":\"passwort123\"}";
+            "{\"email\":\"student@example.invalid\",\"passwort\":\"passwort123\"}";
 
     private HttpResponse<String> post(String pfad, String jsonBody, String token) throws Exception {
         HttpRequest.Builder b = HttpRequest.newBuilder(URI.create("http://localhost:" + port + pfad))
@@ -84,7 +84,7 @@ class AuthIntegrationTest {
     @Test
     void falschesPasswortGibt401MitKlartext() throws Exception {
         HttpResponse<String> r = post("/api/auth/login",
-                "{\"email\":\"student@fh-dortmund.de\",\"passwort\":\"falsch\"}", null);
+                "{\"email\":\"student@example.invalid\",\"passwort\":\"falsch\"}", null);
 
         assertThat(r.statusCode()).isEqualTo(401);
         assertThat(feld(r.body(), "message")).isEqualTo("E-Mail oder Passwort ist falsch.");
@@ -105,7 +105,7 @@ class AuthIntegrationTest {
         HttpResponse<String> r = get("/api/auth/ich", token);
 
         assertThat(r.statusCode()).isEqualTo(200);
-        assertThat(feld(r.body(), "email")).isEqualTo("student@fh-dortmund.de");
+        assertThat(feld(r.body(), "email")).isEqualTo("student@example.invalid");
         assertThat(feld(r.body(), "name")).isEqualTo("Demo Student");
     }
 
@@ -119,7 +119,7 @@ class AuthIntegrationTest {
 
     @Test
     void registrierenLegtKontoAnUndLoggtDirektEin() throws Exception {
-        String body = "{\"email\":\"neu.person@fh-dortmund.de\",\"name\":\"Neue Person\","
+        String body = "{\"email\":\"neu.person@example.invalid\",\"name\":\"Neue Person\","
                 + "\"rolle\":\"Betreuer\",\"passwort\":\"geheim123\"}";
 
         HttpResponse<String> r = post("/api/auth/registrieren", body, null);
@@ -129,12 +129,12 @@ class AuthIntegrationTest {
         String token = feld(r.body(), "token");
         HttpResponse<String> ich = get("/api/auth/ich", token);
         assertThat(ich.statusCode()).isEqualTo(200);
-        assertThat(feld(ich.body(), "email")).isEqualTo("neu.person@fh-dortmund.de");
+        assertThat(feld(ich.body(), "email")).isEqualTo("neu.person@example.invalid");
     }
 
     @Test
     void bereitsVerwendeteEmailWirdAbgelehnt() throws Exception {
-        String body = "{\"email\":\"doppelt@fh-dortmund.de\",\"name\":\"A\","
+        String body = "{\"email\":\"doppelt@example.invalid\",\"name\":\"A\","
                 + "\"rolle\":\"Student\",\"passwort\":\"geheim123\"}";
         assertThat(post("/api/auth/registrieren", body, null).statusCode()).isEqualTo(200);
 
@@ -145,7 +145,7 @@ class AuthIntegrationTest {
 
     @Test
     void zuKurzesPasswortWirdAbgelehnt() throws Exception {
-        String body = "{\"email\":\"kurz@fh-dortmund.de\",\"name\":\"K\","
+        String body = "{\"email\":\"kurz@example.invalid\",\"name\":\"K\","
                 + "\"rolle\":\"Student\",\"passwort\":\"123\"}";
         assertThat(post("/api/auth/registrieren", body, null).statusCode()).isEqualTo(400);
     }

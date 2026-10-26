@@ -17,7 +17,7 @@ class JwtDienstTest {
     private static final String SECRET = "test-geheimer-schluessel-mindestens-32z!";
 
     private Benutzerkonto konto() {
-        return new Benutzerkonto("a@b.de", "Alice", "Student", "salt:hash", Instant.now());
+        return new Benutzerkonto("alice@example.invalid", "Alice", "Student", "salt:hash", Instant.now());
     }
 
     @Test
@@ -28,7 +28,7 @@ class JwtDienstTest {
         Claims inhalt = dienst.pruefe(token);
 
         assertThat(token.split("\\.")).hasSize(3);
-        assertThat(inhalt.getSubject()).isEqualTo("a@b.de");
+        assertThat(inhalt.getSubject()).isEqualTo("alice@example.invalid");
         assertThat(inhalt.get("name", String.class)).isEqualTo("Alice");
         assertThat(inhalt.get("rolle", String.class)).isEqualTo("Student");
         assertThat(inhalt.getId()).isNotBlank();

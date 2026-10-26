@@ -66,7 +66,7 @@ class RechteIntegrationTest {
     // Der Request behauptet "Boesewicht", gespeichert wird der Name aus dem Token.
     @Test
     void professorDarfHoersaalReservierenZuordnungAusDemToken() throws Exception {
-        String token = login("prof@fh-dortmund.de");
+        String token = login("prof@example.invalid");
 
         HttpResponse<String> antwort = reserviere(token, "ef42-hoersaal1", "18:00", "19:00");
 
@@ -78,7 +78,7 @@ class RechteIntegrationTest {
 
     @Test
     void studentDarfHoersaalNichtReservieren() throws Exception {
-        String token = login("student@fh-dortmund.de");
+        String token = login("student@example.invalid");
 
         HttpResponse<String> antwort = reserviere(token, "ef42-hoersaal1", "19:00", "20:00");
 
@@ -88,12 +88,12 @@ class RechteIntegrationTest {
 
     @Test
     void adminDarfReservierungenLoeschen() throws Exception {
-        String studentToken = login("student@fh-dortmund.de");
+        String studentToken = login("student@example.invalid");
         HttpResponse<String> angelegt = reserviere(studentToken, "ef42-innovationlab", "06:00", "07:00");
         assertThat(angelegt.statusCode()).isEqualTo(200);
         long id = om.readTree(angelegt.body()).get("id").asLong();
 
-        String adminToken = login("admin@fh-dortmund.de");
+        String adminToken = login("admin@example.invalid");
         assertThat(loesche(adminToken, "/api/campus/reservierungen/" + id).statusCode())
                 .isEqualTo(200);
         // Ein zweiter Loeschversuch meldet 404.
@@ -104,7 +104,7 @@ class RechteIntegrationTest {
     // Spring Security blockt das Loeschen fuer Studierende mit 403.
     @Test
     void studentDarfNichtLoeschen() throws Exception {
-        String studentToken = login("student@fh-dortmund.de");
+        String studentToken = login("student@example.invalid");
         HttpResponse<String> angelegt = reserviere(studentToken, "ef42-hardwarelabor", "05:00", "06:00");
         assertThat(angelegt.statusCode()).isEqualTo(200);
         long id = om.readTree(angelegt.body()).get("id").asLong();
@@ -115,7 +115,7 @@ class RechteIntegrationTest {
 
     @Test
     void adminDarfPinwandPostsLoeschen() throws Exception {
-        String studentToken = login("student@fh-dortmund.de");
+        String studentToken = login("student@example.invalid");
         HttpResponse<String> post = http.send(HttpRequest.newBuilder(URI.create(url("/api/pinwand/posts")))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + studentToken)
@@ -129,7 +129,7 @@ class RechteIntegrationTest {
         assertThat(json.get("autor").asText()).isEqualTo("Demo Student");
         assertThat(json.get("rolle").asText()).isEqualTo("Student");
 
-        String adminToken = login("admin@fh-dortmund.de");
+        String adminToken = login("admin@example.invalid");
         assertThat(loesche(adminToken, "/api/pinwand/posts/" + json.get("id").asLong()).statusCode())
                 .isEqualTo(200);
     }
