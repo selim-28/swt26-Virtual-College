@@ -46,9 +46,9 @@ public class AuthService {
      */
     @PostConstruct
     public void demoKontenAnlegen() {
-        legeAnWennNeu("student@fh-dortmund.de", "Demo Student", "Student");
-        legeAnWennNeu("prof@fh-dortmund.de", "Prof. Demo", "Professor");
-        legeAnWennNeu("admin@fh-dortmund.de", "Demo Admin", "Admin");
+        legeAnWennNeu("student@example.invalid", "Demo Student", "Student");
+        legeAnWennNeu("prof@example.invalid", "Prof. Demo", "Professor");
+        legeAnWennNeu("admin@example.invalid", "Demo Admin", "Admin");
     }
 
     private void legeAnWennNeu(String email, String name, String rolle) {
